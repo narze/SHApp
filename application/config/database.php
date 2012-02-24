@@ -75,13 +75,13 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['dsn']      = '';
+$db['default']['dsn']      = 'mysql:host=localhost;dbname=apps';
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = '';
+$db['default']['username'] = 'root';
 $db['default']['password'] = '';
-$db['default']['database'] = '';
+$db['default']['database'] = 'apps';
 $db['default']['dbdriver'] = 'mysql';
-$db['default']['dbprefix'] = '';
+$db['default']['dbprefix'] = 'shapp_';
 $db['default']['pconnect'] = FALSE;
 $db['default']['db_debug'] = TRUE;
 $db['default']['cache_on'] = FALSE;
