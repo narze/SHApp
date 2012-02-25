@@ -54,7 +54,7 @@ class Sh extends CI_Controller {
 				)
 			);
 			
-			if(!isset($request_install_app_result['app_install_id']) || !isset()){
+			if(!isset($request_install_app_result['app_install_id']) || !isset($request_install_app_result['app_install_secret_key'])){
 				$return['error'] = 'Can not install app';
 			} else {
 				$app_install_id = $request_install_app_result['app_install_id'];
