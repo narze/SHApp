@@ -9,42 +9,74 @@ class Configniter extends CI_Controller {
 	}
 	
 	function index(){
-		//index
-		//config.php
-		//database.php
-		//socialhappen.php
-		//socialhappen_actions.php
+		echo '<h1>Please select config file</h1>';
+		$config_dir = get_dir_file_info('application/config/');
+		$development_dir = get_dir_file_info('application/config/development/');
+		$testing_dir = get_dir_file_info('application/config/testing/');
+		$production_dir = get_dir_file_info('application/config/production/');
+		
+		echo '<h2>/config/</h2>';
+		if(!$config_dir){
+			echo '<p>No config file found.</p>';
+		} else {
+			foreach($config_dir as $filename => $info){
+				if(($basename = strstr($filename, '.php', TRUE)) !== FALSE){ //is not folder
+					echo anchor('configniter/edit_config_file/'.$basename, $filename).'<br />';
+				}
+			}
+		}
+		
+		echo '<h2>/config/development/</h2>';
+		if(!$development_dir){
+			echo '<p>No config file found.</p>';
+		} else {
+			foreach($development_dir as $filename => $info){
+				if(($basename = strstr($filename, '.php', TRUE)) !== FALSE){ //is not folder
+					echo anchor('configniter/edit_config_file/'.$basename.'/development', $filename).'<br />';
+				}
+			}
+		}
+		
+		echo '<h2>/config/testing/</h2>';
+		if(!$testing_dir){
+			echo '<p>No config file found.</p>';
+		} else {
+			foreach($testing_dir as $filename => $info){
+				if(($basename = strstr($filename, '.php', TRUE)) !== FALSE){ //is not folder
+					echo anchor('configniter/edit_config_file/'.$basename.'/testing', $filename).'<br />';
+				}
+			}
+		}
+
+		echo '<h2>/config/production/</h2>';
+		if(!$production_dir){
+			echo '<p>No config file found.</p>';
+		} else {
+			foreach($production_dir as $filename => $info){
+				if(($basename = strstr($filename, '.php', TRUE)) !== FALSE){ //is not folder
+					echo anchor('configniter/edit_config_file/'.$basename.'/production', $filename).'<br />';
+				}
+			}
+		}
+		echo 'Or input config file name (without .php) ';
+		echo form_open('configniter/redirect');
+		$data = array(
+              'name'        => 'config_name',
+              'id'          => 'config_name',
+              'value'       => 'config',
+              'maxlength'   => '50',
+              'size'        => '50',
+              'style'       => 'width:50%',
+            );
+		echo form_input($data);
+		echo form_submit('submit', 'Submit');
+		echo form_close();
 	}
 
-	// function edit(){
-	// 	$filepath = $this->input->get('filepath');
-	// 	if(!$file_content = read_file($filepath)){
-	// 		echo 'File is not readable';
-	// 	} else {
-	// 		echo '<html><body><form method="post" action="'.base_url().'configniter/edit_submit" >';
-	// 		echo form_textarea(array(
-	// 					  'name'        => 'file_content',
-	// 					  'id'          => 'file_content',
-	// 					  'value'       => $file_content,
-	// 			));
-	// 		echo '<input type="submit" />';
-	// 		echo '</form></body></html>';
-	// 	}
-	// }
-
-	// function edit_submit(){
-	// 	$filepath = $this->input->post('filepath');
-	// 	echo nl2br(htmlspecialchars($file_content = $this->input->post('file_content')));
-	// 	if ( ! write_file('./test.txt', $file_content))
-	// 	{
-	// 	     echo 'Unable to write the file';
-	// 	}
-	// 	else
-	// 	{
-	// 	     echo 'File written!';
-	// 	}
-
-	// }
+	function redirect(){
+		$config_name = $this->input->post('config_name');
+		redirect('configniter/edit_config_file/'.$config_name);
+	}
 
 	function edit_config_file($config_name, $environment = ''){
 		if($environment) { //development, testing, production
@@ -57,46 +89,59 @@ class Configniter extends CI_Controller {
 		if(!$file_content = read_file($filepath)){
 			echo 'File is not readable';
 		} else {
+
+			$vars_before_include = get_defined_vars();
 			include(APPPATH.'config/'.$environment.$config_name.'.php');
-			//Strip multiline comments
-			$file_content = preg_replace('!/\*.*?\*/!s', '', $file_content);
-			//Strip singleline comments if it leads $config
-			$file_content = preg_replace('!//.*(?=\$config).*\n!', '', $file_content);
-			//Remove blank lines
-			$file_content = preg_replace('/\n\s*\n/', "\n", $file_content);
-			//find $config
-			$config_pattern = '/(\$config\[[\\\'\"](.*)[\\\'\"]\]\s*=)(\s*[\\\'\"]?(.*)[\\\'\"]?);/Us';
-			if(preg_match_all($config_pattern, $file_content, $matches) !== FALSE){
-				// echo '<pre>';
-				// var_dump($matches);
-				// echo '</pre>';
-			} else {
-				// echo 'not found';
+			$vars_after_include = get_defined_vars();
+			foreach($vars_before_include as $key => $value){
+				unset($vars_after_include[$key]);
+			} unset($vars_after_include['vars_before_include']);
+			echo '<form method="post" action="'.
+			base_url().'configniter/edit_config_file_submit/'.$config_name.'/'.$environment.'">';
+			foreach($vars_after_include as $config_var_name => $config_var_value) {
+				if(is_array($config_var_value)){
+					foreach($config_var_value as $config_key => $config_value) { 
+						$config_type = gettype($config_value);?>
+						<div id="<?php echo $config_value;?>">
+							<span>$<?php echo $config_var_name;?>['<?php echo $config_key;?>'] (<?php echo $config_type;?>)</span>
+							<input type="hidden" name="<?php echo $config_var_name;?>[<?php echo $config_key;?>][type]" value="<?php echo $config_type;?>" />
+							<?php if(strpos($export_value = var_export($config_value, TRUE), "\n") !== FALSE) : ?>
+								<span>
+									<textarea style="width: 400px"
+									 name="<?php echo $config_var_name;?>[<?php echo $config_key;?>][value]" 
+									 rows="<?php echo substr_count($export_value, "\n")+1;?>"><?php echo $export_value;?></textarea>
+								</span>
+							<?php else : ?>
+								<span><input type="text" name="<?php echo $config_var_name;?>[<?php echo $config_key;?>][value]" 
+									value="<?php echo trim($export_value, '"\''); ?>"</span>
+							<?php endif; ?>
+							Update this field <input type="checkbox" name="<?php echo $config_var_name;?>[<?php echo $config_key;?>][edit]" value="1" />
+							
+						</div>
+					<?php
+					}
+				} else { 
+					$config_type = gettype($config_var_value);?>
+					<div id="<?php echo $config_var_value;?>">
+					<span>$<?php echo $config_var_name;?> (<?php echo $config_type;?>)</span>
+					<input type="hidden" name="<?php echo $config_var_name;?>[non_array][type]" value="<?php echo $config_type;?>" />
+					<?php if(strpos($export_value = var_export($config_var_value, TRUE), "\n") !== FALSE) : ?>
+						<span>
+							<textarea style="width
+							: 400px" name="<?php echo $config_var_name;?>[non_array][value]" 
+							rows="<?php echo substr_count($export_value, "\n")+1;?>"><?php echo $export_value;?></textarea>
+						</span>
+					<?php else : ?>
+						<span><input type="text" name="<?php echo $config_var_name;?>[non_array][value]" 
+							value="<?php echo trim($export_value, '"\''); ?>"</span>
+					<?php endif; ?>
+					Update this field <input type="checkbox" name="<?php echo $config_var_name;?>[non_array][edit]" value="1" />
+					<?php
+				}
 			}
+			echo '<input type="submit" />';
+			echo '</form>';
 		}
-		echo '<form method="post" action="'.
-		base_url().'configniter/edit_config_file_submit/'.$config_name.'/'.$environment.'">';
-		include(APPPATH.'config/'.$environment.$config_name.'.php');
-		foreach($config as $config_key => $config_value) { 
-			$config_type = gettype($config_value);?>
-			<div id="<?php echo $config_value;?>">
-				<span>$config['<?php echo $config_key;?>'] (<?php echo $config_type;?>)</span>
-				<input type="hidden" name="config[<?php echo $config_key;?>][type]" value="<?php echo $config_type;?>" />
-				<?php if(strpos($export_value = var_export($config_value, TRUE), "\n") !== FALSE) : ?>
-					<span><textarea name="config[<?php echo $config_key;?>][value]" rows="<?php echo substr_count($export_value, "\n")+1;?>">
-						<?php echo $export_value;?>
-					</textarea></span>
-				<?php else : ?>
-					<span><input type="text" name="config[<?php echo $config_key;?>][value]" 
-						value="<?php echo trim($export_value, '"\''); ?>"</span>
-				<?php endif; ?>
-				Update this field <input type="checkbox" name="config[<?php echo $config_key;?>][edit]" value="1" />
-				
-			</div>
-		<?php
-		}
-		echo '<input type="submit" />';
-		echo '</form>';
 	}
 
 	function edit_config_file_submit($config_name, $environment = ''){
@@ -109,47 +154,67 @@ class Configniter extends CI_Controller {
 		if(!$file_content = read_file($filepath)){
 			echo 'File is not readable';
 		} else {
+			$vars_before_include = get_defined_vars();
 			include(APPPATH.'config/'.$environment.$config_name.'.php');
+			$vars_after_include = get_defined_vars();
+			foreach($vars_before_include as $key => $value){
+				unset($vars_after_include[$key]);
+			} unset($vars_after_include['vars_before_include']);
 			$config_array = $this->input->post();
-			$config_array = $config_array['config'];
-			foreach($config_array as $name => $config_value){
-				if(!empty($config_value['edit'])){
-					
-					$type = $config_value['type'];
-					$value = $config_value['value'];
-					if(isset($config[$name]) && $value !== $config[$name]) { //If config exists and have update
-						if($type === 'array'){
-							eval('$value = '.$value.';');
-							$value = var_export($value, TRUE);
-						} else if($type === 'boolean'){
-							if(strtolower($value)==='true'){
-								$value = 'TRUE';
-							} else if(strtolower($value)==='false') { //false
-								$value = 'FALSE';
+			foreach($config_array as $config_var_name => $config_var_value){
+				foreach($config_var_value as $name => $config_value){
+					if(!empty($config_value['edit'])){
+						
+						$type = $config_value['type'];
+						$value = $config_value['value'];
+						if(isset($vars_after_include[$config_var_name])){
+							if(is_array($vars_after_include[$config_var_name]) && isset($vars_after_include[$config_var_name][$name])){
+								$old_value = $vars_after_include[$config_var_name][$name];
 							} else {
-								continue;
+								$old_value = $vars_after_include[$config_var_name];
 							}
-						} else if($type === 'string'){
-							$value = "'".str_replace("'", "\'", $value)."'";
 						}
+						if($value !== $old_value) { //If config exists and have update
+							if($type === 'array'){
+								eval('$value = '.$value.';');
+								$value = var_export($value, TRUE);
+							} else if($type === 'boolean'){
+								if(strtolower($value)==='true'){
+									$value = 'TRUE';
+								} else if(strtolower($value)==='false') { //false
+									$value = 'FALSE';
+								} else {
+									continue;
+								}
+							} else if($type === 'string'){
+								$value = "'".str_replace("'", "\'", $value)."'";
+							}
+							if($name === 'non_array'){
+								$config_pattern = '/(\$'.$config_var_name.'\s*=)(\s*[\\\'\"]?(.*)[\\\'\"]?);/Us';
+								echo '<div>Edited $'.$config_var_name.' ('.var_export($vars_after_include[$config_var_name], TRUE).' -> '.$value.')</div>';
+							} else {
+								//Replace old value with new value
+								//1. find $config[{$name}] = ___;
+								$config_pattern = '/(\$'.$config_var_name.'\[[\\\'\"]'.$name.'[\\\'\"]\]\s*=)(\s*[\\\'\"]?(.*)[\\\'\"]?);/Us';
+								//2. replace ___ with new value (var_export)
+								echo '<div>Edited $'.$config_var_name.'[\''.$name.'\'] ('.var_export($vars_after_include[$config_var_name][$name], TRUE).' -> '.$value.')</div>';
+							}
+							$file_content = preg_replace($config_pattern, '${1} '.$value.';', $file_content);
 
-						//Replace old value with new value
-						//1. find $config[{$name}] = ___;
-						$config_pattern = '/(\$config\[[\\\'\"]'.$name.'[\\\'\"]\]\s*=)(\s*[\\\'\"]?(.*)[\\\'\"]?);/Us';
-						//2. replace ___ with new value (var_export)
-						$file_content = preg_replace($config_pattern, '${1} '.$value.';', $file_content);
-						echo '<div>Edited $config[\''.$name.'\'] ('.$config[$name].' -> '.$value.')</div>';
-
+							
+						}
 					}
 				}
 			}
 
 			echo '<form method="post" action="'.base_url().'configniter/edit_config_file_write/'.$config_name.'/'.$environment.'" >';
 			echo form_textarea(array(
-						  'name'        => 'new_file_content',
-						  'id'          => 'new_file_content',
-						  'value'       => $file_content,
-				));
+			  'name'        => 'new_file_content',
+			  'id'          => 'new_file_content',
+			  'value'       => $file_content,
+			  'style'		=> 'width:100%; height:80%;'
+			));
+			echo '<p>Please recheck the input, if the config is not set, please edit it manually here.</p>';
 			echo '<input type="submit" value="Write to file" />';
 			echo '</form>';
 		}
