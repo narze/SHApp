@@ -16,21 +16,24 @@ class SocialHappen {
 		$this->sh_api_url = $CI->config->item('api_url');
 		$this->app_id = $CI->config->item('app_id');
 		$this->app_secret_key = $CI->config->item('app_secret_key');
-		
+		$this->mockuphappen_enable = $CI->config->item('mockuphappen_enable');
 	}
 	
 	function request($method = null, $args = array()){
-		if($method == null && sizeof($args)){
+		if($this->mockuphappen_enable) {
+			$CI->load->config('mockuphappen');
+			return $CI->config->item("mockuphappen_{$method}");
+		} else {
+			if($method == null && sizeof($args)){
 			return array(
 					'error' => '',
 					'message' => 'Parameters '
 				);
+			}
+			$this->set_api_method($method);
+			$response = $this->sh_curl($args);			
+			return $this->check_response($response);
 		}
-		
-		$this->set_api_method($method);
-		$response = $this->sh_curl($args);			
-		return $this->check_response($response);
-	
 	}
 	
 	function sh_curl($args = array()) {
