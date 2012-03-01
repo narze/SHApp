@@ -9,6 +9,9 @@
 	 		oauth: true
 		});
 		FB.getLoginStatus(function(response) {
+			if (response.status === 'connected' && typeof fbcallback === 'function') {
+				fbcallback();
+			}
 		  	window.fblogin = function () {
 				FB.login(function(response) {
 					if (response.status === 'connected') {

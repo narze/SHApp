@@ -10,7 +10,7 @@ class Example_mongo_model extends CI_Model {
 	//Basic functions (reindex & CRUD)
 	function recreateIndex() {
 		return $this->collection->deleteIndexes() 
-			&& $this->collection->ensureIndex(array('example_unique_id' => 1));
+			&& $this->collection->ensureIndex(array('example_unique_id' => 1), array('unique' => 1));
 	}
         
 	function add($data)
