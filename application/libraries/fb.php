@@ -18,7 +18,7 @@ class FB {
 		);
 		$this->facebook = $this->CI->facebook;
 		// channel_url can be used with facebook js sdk
-		// $this->channel_url = base_url().'assets/channel/fb.php';
+		$this->channel_url = base_url().'assets/channel/fb.php';
 	}
 
 	/**
@@ -26,5 +26,16 @@ class FB {
 	 */
 	function api(/* polymorphic */){
 		return $this->facebook->api(func_get_args());
+	}
+
+	/*
+	 * Get fb-root div
+	 */
+	function getFbRoot(){
+		return $this->CI->load->view('fb-root', array(
+			'facebook_app_id' => $this->CI->config->item('facebook_app_id'),
+			'facebook_channel_url' => $this->channel_url,
+			'facebook_app_scope' => $this->CI->config->item('facebook_app_scope')
+		), TRUE);
 	}
 }
