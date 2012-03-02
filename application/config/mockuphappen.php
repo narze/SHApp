@@ -29,4 +29,6 @@ $config['mockuphappen_request_current_campaign'] = array('status' => 'OK', 'succ
 $config['mockuphappen_request_user_classes'] = array('status' => 'OK', 'success' => TRUE);
 $config['mockuphappen_request_add_campaign'] = array('status' => 'OK', 'success' => TRUE);
 $config['mockuphappen_request_page_role'] = array('status' => 'OK', 'success' => TRUE);
-$config['mockuphappen_request_campaign_list'] = array('status' => 'OK', 'success' => TRUE;)
+$config['mockuphappen_request_campaign_list'] = array('status' => 'OK', 'success' => TRUE);
+
+$config['mockuphappen_facebook_page_id'] = '135287989899131';
