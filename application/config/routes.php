@@ -66,6 +66,7 @@
 
 $route['default_controller'] = "welcome";
 $route['404_override'] = '';
+$route['(:any)/(:num)'] = "$1/index/$2"; // default index routes
 
 
 /* End of file routes.php */

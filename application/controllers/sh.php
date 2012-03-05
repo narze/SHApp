@@ -6,9 +6,18 @@ class Sh extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->config('socialhappen');
+		$this->mockuphappen_enabled = $this->config->item('mockuphappen_enable');
 	}
 	
 	function index(){
+	}
+
+	function mockuphappen_install() {
+		if($this->mockuphappen_enabled){
+			echo anchor('sh/install?company_id=1&user_id=1&page_id=1', "Install");
+		} else {
+			redirect();
+		}
 	}
 
 	function install()
@@ -32,7 +41,7 @@ class Sh extends CI_Controller {
 			return;
 		}
 		
-		//Face book page id		
+		//Facebook page id		
 		$result = $this->SH->request('request_facebook_page_id', array('page_id' => $page_id));
 		if(isset($result['facebook_page_id'])){
 			$facebook_page_id = $result['facebook_page_id'];
@@ -46,20 +55,37 @@ class Sh extends CI_Controller {
 		if(!$company_id || !$user_facebook_id){
 			log_message('error', 'Insufficient parameters');
 			$return['error'] = 'Insufficient parameters';
-		} else {	
-			$request_install_app_result = $this->SH->request('request_install_app',
-				array(
-					'company_id' => $company_id,
-					'user_id' => $user_id
-				)
-			);
+		} else {
+			if($this->mockuphappen_enabled){
+				$app_install_id = $this->config->item('mockuphappen_app_install_id');
+				$facebook_page_id = $this->config->item('mockuphappen_facebook_page_id');
+				if($this->setting_model->getOne(array('app_install_id' => $app_install_id))){
+					log_message('error', 'mockuphappen restrict user to install again, please remove this app setting first');
+				} else if(($exist_setting = $this->setting_model->get(array('facebook_page_id' => $facebook_page_id))) && !empty($exist_setting['app_install_id'])){
+					log_message('error', 'mockuphappen restrict user to install again, please remove this app setting first');
+				} else {
+					$request_install_app_result = array(
+						'app_install_id' => $this->config->item('mockuphappen_app_install_id'),
+						'app_install_secret_key' => $this->config->item('mockuphappen_app_install_secret_key')
+					);
+				}
+			} else {
+				$request_install_app_result = $this->SH->request('request_install_app',
+					array(
+						'company_id' => $company_id,
+						'user_id' => $user_id
+					)
+				);
+			}
 			
 			if(!isset($request_install_app_result['app_install_id']) || !isset($request_install_app_result['app_install_secret_key'])){
 				$return['error'] = 'Can not install app';
 			} else {
 				$app_install_id = $request_install_app_result['app_install_id'];
 				$app_install_secret_key = $request_install_app_result['app_install_secret_key'];
-
+				if($this->mockuphappen_enabled){
+					$app_install_secret_key = $this->config->item('mockuphappen_app_install_secret_key');
+				}
 				$install_page_result = $this->SH->request('request_install_page',
 					array(
 						'app_install_id' => $app_install_id,
@@ -83,6 +109,43 @@ class Sh extends CI_Controller {
 					} else {
 						$return['status'] = 'OK';
 						$return['app_install_id'] = $app_install_id;
+					}
+
+					//3. Add actions, achievements (config/socialhappen_sctions.php)
+					$this->load->config('socialhappen_actions');
+					$achievement_infos = $this->config->item('achievement_infos');
+
+					//Replace achievement criterias {app_install_id}
+					if(is_array($achievement_infos)){
+						foreach($achievement_infos as &$info){
+							foreach($info['criteria'] as $key => $value){
+								$new_key = str_replace('{app_install_id}', $app_install_id, $key);
+								if($new_key != $key){
+									$info['criteria'][$new_key] = $info['criteria'][$key];
+									unset($info['criteria'][$key]);
+								}
+							}
+						}
+						unset($info);
+
+						$achievement_infos = base64_encode(json_encode($achievement_infos));
+						
+						$this->app_id = $this->config->item('app_id');
+						$this->app_secret_key = $this->config->item('app_secret_key');
+						$this->load->library('socialhappen', NULL, 'SH');
+						$add_achievement_infos_result = $this->SH->request('request_add_achievement_infos', 
+							array(
+								'app_id' => $this->app_id,
+								'app_install_id' => $app_install_id,
+								'app_secret_key' => $this->app_secret_key,
+								'app_install_secret_key' => $app_install_secret_key,
+								'achievement_infos' => $achievement_infos
+							)
+						);
+						if(isset($add_achievement_infos_result['error'])){
+							log_message('error', 'Add achievements failed');
+							$return['error'] = 'Add achievements failed';
+						}
 					}
 				}
 			}
