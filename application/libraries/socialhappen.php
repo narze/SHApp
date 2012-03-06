@@ -114,7 +114,7 @@ class SocialHappen {
 				exit('Cannot get facebook signed request');
 			}
 			if($setting = $this->CI->setting_model->getOne(array('facebook_page_id' => $facebook_page_id))){
-				redirect($setting['app_install_id']);
+				redirect($this->CI->uri->uri_string().'/'.$setting['app_install_id']);
 			} else {
 				exit('App not installed yet');
 			}
