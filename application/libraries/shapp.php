@@ -34,7 +34,8 @@ class SHApp {
 				'facebook_page_id' => $data['facebook_page_id'],
 				'admin_list' => array(
 					((string) $data['user_facebook_id']) => array() //preserve empty array for user specific data
-				)
+				),
+				'data' => array() //preserve for app's data
 			);
 
 			if($this->CI->setting_model->getOne(array('app_install_id' => $app_install_id))){

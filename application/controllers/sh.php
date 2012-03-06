@@ -25,12 +25,9 @@ class Sh extends CI_Controller {
 		$company_id = $this->input->get('company_id');
 		$user_id = $this->input->get('user_id');
 		$page_id = $this->input->get('page_id');
-				
-		//init SH object
-		$this->load->library('socialhappen', NULL, 'SH');
 		
 		//User facebook id
-		$result = $this->SH->request('request_user_facebook_id', array('user_id' => $user_id));
+		$result = $this->socialhappen->request('request_user_facebook_id', array('user_id' => $user_id));
 		$return = array();
 		if(isset($result['user_facebook_id'])){
 			$user_facebook_id = $result['user_facebook_id'];
@@ -42,7 +39,7 @@ class Sh extends CI_Controller {
 		}
 		
 		//Facebook page id		
-		$result = $this->SH->request('request_facebook_page_id', array('page_id' => $page_id));
+		$result = $this->socialhappen->request('request_facebook_page_id', array('page_id' => $page_id));
 		if(isset($result['facebook_page_id'])){
 			$facebook_page_id = $result['facebook_page_id'];
 		} else {
@@ -59,6 +56,7 @@ class Sh extends CI_Controller {
 			if($this->mockuphappen_enabled){
 				$app_install_id = $this->config->item('mockuphappen_app_install_id');
 				$facebook_page_id = $this->config->item('mockuphappen_facebook_page_id');
+				$user_facebook_id = $this->facebook->getUser();
 				if($this->setting_model->getOne(array('app_install_id' => $app_install_id))){
 					log_message('error', 'mockuphappen restrict user to install again, please remove this app setting first');
 				} else if(($exist_setting = $this->setting_model->get(array('facebook_page_id' => $facebook_page_id))) && !empty($exist_setting['app_install_id'])){
@@ -70,7 +68,7 @@ class Sh extends CI_Controller {
 					);
 				}
 			} else {
-				$request_install_app_result = $this->SH->request('request_install_app',
+				$request_install_app_result = $this->socialhappen->request('request_install_app',
 					array(
 						'company_id' => $company_id,
 						'user_id' => $user_id
@@ -86,7 +84,7 @@ class Sh extends CI_Controller {
 				if($this->mockuphappen_enabled){
 					$app_install_secret_key = $this->config->item('mockuphappen_app_install_secret_key');
 				}
-				$install_page_result = $this->SH->request('request_install_page',
+				$install_page_result = $this->socialhappen->request('request_install_page',
 					array(
 						'app_install_id' => $app_install_id,
 						'app_install_secret_key' => $app_install_secret_key,
@@ -109,6 +107,9 @@ class Sh extends CI_Controller {
 					} else {
 						$return['status'] = 'OK';
 						$return['app_install_id'] = $app_install_id;
+						if($this->mockuphappen_enabled){
+							redirect('sh/config?app_install_id='.$app_install_id.'&user_id='.$user_id.'&app_install_secret_key='.$app_install_secret_key);
+						}
 					}
 
 					//3. Add actions, achievements (config/socialhappen_sctions.php)
@@ -133,7 +134,7 @@ class Sh extends CI_Controller {
 						$this->app_id = $this->config->item('app_id');
 						$this->app_secret_key = $this->config->item('app_secret_key');
 						$this->load->library('socialhappen', NULL, 'SH');
-						$add_achievement_infos_result = $this->SH->request('request_add_achievement_infos', 
+						$add_achievement_infos_result = $this->socialhappen->request('request_add_achievement_infos', 
 							array(
 								'app_id' => $this->app_id,
 								'app_install_id' => $app_install_id,
@@ -162,7 +163,77 @@ class Sh extends CI_Controller {
 		if(!$app_install_id || !$user_id || !$app_install_secret_key ){
 			show_error('Config parameter incorrect');
 		} else {
-			redirect(site_url('admin/dashboard/'.$app_install_id.'/'.$user_id.'/'.$app_install_secret_key));
+			redirect('sh/setting/'.$app_install_id.'/'.$user_id.'/'.$app_install_secret_key);
+		}
+	}
+
+	function setting($app_install_id = NULL, $user_id = NULL, $app_install_secret_key = NULL){
+		if(!$app_install_id || !$user_id || !$app_install_secret_key ){
+			exit('Insufficient Parameters');
+		} else {
+			$user_facebook_id = $this->facebook->getUser();
+			if(!$user_facebook_id) {
+				exit('No facebook session');
+			}
+			$this->load->model('setting_model');
+			$setting = $this->setting_model->getOne(compact('app_install_id', 'app_install_secret_key'));
+			if(!$setting) {
+				exit('Setting not found');
+			} else if (!isset($setting['admin_list'][$user_facebook_id])){
+				exit('Permission Denied');
+			}
+			$this->load->vars(compact('app_install_id', 'user_id', 'app_install_secret_key'));
+			
+			$success = $this->input->get('success');
+
+			//Start form
+			$this->load->library('form_validation');
+
+			//Form validations
+			$this->form_validation->set_rules('example_field', 'Example Field', 'trim|xss_clean');			
+			$this->form_validation->set_rules('admin_list', 'Admin List', 'trim|xss_clean');			
+					
+			$this->form_validation->set_error_delimiters('<br /><span class="error">', '</span>');
+		
+			$this->load->vars(array(
+				'success' => $success,
+				'data' => $setting['data'],
+				'admin_list' => implode(',', array_keys($setting['admin_list']))
+			));
+			if ($this->form_validation->run() == FALSE)
+			{
+				$this->load->view('sh_setting');
+			}
+			else
+			{
+				//$setting['data']
+				$data = array(
+			       	'example_field' => set_value('example_field')
+				);
+				//$setting['admin_list']
+				$admins = explode(',', set_value('admin_list'));
+				$admin_list = array();
+				foreach($admins as $admin) {
+					$admin_list[$admin] = array(); //If each user has data, edit here
+				}
+
+				$update_data = array(
+					'$set' => array(
+						'data' => $data,
+						'admin_list' => $admin_list
+					)
+				);
+			
+				if ($this->setting_model->update(array('app_install_id' => $app_install_id), $update_data) == TRUE)
+				{
+					redirect('sh/setting/'.$app_install_id.'/'.$user_id.'/'.$app_install_secret_key.'?success=1');
+				}
+				else
+				{
+					exit('Update Error');
+				}
+			}
+
 		}
 	}
 }
