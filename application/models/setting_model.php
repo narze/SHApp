@@ -5,7 +5,7 @@ class Setting_model extends CI_Model {
 	function __construct() {
 		$this->load->helper('mongodb_helper');
 		$this->collection = mongodb_load('setting');
-		$this->int_values = array('app_install_id');
+		$this->int_values = array('page_id');
 	}
 
 	//Basic functions (reindex & CRUD)
@@ -18,7 +18,8 @@ class Setting_model extends CI_Model {
 	{
 		$data = array_cast_int($data, $this->int_values);
 		try	{
-			return $this->collection->insert($data, array('safe' => TRUE));
+			$this->collection->insert($data, array('safe' => TRUE));
+			return ''.$data['_id'];
 		} catch(MongoCursorException $e){
 			log_message('error', 'Mongodb error : '. $e);
 			return FALSE;
