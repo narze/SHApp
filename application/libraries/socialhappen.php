@@ -85,7 +85,7 @@ class SocialHappen {
 		else return TRUE;
 	}
 
-	function get_app_install_id() {
+	function get_app_install_id($force_app_installed = TRUE) {
 		$segments = $this->CI->uri->segment_array();
 		foreach($segments as $segment) {
 			if(is_numeric($segment)){
@@ -116,11 +116,15 @@ class SocialHappen {
 			if($setting = $this->CI->setting_model->getOne(array('facebook_page_id' => $facebook_page_id))){
 				redirect($this->CI->uri->uri_string().'/'.$setting['app_install_id']);
 			} else {
-				exit('App not installed yet');
+				if($force_app_installed) {
+					exit('App not installed yet');
+				}
 			}
 		} else {
 			if(!$setting = $this->CI->setting_model->getOne(array('app_install_id' => $this->app_install_id))){
-				exit('App not installed yet');
+				if($force_app_installed) {
+					exit('App not installed yet');
+				}
 			}
 		}
 	}

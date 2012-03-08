@@ -19,7 +19,7 @@ class Example_mongo_model extends CI_Model {
 		$data = array_cast_int($data, $this->int_values);
 		try	{
 			$result = $this->collection->insert($data, array('safe' => TRUE));
-			return ''.$result['_id'];
+			return ''.$data['_id'];
 		} catch(MongoCursorException $e){
 			log_message('error', 'Mongodb error : '. $e);
 			return FALSE;
