@@ -11,7 +11,6 @@ class Facebook_connect extends CI_Controller {
 		if(!$facebook_uid = $this->facebook->getUser()){
 			$this->load->vars('fb_root', $this->fb->getFbRoot());
 			$this->load->view('facebook_connect');
-			echo 'did not connect';
 		} else {
 			echo "Connected";
 		}

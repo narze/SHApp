@@ -9,6 +9,7 @@ class SocialHappen {
 	private $api_method;
 	private $app_id;
 	private $app_secret_key;
+	private $app_install_id;
 	
 	function __construct(){
 		$this->CI =& get_instance();
@@ -127,5 +128,27 @@ class SocialHappen {
 				}
 			}
 		}
+	}
+
+	function get_bar() {
+		if(!isset($this->app_install_id)) {
+			$this->app_install_id = $this->get_app_install_id();
+		}
+		$setting = $this->CI->setting_model->getOne(array('app_install_id' => $this->app_install_id));
+		$app_install_secret_key = $setting['app_install_secret_key'];
+		$user_facebook_id = $this->CI->facebook->getUser();
+		$request = array(
+			'app_id' => $this->app_id,
+			'app_install_id' => $this->app_install_id,
+			'app_secret_key' => $this->app_secret_key,
+			'app_install_secret_key' => $app_install_secret_key,
+			'user_facebook_id' => $user_facebook_id
+		);
+		$result = $this->request('bar', $request);
+		$this->CI->load->vars(array(
+			'socialhappen_bar_css' => $result['css'],
+			'socialhappen_bar_html' => $result['html']
+		));
+		return $result;
 	}
 }
