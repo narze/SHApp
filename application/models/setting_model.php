@@ -5,7 +5,7 @@ class Setting_model extends CI_Model {
 	function __construct() {
 		$this->load->helper('mongodb_helper');
 		$this->collection = mongodb_load('setting');
-		$this->int_values = array('page_id');
+		$this->int_values = array('company_id', 'page_id', 'app_install_id');
 	}
 
 	//Basic functions (reindex & CRUD)

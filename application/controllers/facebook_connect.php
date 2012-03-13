@@ -4,7 +4,10 @@ class Facebook_connect extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-		$this->app_install_id = $this->socialhappen->get_app_install_id();
+		// Set force=1 to skip app_install_id checking
+		if(!$this->input->get('force') === 1) {
+			$this->app_install_id = $this->socialhappen->get_app_install_id();
+		}
 	}
 
 	function index() {

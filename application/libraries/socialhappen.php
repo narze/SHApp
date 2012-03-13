@@ -146,8 +146,8 @@ class SocialHappen {
 		);
 		$result = $this->request('bar', $request);
 		$this->CI->load->vars(array(
-			'socialhappen_bar_css' => $result['css'],
-			'socialhappen_bar_html' => $result['html']
+			'socialhappen_bar_css' => isset($result['css']) ? $result['css'] : NULL,
+			'socialhappen_bar_html' => isset($result['html']) ? $result['html'] : NULL
 		));
 		return $result;
 	}
