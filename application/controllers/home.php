@@ -8,7 +8,7 @@ class Home extends CI_Controller {
 	}
 
 	function index(){
-		if(!$facebook_uid = $this->facebook->getUser()){
+		if((!$facebook_uid = $this->facebook->getUser()) || !$this->fb->hasPermissions()){
 			$this->load->vars('fb_root', $this->fb->getFbRoot());
 			$this->load->view('facebook_connect');
 		} else {			
@@ -26,7 +26,7 @@ class Home extends CI_Controller {
 		$random_image_path = $images[array_rand($images)];
 		$random_image_name = pathinfo($random_image_path, PATHINFO_BASENAME);
 		$random_image_url = base_url().'assets/images/random/'.$random_image_name;
-		$user_image = imagecreatefromstring(file_get_contents("http://graph.facebook.com/{$facebook_uid}/picture"));
+		$user_image = imagecreatefromstring(file_get_contents("http://graph.facebook.com/{$facebook_uid}/picture?return_ssl_resources=1&type=large"));
 		$new_user_image_size = 50;
 		$x = 1;
 		$y = 2;
@@ -49,6 +49,21 @@ class Home extends CI_Controller {
 		if(is_writable(FCPATH.'uploads')) {
 			imagepng($background_image, $image_path);
 			echo '<img src="'.base_url().'uploads/'.$filename.'.png" />';
+			//upload to facebook
+
+			// $photo_message = $setting_data['photo_message'];
+		
+			//upload image
+			$this->facebook->setFileUploadSupport(true);
+
+			$args = array(
+				'message' => 'test',
+				'image' => '@'.$image_path
+			);
+			$data = $this->facebook->api('me/photos', 'POST', $args);
+			echo '<pre>';
+			var_dump($data);
+			echo '</pre>';
 		} else {
 			echo 'no write perm';
 		}
