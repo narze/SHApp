@@ -28,9 +28,10 @@ $config['facebook_app_scope'] = 'user_about_me,publish_stream';
 $config['mockuphappen_enable'] = TRUE;
 
 $config['randomapp_settings'] = array(
-	'profile_image_size' => 100,
-	'profile_image_x' => 20,
-	'profile_image_y' => 20,
+	'profile_image_size' => 84,
+	'profile_image_x' => 44,
+	'profile_image_y' => 27,
 	'profile_image_type' => 'square',
 	'profile_image_facebook_size' => 50,
+	'default_message' => '',
 );
