@@ -28,7 +28,7 @@ class FB {
 		return $this->facebook->api(func_get_args());
 	}
 
-	/*
+	/**
 	 * Get fb-root div
 	 */
 	function getFbRoot(){
@@ -37,5 +37,21 @@ class FB {
 			'facebook_channel_url' => $this->channel_url,
 			'facebook_app_scope' => $this->CI->config->item('facebook_app_scope')
 		), TRUE);
+	}
+
+	/**
+	 * Check if current user have grant all permissions requested
+	 */
+	function hasPermissions() {
+		$permissions = $this->CI->facebook->api('me/permissions');
+		if(!isset($permissions['data'][0]) || !is_array($permissions['data'][0])) {
+			return FALSE;
+		}
+		foreach(explode(',', $this->CI->config->item('facebook_app_scope')) as $permission) {
+			if(!isset($permissions['data'][0][$permission])) {
+				return FALSE;
+			}
+		}
+		return TRUE;
 	}
 }
