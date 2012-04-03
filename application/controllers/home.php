@@ -12,13 +12,14 @@ class Home extends CI_Controller {
 			$this->load->vars('fb_root', $this->fb->getFbRoot());
 			$this->load->view('facebook_connect');
 		} else {			
-			$this->get_random_pic();
+			$this->play();
 		}
 	}
 
-	function get_random_pic() {
-
-		$facebook_uid = $this->facebook->getUser();
+	function play() {
+		if(!$facebook_uid = $this->facebook->getUser()) {
+			redirect();
+		}
 		$jpgs = glob(FCPATH.'assets/images/random/*.jpg');
 		$pngs = glob(FCPATH.'assets/images/random/*.png');
 		$gifs = glob(FCPATH.'assets/images/random/*.gif');
@@ -26,10 +27,20 @@ class Home extends CI_Controller {
 		$random_image_path = $images[array_rand($images)];
 		$random_image_name = pathinfo($random_image_path, PATHINFO_BASENAME);
 		$random_image_url = base_url().'assets/images/random/'.$random_image_name;
-		$user_image = imagecreatefromstring(file_get_contents("http://graph.facebook.com/{$facebook_uid}/picture?return_ssl_resources=1&type=large"));
-		$new_user_image_size = 50;
-		$x = 1;
-		$y = 2;
+		$randomapp_settings = $this->config->item('randomapp_settings');
+		$profile_image_size = $randomapp_settings['profile_image_size'];
+		$profile_image_x = $randomapp_settings['profile_image_x'];
+		$profile_image_y = $randomapp_settings['profile_image_y'];
+		$profile_image_type = $randomapp_settings['profile_image_type'];
+		$profile_image_facebook_size = $randomapp_settings['profile_image_facebook_size'];
+		$user_image = imagecreatefromstring(file_get_contents("http://graph.facebook.com/{$facebook_uid}/picture?type={$profile_image_type}"));
+		
+		if($profile_image_facebook_size != $profile_image_size) { 
+			$resized = imagecreatetruecolor($profile_image_size, $profile_image_size);
+			imagecopyresampled($resized, $user_image, 0, 0, 0, 0, $profile_image_size, $profile_image_size, $profile_image_facebook_size, $profile_image_facebook_size);
+			$user_image = $resized;
+		} 
+
 		if(strrpos($random_image_url, '.png') !== FALSE) {
 			$background_image = imagecreatefrompng($random_image_url);
 		} else if(strrpos($random_image_url, '.jpg') !== FALSE) {
@@ -37,7 +48,7 @@ class Home extends CI_Controller {
 		} else if(strrpos($random_image_url, '.gif') !== FALSE) {
 			$background_image = imagecreatefromgif($random_image_url);
 		}
-		imagecopymerge($background_image, $user_image, $x, $y, 0, 0, $new_user_image_size, $new_user_image_size, 100);
+		imagecopymerge($background_image, $user_image, $profile_image_x, $profile_image_y, 0, 0, $profile_image_size, $profile_image_size, 100);
 
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
 
@@ -54,10 +65,26 @@ class Home extends CI_Controller {
 			// $photo_message = $setting_data['photo_message'];
 		
 			//upload image
-			$this->facebook->setFileUploadSupport(true);
+			echo anchor('home/upload', 'Upload');
+			echo anchor('home/play', 'Play again');
+		} else {
+			echo 'no write perm';
+		}
+	}
 
+	function upload() {
+		if(!$facebook_uid = $this->facebook->getUser()) {
+			redirect();
+		}
+		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
+
+		$image_path = FCPATH.'uploads/'.$filename.'.png';
+		$image_url = base_url().'uploads/'.$filename.'.png';
+		if(is_writable($image_path)) {
+			$this->facebook->setFileUploadSupport(true);
+			$message = 'test';
 			$args = array(
-				'message' => 'test',
+				'message' => $message,
 				'image' => '@'.$image_path
 			);
 			$data = $this->facebook->api('me/photos', 'POST', $args);
@@ -65,7 +92,8 @@ class Home extends CI_Controller {
 			var_dump($data);
 			echo '</pre>';
 		} else {
-			echo 'no write perm';
+			//image not found
+			redirect();
 		}
 	}
 }

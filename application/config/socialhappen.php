@@ -26,3 +26,11 @@ $config['facebook_app_scope'] = 'user_about_me,publish_stream';
 //	do socialhappen api request
 //}
 $config['mockuphappen_enable'] = TRUE;
+
+$config['randomapp_settings'] = array(
+	'profile_image_size' => 100,
+	'profile_image_x' => 20,
+	'profile_image_y' => 20,
+	'profile_image_type' => 'square',
+	'profile_image_facebook_size' => 50,
+);
