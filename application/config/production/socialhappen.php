@@ -9,12 +9,12 @@ $config['mongodb_username'] = 'sohap';
 $config['mongodb_password'] = 'figyfigy';
 $config['mongodb_host'] = 'localhost';
 $config['mongodb_port'] = 27017;
-$config['mongodb_database'] = '';
+$config['mongodb_database'] = 'ghost';
 
 //Facebook : Fill these if you want to use facebook library
-$config['facebook_app_id'] = '';
-$config['facebook_app_secret'] = '';
-$config['facebook_app_scope'] = '';
+$config['facebook_app_id'] = '266924893395731';
+$config['facebook_app_secret'] = 'd25c5e3bde79fc0f97c04a11ac055d45';
+$config['facebook_app_scope'] = 'user_about_me,publish_stream';
 
 //MockupHappen : Use only if you want to use app without socialhappen api calls
 //This will mockup all api request and return values corresponding to api names
@@ -26,3 +26,12 @@ $config['facebook_app_scope'] = '';
 //	do socialhappen api request
 //}
 $config['mockuphappen_enable'] = TRUE;
+
+$config['randomapp_settings'] = array(
+	'profile_image_size' => 84,
+	'profile_image_x' => 44,
+	'profile_image_y' => 27,
+	'profile_image_type' => 'square',
+	'profile_image_facebook_size' => 50,
+	'default_message' => "ล่า ท้า ผี...คุณจะเจอผีแบบไหน? ",
+);
