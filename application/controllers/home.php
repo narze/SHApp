@@ -89,9 +89,23 @@ class Home extends CI_Controller {
 		//insert name
 		$user = $this->facebook->api('me');
 		if(isset($user['name'])) {	
+			//Try caching font (because windows' apache would lock it!)
+			$original_font_file = FCPATH.'assets/fonts/tahoma.ttf';
+			$cached_font_file = FCPATH.'assets/fonts/tahoma.cached.ttf';
+			
+			if(file_exists($cached_font_file)) {
+				$font_file = $cached_font_file;
+			} else if(is_writable(FCPATH.'assets/')) {
+				if(!file_exists($cached_font_file)) {
+					copy($original_font_file, $cached_font_file);
+				}
+				$font_file = $cached_font_file;
+			} else {
+				$font_file = $original_font_file;
+			}
 			//Shadow
-			imagettftext($background_image, 14, 0, 148, 36, $grey, FCPATH.'assets/tahoma.ttf', $user['name']);
-			imagettftext($background_image, 14, 0, 150, 38, $white, FCPATH.'assets/tahoma.ttf', $user['name']);
+			imagettftext($background_image, 14, 0, 148, 36, $grey, $font_file, $user['name']);
+			imagettftext($background_image, 14, 0, 150, 38, $white, $font_file, $user['name']);
 		}
 
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
