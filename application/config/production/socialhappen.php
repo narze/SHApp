@@ -33,5 +33,5 @@ $config['randomapp_settings'] = array(
 	'profile_image_y' => 27,
 	'profile_image_type' => 'square',
 	'profile_image_facebook_size' => 50,
-	'default_message' => "ล่า ท้า ผี...คุณจะเจอผีแบบไหน? ",
+	'default_message' => "ล่า ท้า ผี...คุณจะเจอผีแบบไหน? \nhttps://www.facebook.com/SocialHappen/app_266924893395731"
 );
