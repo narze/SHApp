@@ -3,16 +3,8 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	</head>
-	<script>
-		function fbcallback() {
-			var txt = document.createTextNode('Connected');
-			document.getElementById('connected').appendChild(txt);
-			document.getElementById('fblogin').visibility = 'hidden';
-		}
-	</script>
-	<body>
+	<body bgcolor="black">
 		<?php echo $fb_root;?>
-		<a id="fblogin" onclick="fblogin();">Connect to Facebook</a>
-		<span id="connected"></span>
+		<center><a id="fblogin" onclick="fblogin();"><img src="<?php echo base_url('assets/images/start.jpg');?>" /></a></center>
 	</body>
 </html>

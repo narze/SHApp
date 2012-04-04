@@ -12,7 +12,7 @@ class Home extends CI_Controller {
 			$this->load->vars('fb_root', $this->fb->getFbRoot());
 			$this->load->view('facebook_connect');
 		} else {			
-			$this->load->view('main_view');
+			redirect('home/play');
 		}
 	}
 
