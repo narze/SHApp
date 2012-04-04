@@ -72,6 +72,7 @@ class Home extends CI_Controller {
 		}
 
 		$white = imagecolorallocate($background_image, 255, 255, 255);
+		$grey = imagecolorallocate($background_image, 100, 100, 100);
 
 		// Draw a white rectangle
 		imagefilledrectangle(
@@ -87,7 +88,9 @@ class Home extends CI_Controller {
 
 		//insert name
 		$user = $this->facebook->api('me');
-		if(isset($user['name'])) {
+		if(isset($user['name'])) {	
+			//Shadow
+			imagettftext($background_image, 14, 0, 148, 36, $grey, FCPATH.'assets/tahoma.ttf', $user['name']);
 			imagettftext($background_image, 14, 0, 150, 38, $white, FCPATH.'assets/tahoma.ttf', $user['name']);
 		}
 
@@ -100,6 +103,7 @@ class Home extends CI_Controller {
 		}
 		if(is_writable(FCPATH.'uploads')) {
 			imagepng($background_image, $image_path);
+			imagedestroy($background_image);
 		
 			$this->load->helper('html');
 			$this->load->helper('form');
