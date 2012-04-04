@@ -2,10 +2,12 @@
 <head>
 	<title></title>
 </head>
-<body>
-	<?php	
-		echo anchor('home/redirect', 'See Your Upload');
-		echo anchor('home/play', 'Play Again');
-	?>
+<body bgcolor="black">
+	<center>
+		<?php	
+			echo anchor('home/redirect', 'ดูภาพของคุณ');
+			echo anchor('home/play', 'เล่นใหม่');
+		?>
+	</center>
 </body>
 </html>

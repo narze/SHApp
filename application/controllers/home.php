@@ -83,8 +83,13 @@ class Home extends CI_Controller {
 			$white
 		);
 
-
 		imagecopymerge($background_image, $user_image, $profile_image_x, $profile_image_y, 0, 0, $profile_image_size, $profile_image_size, 100);
+
+		//insert name
+		$user = $this->facebook->api('me');
+		if(isset($user['name'])) {
+			imagettftext($background_image, 14, 0, 150, 38, $white, FCPATH.'assets/tahoma.ttf', $user['name']);
+		}
 
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
 
