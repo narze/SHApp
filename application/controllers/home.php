@@ -154,18 +154,18 @@ class Home extends CI_Controller {
 			if(is_writable($image_path)) {
 				unlink($image_path);
 			}
+			$user = $this->facebook->api('me');
+			if(isset($user['link'])) {
+				$facebook_link = $user['link'];
+			}	else {
+				$facebook_link = 'https://facebook.com/'.$facebook_uid;
+			}
+			$this->load->vars('facebook_link', $facebook_link);
 			$this->load->view('upload_view');
 		} else {
 			//image not found
 			redirect();
 		}
-	}
-
-	function redirect() {
-		if(!$facebook_uid = $this->facebook->getUser()) {
-			redirect();
-		}
-		redirect('https://facebook.com/'.$facebook_uid);
 	}
 
 	function invite() {
