@@ -2,3 +2,4 @@ application/logs
 uploads/*
 !uploads/index.html
 assets/fonts/tahoma.cached.ttf
+index.php
