@@ -4,20 +4,51 @@ class Home extends CI_Controller {
 
 	function __construct(){
 		parent::__construct();
-		
+		$signedRequest = $this->facebook->getSignedRequest();
+		// If not liked, redirect to page tab
+		if(!isset($signedRequest['page']['liked']) || !$signedRequest['page']['liked']) {
+			$page_id = $this->config->item('mockuphappen_facebook_page_id');
+			$facebook_app_id = $this->config->item('facebook_app_id');
+			// echo '<script>top.location = "'."https://www.facebook.com/profile.php?id={$page_id}&sk=app_{$facebook_app_id}".'";</script>';
+		}
+		// echo '<pre>';
+		// var_dump($signedRequest);
+		// echo '</pre>';
 	}
 
 	function index(){
-		if((!$facebook_uid = $this->facebook->getUser()) || !$this->fb->hasPermissions()){
+		if((!$facebook_uid = $this->facebook->getUser()) 
+			|| !$this->fb->hasPermissions()){
 			$this->load->vars('fb_root', $this->fb->getFbRoot());
 			$this->load->view('facebook_connect');
-		} else {			
+		} else if ($this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))){			
+			$this->play();
+		} else {
+			$this->like();
+		}
+	}
+
+	function like() {
+		if(!$facebook_uid = $this->facebook->getUser()) {
+			redirect();
+		} else if($this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))) {
 			redirect('home/play');
+		} else {
+			$signedRequest = $this->facebook->getSignedRequest();
+			if(!isset($signedRequest['page']['id']) 
+				|| ($signedRequest['page']['id'] != $this->config->item('mockuphappen_facebook_page_id'))) {
+				$page_id = $this->config->item('mockuphappen_facebook_page_id');
+				$facebook_app_id = $this->config->item('facebook_app_id');
+				echo '<script>top.location = "'."https://www.facebook.com/profile.php?id={$page_id}&sk=app_{$facebook_app_id}".'";</script>';
+			} else {
+				$this->load->view('like_view');
+			}
 		}
 	}
 
 	function play() {
-		if(!$facebook_uid = $this->facebook->getUser()) {
+		if((!$facebook_uid = $this->facebook->getUser()) 
+			|| !$this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))) {
 			redirect();
 		}
 		$jpgs = glob(FCPATH.'assets/images/random/*.jpg');
@@ -131,7 +162,8 @@ class Home extends CI_Controller {
 	}
 
 	function upload() {
-		if(!$facebook_uid = $this->facebook->getUser()) {
+		if((!$facebook_uid = $this->facebook->getUser()) 
+			|| !$this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))) {
 			redirect();
 		}
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');

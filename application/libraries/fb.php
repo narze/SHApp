@@ -54,4 +54,19 @@ class FB {
 		}
 		return TRUE;
 	}
+
+	/**
+	 * Check if current user liked the page (required 'user_likes' permission)
+	 */
+	function isUserLikedPage($facebook_page_id = NULL){
+		if(!$facebook_page_id){
+			return FALSE;
+		}
+		try {
+			$likes = $this->CI->facebook->api('me/likes/'.$facebook_page_id);
+			return isset($likes['data']) && count($likes['data']);
+		} catch (FacebookApiException $e) {
+    	return FALSE;
+    }
+	}
 }
