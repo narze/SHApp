@@ -1,8 +1,9 @@
 <?php
 
 $attributes = array('class' => '', 'id' => '');
-echo form_open('sh/setting/'.$app_install_id.'/'.$user_id.'/'.$app_install_secret_key, $attributes); ?>
+echo form_open($form_url, $attributes); ?>
 <h1>Setting</h1>
+<p><a href="<?php echo $facebook_add_page_app_url;?>">Add app into facebook page</a></p>
 <p>
         <label for="example_field">Example Field</label>
         <?php echo form_error('example_field'); ?>

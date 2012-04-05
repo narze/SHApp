@@ -206,10 +206,16 @@ class Sh extends CI_Controller {
 					
 			$this->form_validation->set_error_delimiters('<br /><span class="error">', '</span>');
 		
+			$form_url = 'sh/setting/'.$app_install_id.'/'.$user_id.'/'.$app_install_secret_key;
+			$facebook_redirect = urlencode(base_url($form_url));
+			$facebook_app_id = $this->config->item('facebook_app_id');
 			$this->load->vars(array(
 				'success' => $success,
 				'data' => $setting['data'],
-				'admin_list' => implode(',', array_keys($setting['admin_list']))
+				'form_url' => $form_url,
+				'admin_list' => implode(',', array_keys($setting['admin_list'])),
+				'facebook_add_page_app_url' => "https://www.facebook.com/dialog/pagetab?app_id={$facebook_app_id}
+&display=page&next={$facebook_redirect}"
 			));
 			if ($this->form_validation->run() == FALSE)
 			{
