@@ -64,8 +64,14 @@ class Home extends CI_Controller {
 		$profile_image_y = $randomapp_settings['profile_image_y'];
 		$profile_image_type = $randomapp_settings['profile_image_type'];
 		$profile_image_facebook_size = $randomapp_settings['profile_image_facebook_size'];
-		$user_image = imagecreatefromstring(file_get_contents("http://graph.facebook.com/{$facebook_uid}/picture?type={$profile_image_type}"));
 
+		$cached_profile_picture = FCPATH.'uploads/'.$facebook_uid.'.png';
+		if(file_exists($cached_profile_picture)) {
+			$user_image = imagecreatefromstring(file_get_contents($cached_profile_picture, FILE_USE_INCLUDE_PATH));
+		} else {
+			$user_image = imagecreatefromstring(file_get_contents("http://graph.facebook.com/{$facebook_uid}/picture?type={$profile_image_type}"));
+			imagepng($user_image, $cached_profile_picture);
+		}
 		
 		if($profile_image_facebook_size != $profile_image_size) { 
 			//Native way
@@ -169,6 +175,7 @@ class Home extends CI_Controller {
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
 
 		$image_path = FCPATH.'uploads/'.$filename.'.png';
+		$user_image_path = FCPATH.'uploads/'.$facebook_uid.'.png';
 		$image_url = base_url().'uploads/'.$filename.'.png';
 		if(is_writable($image_path)) {
 			$randomapp_settings = $this->config->item('randomapp_settings');
@@ -185,6 +192,9 @@ class Home extends CI_Controller {
 
 			if(is_writable($image_path)) {
 				unlink($image_path);
+			}
+			if(is_writable($user_image_path)) {
+				unlink($user_image_path);
 			}
 			$user = $this->facebook->api('me');
 			if(isset($user['link'])) {
