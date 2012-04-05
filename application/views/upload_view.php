@@ -9,8 +9,8 @@
 <body style="background-color:black">
 	<center>
 		<p>&nbsp;</p>
-		<?php	
-			echo '<p>'.anchor($facebook_link, 'ดูภาพของคุณ', 'class="btn btn-danger"').'</p>';
+		<?php
+			echo '<p><a href="#" class="btn btn-danger" onclick="top.location=\''.$facebook_link.'\';">ดูภาพของคุณ</a></p>';
 			echo '<p>'.anchor('home/play', 'เล่นใหม่', 'class="btn"').'</p>';
 		?>
 	</center>
