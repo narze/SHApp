@@ -51,6 +51,7 @@ class Home extends CI_Controller {
 			|| !$this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))) {
 			redirect();
 		}
+
 		$jpgs = glob(FCPATH.'assets/images/random/*.jpg');
 		$pngs = glob(FCPATH.'assets/images/random/*.png');
 		$gifs = glob(FCPATH.'assets/images/random/*.gif');
@@ -58,6 +59,25 @@ class Home extends CI_Controller {
 		$random_image_path = $images[mt_rand(0, count($images)-1)];
 		$random_image_name = pathinfo($random_image_path, PATHINFO_BASENAME);
 		$random_image_url = base_url().'assets/images/random/'.$random_image_name;
+		
+
+
+		$this->load->helper('html');
+		$this->load->helper('form');
+		$this->load->vars(array(
+			'image_url' => $random_image_url,
+			'img_name' => $random_image_name,
+			'facebook_uid' => $facebook_uid
+		));
+		$this->load->view('play_view');
+	}
+
+	function upload() {
+		if((!$facebook_uid = $this->facebook->getUser()) 
+			|| !$this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))) {
+			redirect();
+		}
+
 		$randomapp_settings = $this->config->item('randomapp_settings');
 		$profile_image_size = $randomapp_settings['profile_image_size'];
 		$profile_image_x = $randomapp_settings['profile_image_x'];
@@ -65,39 +85,19 @@ class Home extends CI_Controller {
 		$profile_image_type = $randomapp_settings['profile_image_type'];
 		$profile_image_facebook_size = $randomapp_settings['profile_image_facebook_size'];
 
-		$cached_profile_picture = FCPATH.'uploads/'.$facebook_uid.'.png';
-		if(file_exists($cached_profile_picture)) {
-			$user_image = imagecreatefromstring(file_get_contents($cached_profile_picture, FILE_USE_INCLUDE_PATH));
-		} else {
-			$user_image = imagecreatefromstring(file_get_contents("http://graph.facebook.com/{$facebook_uid}/picture?type={$profile_image_type}"));
-			imagepng($user_image, $cached_profile_picture);
+		$random_image_name = $this->input->post('img_name');
+		$random_image_url = base_url().'assets/images/random/'.$random_image_name;
+		if(!file_exists(FCPATH.'assets/images/random/'.$random_image_name)) {
+			exit('Image not found');
 		}
-		
+
+		$user_image = imagecreatefromstring(file_get_contents("http://graph.facebook.com/{$facebook_uid}/picture?type={$profile_image_type}"));
+
 		if($profile_image_facebook_size != $profile_image_size) { 
 			//Native way
 			$resized = imagecreatetruecolor($profile_image_size, $profile_image_size);
 			imagecopyresampled($resized, $user_image, 0, 0, 0, 0, $profile_image_size, $profile_image_size, $profile_image_facebook_size, $profile_image_facebook_size);
 			$user_image = $resized;
-
-			//GD2 way
-			// $facebook_profile_image_path = FCPATH.'uploads/'.$facebook_uid.'.png';
-			// if(is_writable($facebook_profile_image_path)) {
-			// 	unlink($facebook_profile_image_path);
-			// }
-			// imagepng($user_image, $facebook_profile_image_path);
-
-			// $config['image_library'] = 'gd2';
-			// $config['source_image']	= $facebook_profile_image_path;
-			// $config['create_thumb'] = TRUE;
-			// $config['maintain_ratio'] = TRUE;
-			// $config['width']	 = $profile_image_size;
-			// $config['height']	= $profile_image_size;
-
-			// $this->load->library('image_lib', $config); 
-
-			// $this->image_lib->resize();
-
-			// $user_image = imagecreatefrompng($facebook_profile_image_path);
 		} 
 
 		if(strrpos($random_image_url, '.png') !== FALSE) {
@@ -155,27 +155,15 @@ class Home extends CI_Controller {
 		if(is_writable(FCPATH.'uploads')) {
 			imagepng($background_image, $image_path);
 			imagedestroy($background_image);
-		
-			$this->load->helper('html');
-			$this->load->helper('form');
-			$this->load->vars(array(
-				'image_url' => $image_url
-			));
-			$this->load->view('play_view');
 		} else {
 			exit('Image cannot be saved');
 		}
-	}
 
-	function upload() {
-		if((!$facebook_uid = $this->facebook->getUser()) 
-			|| !$this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))) {
-			redirect();
-		}
+		//Image file created, next is uploading
+
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
 
 		$image_path = FCPATH.'uploads/'.$filename.'.png';
-		$user_image_path = FCPATH.'uploads/'.$facebook_uid.'.png';
 		$image_url = base_url().'uploads/'.$filename.'.png';
 		if(is_writable($image_path)) {
 			$randomapp_settings = $this->config->item('randomapp_settings');
@@ -197,9 +185,7 @@ class Home extends CI_Controller {
 			if(is_writable($image_path)) {
 				unlink($image_path);
 			}
-			if(is_writable($user_image_path)) {
-				unlink($user_image_path);
-			}
+
 			$user = $this->facebook->api('me');
 			if(isset($user['link'])) {
 				$facebook_link = $user['link'];
