@@ -11,7 +11,7 @@
 	<center>
 		<p>&nbsp;</p>
 		<?php
-			echo '<p><a href="#" class="btn btn-danger" onclick="top.location=\''.$facebook_link.'\';">ดูภาพของคุณ</a></p>';
+			echo '<p><a style="cursor: pointer;" class="btn btn-danger" onclick="top.location=\''.$facebook_link.'\';">ดูภาพของคุณ</a></p>';
 			echo '<p>'.anchor('home/play', 'เล่นใหม่', 'class="btn"').'</p>';
 		?>
 	</center>
