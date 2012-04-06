@@ -37,13 +37,7 @@
 </head>
 <body>
 	<div class="container hero-unit">
-		<h1>Welcome to SHApp!</h1>
-		<p>The page you are looking at is being generated dynamically by CodeIgniter.</p>
-		<p>If you would like to edit this page you'll find it located at:</p>
-		<p><code>application/views/welcome_message.php</code></p>
-		<p>The corresponding controller for this page is found at:</p>
-		<p><code>application/controllers/welcome.php</code></p>
-		<p>If you are exploring SHApp for the very first time, you should start by config the <a href="configniter/" class="btn btn-primary btn-large">Configniter</a></p>
+		<h1>Coming Soon!</h1>
 	</div>
 	<div class="alert alert-info span12">
 		<span class="label label-info">Info</span>
