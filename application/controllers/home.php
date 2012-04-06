@@ -69,14 +69,17 @@ class Home extends CI_Controller {
 		$random_image_name = pathinfo($random_image_path, PATHINFO_BASENAME);
 		$random_image_url = base_url().'assets/images/random/'.$random_image_name;
 		
-
+		$randomapp_settings = $this->config->item('randomapp_settings');
 
 		$this->load->helper('html');
 		$this->load->helper('form');
 		$this->load->vars(array(
 			'image_url' => $random_image_url,
 			'img_name' => $random_image_name,
-			'facebook_uid' => $facebook_uid
+			'facebook_uid' => $facebook_uid,
+			'img_x'=> $randomapp_settings['profile_image_x'],
+			'img_y'=> $randomapp_settings['profile_image_y'],
+			'img_size' => $randomapp_settings['profile_image_size']
 		));
 		$this->load->view('play_view');
 	}
