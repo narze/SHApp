@@ -9,7 +9,7 @@
 <body style="background-color:black">
 	<center>
 		<?php
-		echo '<p>'.img($image_url).'</p>';
+		echo '<p style="height:403px;">'.img($image_url).'</p>';
 		echo form_open('home/upload', array('class'=>'form-inline'));
 		?>
 		
