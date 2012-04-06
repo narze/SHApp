@@ -74,7 +74,8 @@ class Home extends CI_Controller {
 
 	function upload() {
 		if((!$facebook_uid = $this->facebook->getUser()) 
-			|| !$this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))) {
+			|| !$this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))
+			|| (!$random_image_name = $this->input->post('img_name'))) {
 			redirect();
 		}
 
@@ -85,7 +86,7 @@ class Home extends CI_Controller {
 		$profile_image_type = $randomapp_settings['profile_image_type'];
 		$profile_image_facebook_size = $randomapp_settings['profile_image_facebook_size'];
 
-		$random_image_name = $this->input->post('img_name');
+		
 		$random_image_url = base_url().'assets/images/random/'.$random_image_name;
 		if(!file_exists(FCPATH.'assets/images/random/'.$random_image_name)) {
 			exit('Image not found');
@@ -141,8 +142,8 @@ class Home extends CI_Controller {
 				$font_file = $original_font_file;
 			}
 			//Shadow
-			imagettftext($background_image, 14, 0, $profile_image_x + $profile_image_size + 15, $profile_image_y + 7, $grey, $font_file, $user['name']);
-			imagettftext($background_image, 14, 0, $profile_image_x + $profile_image_size + 17, $profile_image_y + 9, $white, $font_file, $user['name']);
+			imagettftext($background_image, 13, 0, $profile_image_x + $profile_image_size + 15, $profile_image_y + 7, $grey, $font_file, $user['name']);
+			imagettftext($background_image, 13, 0, $profile_image_x + $profile_image_size + 17, $profile_image_y + 9, $white, $font_file, $user['name']);
 		}
 
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
