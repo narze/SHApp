@@ -52,10 +52,19 @@ class Home extends CI_Controller {
 			redirect();
 		}
 
+
 		$jpgs = glob(FCPATH.'assets/images/random/*.jpg');
 		$pngs = glob(FCPATH.'assets/images/random/*.png');
 		$gifs = glob(FCPATH.'assets/images/random/*.gif');
 		$images = array_merge($jpgs, $pngs, $gifs);
+
+		//Exclude recent image if clicked form in play_view
+		if(count($images) > 1 && ($exclude_this_image = $this->input->post('img_name'))) {
+			$key = array_search(FCPATH.'assets/images/random/'.$exclude_this_image, $images);
+			unset($images[$key]);
+			$images = array_values($images); //Reindex
+		}
+
 		$random_image_path = $images[mt_rand(0, count($images)-1)];
 		$random_image_name = pathinfo($random_image_path, PATHINFO_BASENAME);
 		$random_image_url = base_url().'assets/images/random/'.$random_image_name;

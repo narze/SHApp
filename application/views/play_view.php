@@ -13,14 +13,19 @@
 		echo '<p style="height:403px;">'.img($image_url).'</p>';
 		echo form_open('home/upload', array('class'=>'form-inline'));
 		?>
-		<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />
-		<input style="height:28px;" id="message" type="text" name="message" maxlength="255" value="" <?php echo form_error('message') ? 'class="form-error"':''; ?> placeholder="Message" />
-		<button type="submit" class="btn btn-danger" name="upload">Share!</button>
+			<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />
+			<input style="height:28px;" id="message" type="text" name="message" maxlength="255" value="" <?php echo form_error('message') ? 'class="form-error"':''; ?> placeholder="Message" />
+			<button type="submit" class="btn btn-danger" name="upload">Share!</button>
 		<?php
 
 		echo form_close();
 
-		echo anchor('home/play', 'เล่นใหม่', 'class="btn"');
+		echo form_open('home/play');
+		?>
+			<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />
+			<button type="submit" class="btn" name="upload">เล่นใหม่</button>
+		<?
+		echo form_close();
 	?>
 	</center>
 </body>
