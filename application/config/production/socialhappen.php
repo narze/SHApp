@@ -28,6 +28,7 @@ $config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes';
 $config['mockuphappen_enable'] = TRUE;
 
 $config['randomapp_settings'] = array(
+	'app_title' => 'ล่า ท้า ผี...คุณจะเจอผีอะไร? by SocialHappen',
 	'profile_image_size' => 65,
 	'profile_image_x' => 70,
 	'profile_image_y' => 48,

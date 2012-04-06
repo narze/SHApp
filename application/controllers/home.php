@@ -19,7 +19,11 @@ class Home extends CI_Controller {
 	function index(){
 		if((!$facebook_uid = $this->facebook->getUser()) 
 			|| !$this->fb->hasPermissions()){
-			$this->load->vars('fb_root', $this->fb->getFbRoot());
+			$randomapp_settings = $this->config->item('randomapp_settings');
+			$this->load->vars(array(
+				'fb_root' => $this->fb->getFbRoot(),
+				'app_title' => $randomapp_settings['app_title']
+			));
 			$this->load->view('facebook_connect');
 		} else if ($this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))){			
 			$this->play();
@@ -41,6 +45,10 @@ class Home extends CI_Controller {
 				$facebook_app_id = $this->config->item('facebook_app_id');
 				echo '<script>top.location = "'."https://www.facebook.com/profile.php?id={$page_id}&sk=app_{$facebook_app_id}".'";</script>';
 			} else {
+				$randomapp_settings = $this->config->item('randomapp_settings');
+				$this->load->vars(array(
+					'app_title' => $randomapp_settings['app_title']
+				));
 				$this->load->view('like_view');
 			}
 		}
@@ -79,7 +87,8 @@ class Home extends CI_Controller {
 			'facebook_uid' => $facebook_uid,
 			'img_x'=> $randomapp_settings['profile_image_x'],
 			'img_y'=> $randomapp_settings['profile_image_y'],
-			'img_size' => $randomapp_settings['profile_image_size']
+			'img_size' => $randomapp_settings['profile_image_size'],
+			'app_title' => $randomapp_settings['app_title']
 		));
 		$this->load->view('play_view');
 	}
@@ -205,7 +214,10 @@ class Home extends CI_Controller {
 			}	else {
 				$facebook_link = 'https://facebook.com/'.$facebook_uid;
 			}
-			$this->load->vars('facebook_link', $facebook_link);
+			$this->load->vars(array(
+				'facebook_link' => $facebook_link,
+				'app_title' => $randomapp_settings['app_title']
+			));
 			$this->load->view('upload_view');
 		} else {
 			//image not found

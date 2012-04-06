@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>ล่า ท้า ผี...คุณจะเจอผีอะไร? by SocialHappen</title>
+	<title><?php echo $app_title; ?></title>
 	<?php $this->load->view('ga'); ?>
 </head>
 <body>
