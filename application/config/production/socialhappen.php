@@ -9,7 +9,7 @@ $config['mongodb_username'] = 'sohap';
 $config['mongodb_password'] = 'figyfigy';
 $config['mongodb_host'] = 'localhost';
 $config['mongodb_port'] = 27017;
-$config['mongodb_database'] = '';
+$config['mongodb_database'] = 'static';
 
 //Facebook : Fill these if you want to use facebook library
 $config['facebook_app_id'] = '163186860471398';
