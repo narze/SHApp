@@ -28,11 +28,11 @@ $config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes';
 $config['mockuphappen_enable'] = TRUE;
 
 $config['randomapp_settings'] = array(
-	'app_title' => 'สงกรานต์นี้...คุณจะโดนใครสาด? by SocialHappen',
-	'profile_image_size' => 65,
-	'profile_image_x' => 70,
-	'profile_image_y' => 48,
-	'profile_image_type' => 'square',
-	'profile_image_facebook_size' => 50,
-	'default_message' => "สงกรานต์นี้...คุณจะโดนใครสาด?"
+	'app_title' => 'สงกรานต์นี้...คุณจะโดนอะไรสาด? by SocialHappen',
+	'profile_image_size' => 160,
+	'profile_image_x' => 41,
+	'profile_image_y' => 133,
+	'profile_image_type' => 'large',
+	'profile_image_facebook_size' => 160,
+	'default_message' => "สงกรานต์นี้...คุณจะโดนอะไรสาด?"
 );

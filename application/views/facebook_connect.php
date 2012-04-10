@@ -5,8 +5,8 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<?php $this->load->view('ga'); ?>
 	</head>
-	<body bgcolor="black">
+	<body>
 		<?php echo $fb_root;?>
-		<center><a id="fblogin" onclick="fblogin();"><img src="<?php echo base_url('assets/images/start.jpg');?>" /></a></center>
+		<center><a id="fblogin" onclick="fblogin();" style="cursor:pointer;"><img src="<?php echo base_url('assets/images/start.gif');?>" /></a></center>
 	</body>
 </html>
