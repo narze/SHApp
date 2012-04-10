@@ -22,7 +22,8 @@ class Home extends CI_Controller {
 			$randomapp_settings = $this->config->item('randomapp_settings');
 			$this->load->vars(array(
 				'fb_root' => $this->fb->getFbRoot(),
-				'app_title' => $randomapp_settings['app_title']
+				'app_title' => $randomapp_settings['app_title'],
+				'app_bgcolor' => $randomapp_settings['app_bgcolor']
 			));
 			$this->load->view('facebook_connect');
 		} else if ($this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))){			
@@ -47,7 +48,8 @@ class Home extends CI_Controller {
 			} else {
 				$randomapp_settings = $this->config->item('randomapp_settings');
 				$this->load->vars(array(
-					'app_title' => $randomapp_settings['app_title']
+					'app_title' => $randomapp_settings['app_title'],
+					'app_bgcolor' => $randomapp_settings['app_bgcolor']
 				));
 				$this->load->view('like_view');
 			}
@@ -100,7 +102,8 @@ class Home extends CI_Controller {
 			'img_y'=> $randomapp_settings['profile_image_y']-3,
 			'img_size' => $randomapp_settings['profile_image_size'],
 			'app_title' => $randomapp_settings['app_title'],
-			'profile_image_type' => $randomapp_settings['profile_image_type']
+			'profile_image_type' => $randomapp_settings['profile_image_type'],
+			'app_bgcolor' => $randomapp_settings['app_bgcolor']
 		));
 		$this->load->view('play_view');
 	}
@@ -237,7 +240,8 @@ class Home extends CI_Controller {
 			}
 			$this->load->vars(array(
 				'facebook_link' => $facebook_link,
-				'app_title' => $randomapp_settings['app_title']
+				'app_title' => $randomapp_settings['app_title'],
+				'app_bgcolor' => $randomapp_settings['app_bgcolor']
 			));
 			$this->load->view('upload_view');
 		} else {

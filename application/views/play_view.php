@@ -10,7 +10,7 @@
 	</style>
 	<?php $this->load->view('ga'); ?>
 </head>
-<body>
+<body <?php echo $app_bgcolor ? 'style="background-color:'.$app_bgcolor.';"' : ''; ?>>
 	<center>
 		<div class="img-box">
 			<?php echo img($image_url); ?>

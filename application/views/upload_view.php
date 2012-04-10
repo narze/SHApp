@@ -6,7 +6,7 @@
 	<link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.css');?>" />
 	<?php $this->load->view('ga'); ?>
 </head>
-<body style="padding-top:50px;">
+<body style="padding-top:50px;<?php echo $app_bgcolor ? 'background-color:'.$app_bgcolor.';' : ''; ?>">
 	<center>
 		<?php
 			echo '<p><a style="cursor: pointer;" class="btn btn-primary btn-large" onclick="top.location=\''.$facebook_link.'\';">ดูภาพของคุณ</a></p>';
