@@ -60,24 +60,35 @@ class Home extends CI_Controller {
 			redirect();
 		}
 
-
-		$jpgs = glob(FCPATH.'assets/images/random/*.jpg');
-		$pngs = glob(FCPATH.'assets/images/random/*.png');
-		$gifs = glob(FCPATH.'assets/images/random/*.gif');
-		$images = array_merge($jpgs, $pngs, $gifs);
-
-		//Exclude recent image if clicked form in play_view
-		if(count($images) > 1 && ($exclude_this_image = $this->input->post('img_name'))) {
-			$key = array_search(FCPATH.'assets/images/random/'.$exclude_this_image, $images);
-			unset($images[$key]);
-			$images = array_values($images); //Reindex
-		}
-
-		$random_image_path = $images[mt_rand(0, count($images)-1)];
-		$random_image_name = pathinfo($random_image_path, PATHINFO_BASENAME);
-		$random_image_url = base_url().'assets/images/random/'.$random_image_name;
-		
 		$randomapp_settings = $this->config->item('randomapp_settings');
+
+		if($this->config->item('static_server_enable')) { //From static server
+			$exclude_this_image = $this->input->post('img_name');
+			$random_image_name = rand(1, $randomapp_settings['max_ramdom_number']).'.jpg';
+			//Exclude recent image if clicked form in play_view
+			if($random_image_name == $exclude_this_image) {
+				while($random_image_name == $exclude_this_image) {
+					$random_image_name = rand(1, $randomapp_settings['max_ramdom_number']).'.jpg';
+				}
+			}
+			$random_image_url = $this->config->item('static_server_path').'images/random/'.$random_image_name;
+		} else { //From local file
+			$jpgs = glob(FCPATH.'assets/images/random/*.jpg');
+			$pngs = glob(FCPATH.'assets/images/random/*.png');
+			$gifs = glob(FCPATH.'assets/images/random/*.gif');
+			$images = array_merge($jpgs, $pngs, $gifs);
+
+			//Exclude recent image if clicked form in play_view
+			if(count($images) > 1 && ($exclude_this_image = $this->input->post('img_name'))) {
+				$key = array_search(FCPATH.'assets/images/random/'.$exclude_this_image, $images);
+				unset($images[$key]);
+				$images = array_values($images); //Reindex
+			}
+
+			$random_image_path = $images[mt_rand(0, count($images)-1)];
+			$random_image_name = pathinfo($random_image_path, PATHINFO_BASENAME);
+			$random_image_url = base_url().'assets/images/random/'.$random_image_name;
+		}
 
 		$this->load->helper('html');
 		$this->load->helper('form');
@@ -85,8 +96,8 @@ class Home extends CI_Controller {
 			'image_url' => $random_image_url,
 			'img_name' => $random_image_name,
 			'facebook_uid' => $facebook_uid,
-			'img_x'=> $randomapp_settings['profile_image_x'],
-			'img_y'=> $randomapp_settings['profile_image_y'],
+			'img_x'=> $randomapp_settings['profile_image_x']-3,
+			'img_y'=> $randomapp_settings['profile_image_y']-3,
 			'img_size' => $randomapp_settings['profile_image_size'],
 			'app_title' => $randomapp_settings['app_title'],
 			'profile_image_type' => $randomapp_settings['profile_image_type']
@@ -108,10 +119,17 @@ class Home extends CI_Controller {
 		$profile_image_type = $randomapp_settings['profile_image_type'];
 		$profile_image_facebook_size = $randomapp_settings['profile_image_facebook_size'];
 
-		
-		$random_image_url = base_url().'assets/images/random/'.$random_image_name;
-		if(!file_exists(FCPATH.'assets/images/random/'.$random_image_name)) {
-			exit('Image not found');
+		if($this->config->item('static_server_enable')) { //From static server
+			$random_image_url = $this->config->item('static_server_path').'images/random/'.$random_image_name;
+			if (!fopen($random_image_url, "r")) {
+				exit('Image not found');
+			}
+		}
+		else { // From Local file
+			$random_image_url = base_url().'assets/images/random/'.$random_image_name;
+			if(!file_exists(FCPATH.'assets/images/random/'.$random_image_name)) {
+				exit('Image not found');
+			}
 		}
 
 		$user_image = imagecreatefromstring(file_get_contents("http://graph.facebook.com/{$facebook_uid}/picture?type={$profile_image_type}"));

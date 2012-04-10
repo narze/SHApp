@@ -26,6 +26,8 @@ $config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes';
 //	do socialhappen api request
 //}
 $config['mockuphappen_enable'] = TRUE;
+$config['static_server_enable'] = TRUE;
+$config['static_server_path'] = 'http://static.localhost.com/apps/songkran/';
 
 $config['randomapp_settings'] = array(
 	'app_title' => 'สงกรานต์นี้...คุณจะโดนอะไรสาด? by SocialHappen',
@@ -34,5 +36,6 @@ $config['randomapp_settings'] = array(
 	'profile_image_y' => 133,
 	'profile_image_type' => 'large',
 	'profile_image_facebook_size' => 160,
-	'default_message' => "สงกรานต์นี้...คุณจะโดนอะไรสาด?"
+	'default_message' => "สงกรานต์นี้...คุณจะโดนอะไรสาด?",
+	'max_ramdom_number' => 20 //Total files (if $config['static_server_enable'] = TRUE)
 );

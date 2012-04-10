@@ -9,7 +9,7 @@ $config['mongodb_username'] = 'sohap';
 $config['mongodb_password'] = 'figyfigy';
 $config['mongodb_host'] = 'localhost';
 $config['mongodb_port'] = 27017;
-$config['mongodb_database'] = 'ghost';
+$config['mongodb_database'] = 'songkran';
 
 //Facebook : Fill these if you want to use facebook library
 $config['facebook_app_id'] = '299915470082039';
@@ -26,13 +26,16 @@ $config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes';
 //	do socialhappen api request
 //}
 $config['mockuphappen_enable'] = TRUE;
+$config['static_server_enable'] = TRUE;
+$config['static_server_path'] = 'http://sita3.figabyte.com/apps/songkran/';
 
 $config['randomapp_settings'] = array(
-	'app_title' => 'สงกรานต์นี้...คุณจะโดนใครสาด? by SocialHappen',
-	'profile_image_size' => 65,
-	'profile_image_x' => 70,
-	'profile_image_y' => 48,
-	'profile_image_type' => 'square',
-	'profile_image_facebook_size' => 50,
-	'default_message' => "สงกรานต์นี้...คุณจะโดนใครสาด?"
+	'app_title' => 'สงกรานต์นี้...คุณจะโดนอะไรสาด? by SocialHappen',
+	'profile_image_size' => 160,
+	'profile_image_x' => 41,
+	'profile_image_y' => 133,
+	'profile_image_type' => 'large',
+	'profile_image_facebook_size' => 160,
+	'default_message' => "สงกรานต์นี้...คุณจะโดนอะไรสาด?",
+	'max_ramdom_number' => 20 //Total files (if $config['static_server_enable'] = TRUE)
 );
