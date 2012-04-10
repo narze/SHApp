@@ -7,6 +7,7 @@
 	<style type="text/css">
 	.img-box { width:403px;height:403px;margin-bottom:20px;position:relative; }
 	.user-profile { position: absolute; overflow: hidden; border:3px solid #fff; width:<?php echo $img_size;?>px; height:<?php echo $img_size;?>px; left:<?php echo $img_x;?>px; top:<?php echo $img_y;?>px; }
+	.user-profile img { width:<?php echo $img_size;?>px; height:<?php echo $img_size;?>px; }
 	</style>
 	<?php $this->load->view('ga'); ?>
 </head>
@@ -21,7 +22,7 @@
 			<?php echo form_open('home/upload', array('class'=>'form-inline')); ?>
 			<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />
 			<input style="height:37px;" class="input-large" id="message" type="text" name="message" maxlength="255" value="" <?php echo form_error('message') ? 'class="form-error"':''; ?> placeholder="Message" />
-			<button id="share_button" type="submit" class="btn btn-primary btn-large" name="upload">Share!</button>
+			<button id="share_button" type="submit" class="btn btn-danger btn-large" name="upload">Share!</button>
 			<?php echo form_close();
 			echo form_open('home/play'); ?>
 			<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />

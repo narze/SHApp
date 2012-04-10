@@ -9,7 +9,7 @@
 <body style="padding-top:50px;<?php echo $app_bgcolor ? 'background-color:'.$app_bgcolor.';' : ''; ?>">
 	<center>
 		<?php
-			echo '<p><a style="cursor: pointer;" class="btn btn-primary btn-large" onclick="top.location=\''.$facebook_link.'\';">ดูภาพของคุณ</a></p>';
+			echo '<p><a style="cursor: pointer;" class="btn btn-danger btn-large" onclick="top.location=\''.$facebook_link.'\';">ดูภาพของคุณ</a></p>';
 			echo '<p>'.anchor('home/play', 'เล่นใหม่', 'class="btn btn-large"').'</p>';
 		?>
 	</center>

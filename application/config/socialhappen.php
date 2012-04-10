@@ -27,16 +27,16 @@ $config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes';
 //}
 $config['mockuphappen_enable'] = TRUE;
 $config['static_server_enable'] = TRUE;
-$config['static_server_path'] = 'http://static.localhost.com/apps/songkran/';
+$config['static_server_path'] = 'http://static.localhost.com/apps/ghost/';
 
 $config['randomapp_settings'] = array(
-	'app_title' => 'สงกรานต์นี้...คุณจะโดนอะไรสาด? by SocialHappen',
-	'profile_image_size' => 160,
-	'profile_image_x' => 41,
-	'profile_image_y' => 133,
-	'profile_image_type' => 'large',
-	'profile_image_facebook_size' => 160,
-	'default_message' => "สงกรานต์นี้...คุณจะโดนอะไรสาด?",
-	'max_ramdom_number' => 20, //Total files (if $config['static_server_enable'] = TRUE)
-	'app_bgcolor' => '#fff'
+	'app_title' => 'ล่า ท้า ผี คุณจะเจอผีแบบไหน?',
+	'profile_image_size' => 65,
+	'profile_image_x' => 70,
+	'profile_image_y' => 48,
+	'profile_image_type' => 'square',
+	'profile_image_facebook_size' => 50,
+	'default_message' => "ล่า ท้า ผี คุณจะเจอผีแบบไหน?",
+	'max_ramdom_number' => 21, //Total files (if $config['static_server_enable'] = TRUE)
+	'app_bgcolor' => '#000'
 );

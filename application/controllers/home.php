@@ -185,10 +185,10 @@ class Home extends CI_Controller {
 				$font_file = $original_font_file;
 			}
 			//Shadow
-			//imagettftext($background_image, 13, 0, $profile_image_x + $profile_image_size + 15, $profile_image_y + 7, $grey, $font_file, $user['name']);
-			//imagettftext($background_image, 13, 0, $profile_image_x + $profile_image_size + 17, $profile_image_y + 9, $white, $font_file, $user['name']);
-			imagettftext($background_image, 15, 0, $profile_image_x, $profile_image_y - 21, $white, $font_file, $user['name']);
-			imagettftext($background_image, 15, 0, $profile_image_x, $profile_image_y - 23, $grey, $font_file, $user['name']);
+			imagettftext($background_image, 13, 0, $profile_image_x + $profile_image_size + 15, $profile_image_y + 7, $grey, $font_file, $user['name']);
+			imagettftext($background_image, 13, 0, $profile_image_x + $profile_image_size + 17, $profile_image_y + 9, $white, $font_file, $user['name']);
+			//imagettftext($background_image, 15, 0, $profile_image_x, $profile_image_y - 21, $white, $font_file, $user['name']);
+			//imagettftext($background_image, 15, 0, $profile_image_x, $profile_image_y - 23, $grey, $font_file, $user['name']);
 		}
 
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
