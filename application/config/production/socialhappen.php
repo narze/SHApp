@@ -12,8 +12,8 @@ $config['mongodb_port'] = 27017;
 $config['mongodb_database'] = 'ghost';
 
 //Facebook : Fill these if you want to use facebook library
-$config['facebook_app_id'] = '125984734199028';
-$config['facebook_app_secret'] = '0a7b12697d16233101b6c455960207f5';
+$config['facebook_app_id'] = '214547751984695';
+$config['facebook_app_secret'] = 'd3a1fcba7100ef80a42ce754e831cf7a';
 $config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes';
 
 //MockupHappen : Use only if you want to use app without socialhappen api calls
