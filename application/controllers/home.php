@@ -63,8 +63,10 @@ class Home extends CI_Controller {
 		}
 
 		$randomapp_settings = $this->config->item('randomapp_settings');
+		$static_server_enable = $this->config->item('static_server_enable');
+		$static_server_path = $this->config->item('static_server_path');
 
-		if($this->config->item('static_server_enable')) { //From static server
+		if($static_server_enable) { //From static server
 			$exclude_this_image = $this->input->post('img_name');
 			$random_image_name = rand(1, $randomapp_settings['max_ramdom_number']).'.jpg';
 			//Exclude recent image if clicked form in play_view
@@ -73,7 +75,7 @@ class Home extends CI_Controller {
 					$random_image_name = rand(1, $randomapp_settings['max_ramdom_number']).'.jpg';
 				}
 			}
-			$random_image_url = $this->config->item('static_server_path').'images/random/'.$random_image_name;
+			$random_image_url = $static_server_path.'images/random/'.$random_image_name;
 		} else { //From local file
 			$jpgs = glob(FCPATH.'assets/images/random/*.jpg');
 			$pngs = glob(FCPATH.'assets/images/random/*.png');
@@ -103,7 +105,9 @@ class Home extends CI_Controller {
 			'img_size' => $randomapp_settings['profile_image_size'],
 			'app_title' => $randomapp_settings['app_title'],
 			'profile_image_type' => $randomapp_settings['profile_image_type'],
-			'app_bgcolor' => $randomapp_settings['app_bgcolor']
+			'app_bgcolor' => $randomapp_settings['app_bgcolor'],
+			'static_server_enable' => $static_server_enable,
+			'static_server_path' => $static_server_path
 		));
 		$this->load->view('play_view');
 	}
@@ -122,8 +126,11 @@ class Home extends CI_Controller {
 		$profile_image_type = $randomapp_settings['profile_image_type'];
 		$profile_image_facebook_size = $randomapp_settings['profile_image_facebook_size'];
 
-		if($this->config->item('static_server_enable')) { //From static server
-			$random_image_url = $this->config->item('static_server_path').'images/random/'.$random_image_name;
+		$static_server_enable = $this->config->item('static_server_enable');
+		$static_server_path = $this->config->item('static_server_path');
+
+		if($static_server_enable) { //From static server
+			$random_image_url = $static_server_path.'images/random/'.$random_image_name;
 			if (!fopen($random_image_url, "r")) {
 				exit('Image not found');
 			}
@@ -241,7 +248,9 @@ class Home extends CI_Controller {
 			$this->load->vars(array(
 				'facebook_link' => $facebook_link,
 				'app_title' => $randomapp_settings['app_title'],
-				'app_bgcolor' => $randomapp_settings['app_bgcolor']
+				'app_bgcolor' => $randomapp_settings['app_bgcolor'],
+				'static_server_enable' => $static_server_enable,
+				'static_server_path' => $static_server_path
 			));
 			$this->load->view('upload_view');
 		} else {

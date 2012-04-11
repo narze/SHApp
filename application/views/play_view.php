@@ -3,7 +3,11 @@
 	<title><?php echo $app_title; ?></title>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<?php if($static_server_enable) { ?>
+	<link rel="stylesheet" href="<?php echo $static_server_path.'css/bootstrap.css';?>" />
+	<?php } else { ?>
 	<link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.css');?>" />
+	<?php } ?>
 	<style type="text/css">
 	.img-box { width:403px;height:403px;margin-bottom:20px;position:relative; }
 	.user-profile { position: absolute; overflow: hidden; border:3px solid #fff; width:<?php echo $img_size;?>px; height:<?php echo $img_size;?>px; left:<?php echo $img_x;?>px; top:<?php echo $img_y;?>px; }
