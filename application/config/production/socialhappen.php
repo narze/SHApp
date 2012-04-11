@@ -31,11 +31,11 @@ $config['static_server_path'] = 'https://static.socialhappen.com/apps/songkran/'
 
 $config['randomapp_settings'] = array(
 	'app_title' => 'สงกรานต์นี้...คุณจะโดนอะไรสาด? by SocialHappen',
-	'profile_image_size' => 95,
-	'profile_image_x' => 33,
-	'profile_image_y' => 185,
-	'profile_image_type' => 'large',
-	'profile_image_facebook_size' => 95,
+	'profile_image_size' => 100,
+	'profile_image_x' => 28,
+	'profile_image_y' => 181,
+	'profile_image_type' => 'normal',
+	'profile_image_facebook_size' => 100,
 	'default_message' => "สงกรานต์นี้...คุณจะโดนอะไรสาด?",
 	'max_ramdom_number' => 25, //Total files (if $config['static_server_enable'] = TRUE)
 	'app_bgcolor' => '#fff'
