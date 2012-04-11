@@ -11,7 +11,7 @@ class Home extends CI_Controller {
 			$facebook_app_id = $this->config->item('facebook_app_id');
 			// echo '<script>top.location = "'."https://www.facebook.com/profile.php?id={$page_id}&sk=app_{$facebook_app_id}".'";</script>';
 		}
-		// echo '<pre>';
+		//echo '<pre>';
 		// var_dump($signedRequest);
 		// echo '</pre>';
 	}
@@ -107,7 +107,8 @@ class Home extends CI_Controller {
 			'profile_image_type' => $randomapp_settings['profile_image_type'],
 			'app_bgcolor' => $randomapp_settings['app_bgcolor'],
 			'static_server_enable' => $static_server_enable,
-			'static_server_path' => $static_server_path
+			'static_server_path' => $static_server_path,
+			'fb_root' => $this->fb->getFbRoot()
 		));
 		$this->load->view('play_view');
 	}
@@ -194,8 +195,8 @@ class Home extends CI_Controller {
 			//Shadow
 			//imagettftext($background_image, 13, 0, $profile_image_x + $profile_image_size + 15, $profile_image_y + 7, $grey, $font_file, $user['name']);
 			//imagettftext($background_image, 13, 0, $profile_image_x + $profile_image_size + 17, $profile_image_y + 9, $white, $font_file, $user['name']);
-			imagettftext($background_image, 15, 0, $profile_image_x, $profile_image_y - 21, $white, $font_file, $user['name']);
-			imagettftext($background_image, 15, 0, $profile_image_x, $profile_image_y - 23, $grey, $font_file, $user['name']);
+			imagettftext($background_image, 15, 0, $profile_image_x - 3, $profile_image_y + $profile_image_size + 23, $white, $font_file, $user['name']);
+			imagettftext($background_image, 15, 0, $profile_image_x - 3, $profile_image_y + $profile_image_size + 25, $grey, $font_file, $user['name']);
 		}
 
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');

@@ -9,12 +9,12 @@ $config['mongodb_username'] = 'sohap';
 $config['mongodb_password'] = 'figyfigy';
 $config['mongodb_host'] = 'localhost';
 $config['mongodb_port'] = 27017;
-$config['mongodb_database'] = 'songkran';
+$config['mongodb_database'] = 'postit';
 
 //Facebook : Fill these if you want to use facebook library
-$config['facebook_app_id'] = '299915470082039';
-$config['facebook_app_secret'] = '3c149c76eb9e94759cd65ddcb28fdb70';
-$config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes';
+$config['facebook_app_id'] = '214547751984695';
+$config['facebook_app_secret'] = 'd3a1fcba7100ef80a42ce754e831cf7a';
+$config['facebook_app_scope'] = 'user_about_me,user_photos,publish_stream,user_likes';
 
 //MockupHappen : Use only if you want to use app without socialhappen api calls
 //This will mockup all api request and return values corresponding to api names
@@ -27,16 +27,16 @@ $config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes';
 //}
 $config['mockuphappen_enable'] = TRUE;
 $config['static_server_enable'] = TRUE;
-$config['static_server_path'] = 'https://static.socialhappen.com/apps/songkran/';
+$config['static_server_path'] = 'https://static.socialhappen.com/apps/postit/';
 
 $config['randomapp_settings'] = array(
-	'app_title' => 'สงกรานต์นี้...คุณจะโดนอะไรสาด? by SocialHappen',
-	'profile_image_size' => 160,
-	'profile_image_x' => 41,
-	'profile_image_y' => 133,
-	'profile_image_type' => 'large',
-	'profile_image_facebook_size' => 160,
-	'default_message' => "สงกรานต์นี้...คุณจะโดนอะไรสาด?",
+	'app_title' => 'อยากจะแปะบอกความรู้สึกถึง...',
+	'profile_image_size' => 50,
+	'profile_image_x' => 18,
+	'profile_image_y' => 316,
+	'profile_image_type' => 'square',
+	'profile_image_facebook_size' => 50,
+	'default_message' => "บอกความรู้สึกถึงเพื่อนได้ที่ ",
 	'max_ramdom_number' => 20, //Total files (if $config['static_server_enable'] = TRUE)
 	'app_bgcolor' => '#fff'
 );
