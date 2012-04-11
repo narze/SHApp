@@ -27,7 +27,7 @@ $config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes';
 //}
 $config['mockuphappen_enable'] = TRUE;
 $config['static_server_enable'] = TRUE;
-$config['static_server_path'] = 'https://static.socialhappen.com/apps/songkran/';
+$config['static_server_path'] = 'http://static.socialhappen.com/apps/songkran/';
 
 $config['randomapp_settings'] = array(
 	'app_title' => 'สงกรานต์นี้...คุณจะโดนอะไรสาด? by SocialHappen',
