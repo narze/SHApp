@@ -40,7 +40,7 @@
 	</style>
 
 	<link rel="stylesheet" href="<?php echo base_url('assets/js/jquery.facebook.multifriend.select-list.css');?>" />
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url().'assets/js/jquery.facebook.multifriend.select.min.js';?>"></script>
 
 	<?php $this->load->view('ga'); ?>
