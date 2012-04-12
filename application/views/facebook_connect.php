@@ -7,6 +7,6 @@
 	</head>
 	<body <?php echo $app_bgcolor ? 'style="background-color:'.$app_bgcolor.';"' : ''; ?>>
 		<?php echo $fb_root;?>
-		<center><a id="fblogin" onclick="fblogin();" style="cursor:pointer;"><img src="<?php echo base_url('assets/images/start.gif');?>" /></a></center>
+		<center><a id="fblogin" onclick="fblogin();" style="cursor:pointer;"><img src="<?php echo base_url('assets/images/start.jpg');?>" /></a></center>
 	</body>
 </html>
