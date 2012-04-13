@@ -23,7 +23,6 @@
 		-webkit-border-radius:4px;
 		-moz-border-radius:4px;
 		border-radius:4px;
-		cursor:pointer;
 	}
 	.my-name {
 		font-weight:bold;
@@ -37,6 +36,7 @@
 		top:<?php echo $randomapp_settings['text_2_y']; ?>px;
 		left:<?php echo $randomapp_settings['text_2_x']; ?>px;
 	}
+    .jfmfs-friend {cursor: pointer;}
     .jfmfs-friend:hover {background-color:#fbfbfb;}
 	</style>
 
@@ -88,12 +88,13 @@
 		</div>
 	</center>
 
-    <script>       
+    <script type="text/javascript">
+          
         function fbcallback(){
             $("#jfmfs-container").jfmfs({ max_selected: 1, max_selected_message: "{0} of {1} selected"});
         }
 
-        $(function(){
+        $(document).ready(function() {
             
             function bind_jfmfs() {            
                 $("body").off('click','#jfmfs-container .jfmfs-friend').on('click','#jfmfs-container .jfmfs-friend', function(event) 
