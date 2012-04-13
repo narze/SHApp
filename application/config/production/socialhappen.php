@@ -38,5 +38,9 @@ $config['randomapp_settings'] = array(
 	'profile_image_facebook_size' => 50,
 	'default_message' => "แปะรักให้เธอรู้ (Post-it love) ",
 	'max_ramdom_number' => 30, //Total files (if $config['static_server_enable'] = TRUE)
-	'app_bgcolor' => '#fff'
+	'app_bgcolor' => '#fff',
+	'text_1_x' => 83,
+	'text_1_y' => 311,
+	'text_2_x' => 83,
+	'text_2_y' => 350,
 );

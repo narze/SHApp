@@ -10,8 +10,8 @@
 	<?php } ?>
 	<style type="text/css">
 	.img-box { width:403px;height:403px;margin-bottom:20px;position:relative; }
-	.tag-pic { cursor:pointer; position: absolute; overflow: hidden; border:1px solid #ccc; width:<?php echo $img_size;?>px; height:<?php echo $img_size;?>px; left:<?php echo $img_x;?>px; top:<?php echo $img_y;?>px; }
-	.tag-pic img {min-width:<?php echo $img_size;?>px;}
+	.tag-pic { cursor:pointer; position: absolute; overflow: hidden; background-color:#fbfbfb; border:1px solid #ccc; width:<?php echo $img_size;?>px; height:<?php echo $img_size;?>px; left:<?php echo $img_x;?>px; top:<?php echo $img_y;?>px; }
+    .tag-pic img {min-width:<?php echo $img_size;?>px;}
 	.friends-selector-popup {
 		display:none;
 		position: absolute;
@@ -28,15 +28,16 @@
 	.my-name {
 		font-weight:bold;
 		position: absolute;
-		top: 311px;
-		left: 83px;
+		top: <?php echo $randomapp_settings['text_1_y']; ?>px;
+		left: <?php echo $randomapp_settings['text_1_x']; ?>px;
 	}
 	.my-friend-name {
 		font-weight:bold;
 		position: absolute;
-		top:350px;
-		left:83px;
+		top:<?php echo $randomapp_settings['text_2_y']; ?>px;
+		left:<?php echo $randomapp_settings['text_2_x']; ?>px;
 	}
+    .jfmfs-friend:hover {background-color:#fbfbfb;}
 	</style>
 
 	<link rel="stylesheet" href="<?php echo base_url('assets/js/jquery.facebook.multifriend.select-list.css');?>" />
@@ -51,7 +52,7 @@
 		<div class="img-box">
 			<?php echo img($image_url); ?>
 			<div class="tag-pic" id="img_1"></div>
-			<div class="my-name"></div>
+			<div class="my-name"><?php echo $my_name?></div>
 			<div class="my-friend-name"></div>
 
 			<div class="friends-selector-popup">
@@ -65,12 +66,13 @@
 		</div>
 
 		<div id="share_form">
-			<?php echo form_open('tag/execute', array('class'=>'form-inline', 'id'=>'tag_form')); ?>
+			<?php echo form_open('home/execute', array('class'=>'form-inline', 'id'=>'tag_form')); ?>
 			<input name="img_name" type="hidden" value="<?php echo $img_name;?>" />
 			<input id="my_friend_name" name="my_friend_name" type="hidden" value="" />
 			<input id="tagged" type="hidden" name="tagged" value="<?php echo set_value('tagged'); ?>"  />
 			<input style="height:37px;" class="input-large" id="message" type="text" name="message" maxlength="255" value="" <?php echo form_error('message') ? 'class="form-error"':''; ?> placeholder="Message" />
-			<button id="submit_form" type="submit" class="btn btn-primary btn-large" name="upload">Share!</button>
+            <button id="select_friend" type="button" class="btn btn-large">เลือกเพื่อน</button>
+			<button id="submit_form" type="submit" class="btn btn-primary btn-large" name="upload" style="display:none;">Share!</button>
 			<?php echo form_close();
 			echo form_open('home/play'); ?>
 			<button type="submit" class="btn" name="upload">เล่นใหม่</button>
@@ -86,86 +88,38 @@
 		</div>
 	</center>
 
-    <script>
-       
+    <script>       
         function fbcallback(){
-                jfmfs_init();
-        }
-         
-        function jfmfs_init() {
-            FB.api('/me', function(response) {
-            	//console.log(response);
-            	$('.my-name').text(response.name);
-                $("#jfmfs-container").jfmfs({ max_selected: 1, max_selected_message: "{0} of {1} selected"});
-                $("#loading").hide();
-                //$(".friends-selector-popup").show();
-                open_friends_list();
-            });
-        }
-
-        function open_friends_list() {	
-            var idStr = $('#img_1').attr('id');
-            var imgNo = idStr.charAt( idStr.length-1 );
-            bind_jfmfs(imgNo);
-            $('.friends-selector-popup').show();
-        }
-
-        function getSelectedIds() {
-            var img = [];
-            img[0] = $('#img_1').data('facebookId');
-            return img;
-        }
-
-        function bind_jfmfs(imgNo) {            
-                $("body").off('click',"#jfmfs-container").on('click',"#jfmfs-container", function(event) {
-                    // console.log($(this).data('jfmfs'));
-                    $("#tagged").val($(this).data('jfmfs').getSelectedIds().join(','));
-                    $(this).data('jfmfs').clearSelected();
-                });
-                $("body").off('click','#jfmfs-container .jfmfs-friend')
-                    .on('click','#jfmfs-container .jfmfs-friend', function(event){
-                    var facebookId = $(this).attr('id');
-
-                    //var duplicated = getSelectedIds().join(',').indexOf(facebookId) != -1;
-                    //if(!duplicated) {
-                        $('#img_'+imgNo).data('facebookId',facebookId).html($('<img/>').attr('src', 'https://graph.facebook.com/'+facebookId+'/picture?type=<?php echo $profile_image_type; ?>'));
-                        $('.friends-selector-popup').hide();
-                        $('.my-friend-name').text($(this).find('.friend-name').text());
-                        $('#my_friend_name').val($(this).find('.friend-name').text());
-                    //} else {
-                        //alert('ไม่สามารถแท็กคนซ้ำได้');
-                    //}
-                });
-
-                $(".friends-selector-popup").hover(
-                  function () {
-                    $(this).addClass("hover");
-                  },
-                  function () {
-                    $(this).removeClass("hover");
-                  }
-                );
-                function hidePopupEvent() {
-                    var fsPopup = $('.friends-selector-popup');
-                    var popupVisible = fsPopup.is(':visible');
-                    if(popupVisible && !fsPopup.hasClass('hover')){
-                        fsPopup.hide();
-                        $("body").unbind('mouseup');
-                    } else if(popupVisible) {
-                        $("body").one('mouseup', hidePopupEvent);
-                    }
-                }
-                $("body").one('mouseup', hidePopupEvent);
+            $("#jfmfs-container").jfmfs({ max_selected: 1, max_selected_message: "{0} of {1} selected"});
         }
 
         $(function(){
-            $("body").on('click',"#img_1", function(){
-                open_friends_list();
+            
+            function bind_jfmfs() {            
+                $("body").off('click','#jfmfs-container .jfmfs-friend').on('click','#jfmfs-container .jfmfs-friend', function(event) 
+                {
+                    var facebookId = $(this).attr('id');
+
+                    $('#img_1').data('facebookId',facebookId).html($('<img/>').attr('src', 'https://graph.facebook.com/'+facebookId+'/picture?type=<?php echo $profile_image_type; ?>'));
+                    $("#tagged").val(facebookId);
+                    $('.friends-selector-popup').hide();
+                    $('.my-friend-name').text($(this).find('.friend-name').text());
+                    $('#my_friend_name').val($(this).find('.friend-name').text());
+                    $('#select_friend').hide();
+                    $('#submit_form').show();
+                }); 
+            }
+
+            $('#select_friend, .tag-pic').click(function () {
+                bind_jfmfs();
+                $('.friends-selector-popup').show();
             });
-            $('#submit_form').click(function () {
-            	$('#share_form').hide();
-            	$('#progress_bar').show();
+
+            $('#tag_form').submit(function () {
+                $('#share_form').hide();
+                $('#progress_bar').show();
             });
+            
         });
     </script>
 </body>

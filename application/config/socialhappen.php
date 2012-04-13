@@ -12,8 +12,8 @@ $config['mongodb_port'] = 27017;
 $config['mongodb_database'] = 'shapp';
 
 //Facebook : Fill these if you want to use facebook library
-$config['facebook_app_id'] = '178273098960535';
-$config['facebook_app_secret'] = '4fe404f3a509a667a676b91a310026c4';
+$config['facebook_app_id'] = '204755022911798';
+$config['facebook_app_secret'] = 'd3a1fcba7100ef80a42ce754e831cf7a';
 $config['facebook_app_scope'] = 'user_about_me,user_photos,publish_stream,user_likes';
 
 //MockupHappen : Use only if you want to use app without socialhappen api calls
@@ -38,5 +38,9 @@ $config['randomapp_settings'] = array(
 	'profile_image_facebook_size' => 50,
 	'default_message' => "แปะรักให้เธอรู้ (Post-it love) ",
 	'max_ramdom_number' => 30, //Total files (if $config['static_server_enable'] = TRUE)
-	'app_bgcolor' => '#fff'
+	'app_bgcolor' => '#fff',
+	'text_1_x' => 83,
+	'text_1_y' => 311,
+	'text_2_x' => 83,
+	'text_2_y' => 350,
 );

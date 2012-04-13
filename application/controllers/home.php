@@ -11,9 +11,6 @@ class Home extends CI_Controller {
 			$facebook_app_id = $this->config->item('facebook_app_id');
 			// echo '<script>top.location = "'."https://www.facebook.com/profile.php?id={$page_id}&sk=app_{$facebook_app_id}".'";</script>';
 		}
-		//echo '<pre>';
-		// var_dump($signedRequest);
-		// echo '</pre>';
 	}
 
 	function index(){
@@ -94,6 +91,8 @@ class Home extends CI_Controller {
 			$random_image_url = base_url().'assets/images/random/'.$random_image_name;
 		}
 
+		$user = $this->facebook->api('me');
+
 		$this->load->helper('html');
 		$this->load->helper('form');
 		$this->load->vars(array(
@@ -108,76 +107,69 @@ class Home extends CI_Controller {
 			'app_bgcolor' => $randomapp_settings['app_bgcolor'],
 			'static_server_enable' => $static_server_enable,
 			'static_server_path' => $static_server_path,
-			'fb_root' => $this->fb->getFbRoot()
+			'fb_root' => $this->fb->getFbRoot(),
+			'my_name' => isset($user['name']) ? $user['name'] : '',
+			'randomapp_settings' => $randomapp_settings
 		));
 		$this->load->view('play_view');
 	}
 
-	function upload() {
-		if((!$facebook_uid = $this->facebook->getUser()) 
-			|| !$this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))
-			|| (!$random_image_name = $this->input->post('img_name'))) {
-			redirect();
-		}
+	function execute(){
 
 		$randomapp_settings = $this->config->item('randomapp_settings');
-		$profile_image_size = $randomapp_settings['profile_image_size'];
-		$profile_image_x = $randomapp_settings['profile_image_x'];
-		$profile_image_y = $randomapp_settings['profile_image_y'];
-		$profile_image_type = $randomapp_settings['profile_image_type'];
-		$profile_image_facebook_size = $randomapp_settings['profile_image_facebook_size'];
 
-		$static_server_enable = $this->config->item('static_server_enable');
+		$oldsize = $randomapp_settings['profile_image_facebook_size']; //facebook thumbnail size
+		$newsize = isset($randomapp_settings['profile_image_size']) ? $randomapp_settings['profile_image_size'] : 50;
+
+		if(!$this->input->post('tagged')) {
+			echo 'No friend selected.';
+			return false;
+		}
+		$tagged_facebook_uids = explode(',',$this->input->post('tagged'));
+
+		//1. save images into vars
+		$images = $resized = array();
+		foreach($tagged_facebook_uids as $key => $value){
+			$images[$key] = imagecreatefromstring(file_get_contents("http://graph.facebook.com/{$value}/picture"));
+			//Resize if the size is changed
+			if($oldsize != $newsize) { 
+				$resized[$key] = imagecreatetruecolor($newsize, $newsize);
+				imagecopyresampled($resized[$key], $images[$key], 0, 0, 0, 0, $newsize, $newsize, $oldsize, $oldsize);
+				// imagecopyresampled(dst_image, src_image, dst_x, dst_y, src_x, src_y, dst_w, dst_h, src_w, src_h)
+			} else {
+				$resized[$key] = $images[$key];
+			}
+		}
+
+		//2. get template image and x,y for each image
 		$static_server_path = $this->config->item('static_server_path');
+		$random_image_name = $this->input->post('img_name');
+		$background_image_url = $static_server_path.'images/random/'.$random_image_name;
 
-		if($static_server_enable) { //From static server
-			$random_image_url = $static_server_path.'images/random/'.$random_image_name;
-			if (!fopen($random_image_url, "r")) {
-				exit('Image not found');
-			}
-		}
-		else { // From Local file
-			$random_image_url = base_url().'assets/images/random/'.$random_image_name;
-			if(!file_exists(FCPATH.'assets/images/random/'.$random_image_name)) {
-				exit('Image not found');
-			}
-		}
-
-		$user_image = imagecreatefromstring(file_get_contents("http://graph.facebook.com/{$facebook_uid}/picture?type={$profile_image_type}"));
-
-		if($profile_image_facebook_size != $profile_image_size) { 
-			//Native way
-			$resized = imagecreatetruecolor($profile_image_size, $profile_image_size);
-			imagecopyresampled($resized, $user_image, 0, 0, 0, 0, $profile_image_size, $profile_image_size, $profile_image_facebook_size, $profile_image_facebook_size);
-			$user_image = $resized;
-		} 
-
-		if(strrpos($random_image_url, '.png') !== FALSE) {
-			$background_image = imagecreatefrompng($random_image_url);
-		} else if(strrpos($random_image_url, '.jpg') !== FALSE) {
-			$background_image = imagecreatefromjpeg($random_image_url);
-		} else if(strrpos($random_image_url, '.gif') !== FALSE) {
-			$background_image = imagecreatefromgif($random_image_url);
+		$background_image_size = getimagesize($background_image_url);
+		$background_image_width = $background_image_size[0];
+		$background_image_height = $background_image_size[1];
+		if(strrpos($background_image_url, '.png') !== FALSE) {
+			$background_image = imagecreatefrompng($background_image_url);
+		} else if(strrpos($background_image_url, '.jpg') !== FALSE) {
+			$background_image = imagecreatefromjpeg($background_image_url);
+		} else if(strrpos($background_image_url, '.gif') !== FALSE) {
+			$background_image = imagecreatefromgif($background_image_url);
 		}
 
-		$white = imagecolorallocate($background_image, 255, 255, 255);
 		$grey = imagecolorallocate($background_image, 100, 100, 100);
 
-		// Draw a white rectangle
-		imagefilledrectangle(
-			$background_image,
-			$profile_image_x -3,
-			$profile_image_y -3,
-			$profile_image_x + $profile_image_size + 2,
-			$profile_image_y + $profile_image_size + 2,
-			$white
-		);
+		$tag_x[0] = $randomapp_settings['profile_image_x'];
+		$tag_y[0] = $randomapp_settings['profile_image_y'];
 
-		imagecopymerge($background_image, $user_image, $profile_image_x, $profile_image_y, 0, 0, $profile_image_size, $profile_image_size, 100);
+		//3. create a new image
+		// header ('Content-Type: image/png'); //for test
+		// $background_image = @imagecreatetruecolor(600, 400); // create new blank image
+		$text_color = imagecolorallocate($background_image, 233, 14, 91);
+		// imagestring($background_image, 1, 5, 5,  'U R TAGGED', $text_color);
+		imagecopymerge($background_image, $resized[0], $tag_x[0], $tag_y[0], 0, 0, $newsize, $newsize, 100);
 
-		//insert name
-		$user = $this->facebook->api('me');
-		if(isset($user['name'])) {	
+		//4. insert name
 			//Try caching font (because windows' apache would lock it!)
 			$original_font_file = FCPATH.'assets/fonts/tahoma.ttf';
 			$cached_font_file = FCPATH.'assets/fonts/tahoma.cached.ttf';
@@ -192,59 +184,91 @@ class Home extends CI_Controller {
 			} else {
 				$font_file = $original_font_file;
 			}
+
+		$user = $this->facebook->api('me');
+		if(isset($user['name'])) {	
 			//Shadow
-			//imagettftext($background_image, 13, 0, $profile_image_x + $profile_image_size + 15, $profile_image_y + 7, $grey, $font_file, $user['name']);
-			//imagettftext($background_image, 13, 0, $profile_image_x + $profile_image_size + 17, $profile_image_y + 9, $white, $font_file, $user['name']);
-			imagettftext($background_image, 15, 0, $profile_image_x - 3, $profile_image_y + $profile_image_size + 23, $white, $font_file, $user['name']);
-			imagettftext($background_image, 15, 0, $profile_image_x - 3, $profile_image_y + $profile_image_size + 25, $grey, $font_file, $user['name']);
-		}
-
-		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
-
-		$image_path = FCPATH.'uploads/'.$filename.'.png';
-		$image_url = base_url().'uploads/'.$filename.'.png';
-		if(is_writable($image_path)) {
-			unlink($image_path);
-		}
-		if(is_writable(FCPATH.'uploads')) {
-			imagepng($background_image, $image_path);
-			imagedestroy($background_image);
-		} else {
-			exit('Image cannot be saved');
-		}
-
-		//Image file created, next is uploading
-
-		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
-
-		$image_path = FCPATH.'uploads/'.$filename.'.png';
-		$image_url = base_url().'uploads/'.$filename.'.png';
-		if(is_writable($image_path)) {
-			$randomapp_settings = $this->config->item('randomapp_settings');
-			if($user_message = $this->input->post('message')) {
-				$user_message .= "\n\n\n";
-			}
-			$default_message = $randomapp_settings['default_message'];
+			$my_name_po_x = $randomapp_settings['text_1_x'];
+			$my_name_po_y = $randomapp_settings['text_1_y'];
 			
-			$page_id = $this->config->item('mockuphappen_facebook_page_id');
-			$facebook_app_id = $this->config->item('facebook_app_id');
-			$app_facebook_url = "https://www.facebook.com/profile.php?id={$page_id}&sk=app_{$facebook_app_id}";
-			$this->facebook->setFileUploadSupport(true);
-			$args = array(
-				'message' => $user_message.$default_message."\n".$app_facebook_url,
-				'image' => '@'.$image_path
+			imagettftext($background_image, 12, 0, $my_name_po_x, $my_name_po_y+17, $grey, $font_file, $user['name']); 
+			
+		}
+
+		$friend_name = $this->input->post('my_friend_name');
+		if(isset($friend_name)) {
+			$my_friend_po_x = $randomapp_settings['text_2_x'];
+			$my_friend_po_y = $randomapp_settings['text_2_y'];
+			imagettftext($background_image, 12, 0, $my_friend_po_x, $my_friend_po_y+15, $grey, $font_file, $friend_name); 
+		}
+
+		//set random filename
+		mt_srand();
+		$filename = md5(uniqid(mt_rand()));
+		imagepng($background_image, $filepath = FCPATH.'uploads/'.$filename.'.png');
+
+		$this->uploadToFacebook($filepath, $tagged_facebook_uids);
+	}
+
+	function uploadToFacebook($filepath, $tagged_facebook_uids) {
+
+		//4. upload to facebook, if album not exists, create it
+		$randomapp_settings = $this->config->item('randomapp_settings');
+		if($user_message = $this->input->post('message')) {
+			$user_message .= "\n\n\n";
+		}
+		$default_message = $randomapp_settings['default_message'];
+		$page_id = $this->config->item('mockuphappen_facebook_page_id');
+		$facebook_app_id = $this->config->item('facebook_app_id');
+		$app_facebook_url = "https://www.facebook.com/profile.php?id={$page_id}&sk=app_{$facebook_app_id}";
+		
+		//upload image
+		$this->facebook->setFileUploadSupport(true);
+
+		$args = array(
+			'message' => $user_message.$default_message."\n".$app_facebook_url,
+			'image' => '@'.$filepath
+		);
+		$data = $this->facebook->api('me/photos', 'POST', $args);
+		
+
+		//5. tag
+		$image_size = @getimagesize($filepath);
+		$image_width = $image_size[0];
+		$image_height = $image_size[1];
+		$tag_x[0] = $randomapp_settings['profile_image_x'];
+		$tag_y[0] = $randomapp_settings['profile_image_y'];
+
+		$thumbnail_size = isset($randomapp_settings['profile_image_size']) ? $randomapp_settings['profile_image_size'] : 50;
+		
+		//assigning users to tag and cordinates
+		foreach($tagged_facebook_uids as $key => $value){
+			$argstag = array(
+				'to' => $value,
+				'x' => ($tag_x[$key]+($thumbnail_size/2))*100/$image_width,
+				'y' => ($tag_y[$key]+($thumbnail_size/2))*100/$image_height
 			);
-			$data = $this->facebook->api('me/photos', 'POST', $args);
+			//Perform tag
+			$datatag = $this->facebook->api('/' . $data['id'] . '/tags', 'post', $argstag);
+		}
 
-			if(is_writable($image_path)) {
-				unlink($image_path);
-			}
+		$photo = $this->facebook->api($data['id']);
 
+		//6. remove temp file
+		if(is_writable($filepath)) {
+			unlink($filepath);
+		}
+
+		//7. Load success view
+		$static_server_enable = $this->config->item('static_server_enable');
+		$static_server_path = $this->config->item('static_server_path');
+
+		if(isset($photo['link'])) {
 			$user = $this->facebook->api('me');
 			if(isset($user['link'])) {
 				$facebook_link = $user['link'];
 			}	else {
-				$facebook_link = 'https://facebook.com/'.$facebook_uid;
+				$facebook_link = 'https://facebook.com/me';
 			}
 			$this->load->vars(array(
 				'facebook_link' => $facebook_link,
@@ -255,12 +279,7 @@ class Home extends CI_Controller {
 			));
 			$this->load->view('upload_view');
 		} else {
-			//image not found
 			redirect();
 		}
-	}
-
-	function invite() {
-		echo 'coming soon';
 	}
 }
