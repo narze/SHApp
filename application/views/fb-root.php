@@ -10,7 +10,7 @@
 		});
 		FB.getLoginStatus(function(response) {
 			if (response.status === 'connected' && typeof fbcallback === 'function') {
-				fbcallback();
+				fbcallback(response);
 			}
 		  	window.fblogin = function () {
 				FB.login(function(response) {

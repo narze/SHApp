@@ -1,7 +1,7 @@
 <?php
 /**
  *  SocialHappen Platform Library
- *  Last update 24 Feb 2012
+ *  Last update 14 Apr 2012
  *  @author Manassarn M., Wachiraph C.
  */
 
@@ -13,7 +13,7 @@ class SocialHappen {
 	
 	function __construct(){
 		$this->CI =& get_instance();
-		$this->CI->load->config('socialhappen');
+		$this->CI->load->config('static_socialhappen');
 		$this->sh_api_url = $this->CI->config->item('api_url');
 		$this->app_id = $this->CI->config->item('app_id');
 		$this->app_secret_key = $this->CI->config->item('app_secret_key');
@@ -39,19 +39,24 @@ class SocialHappen {
 	
 	function sh_curl($args = array()) {
 		if(sizeof($args)>0) {
-			$args = array_merge(
+			/*$args = array_merge(
 								array(
 									'APP_ID'=>$this->app_id,
 									'APP_SECRET_KEY'=> $this->app_secret_key
 									),
-								$args);
+								$args);*/
 			$args = array_change_key_case($args,CASE_LOWER);
-			$postfix = http_build_query($args);
+
+			$postfix = '';
+			foreach($args as $key=>$value) { $postfix .= $key.'='.$value.'&'; }
+			$postfix = rtrim($postfix,'&');
 			
 			$url = $this->sh_api_url . $this->api_method . '/?' . $postfix;
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POST,count($args));
+			curl_setopt($ch, CURLOPT_POSTFIELDS,$postfix);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2); //Remove this when certified
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); //Remove this when certified
 			$response = curl_exec($ch);
