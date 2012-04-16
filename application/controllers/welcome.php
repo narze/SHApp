@@ -133,6 +133,13 @@ class Welcome extends CI_Controller {
 		
 	}
 
+	public function sound_check(){
+		echo 'api_url : '. $this->config->item('api_url').'<br>';
+		echo 'mockuphappen_enable : '. $this->config->item('mockuphappen_enable').'<br>';
+		echo 'facebook_app_id : '. $this->config->item('facebook_app_id').'<br>';
+
+	}
+
 	public function play_app_trigger(){
 		//view-redirect after signup
 		$app_data = $this->input->get('app_data', TRUE);

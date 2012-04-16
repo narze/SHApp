@@ -13,7 +13,7 @@ class SocialHappen {
 	
 	function __construct(){
 		$this->CI =& get_instance();
-		$this->CI->load->config('static_socialhappen');
+		$this->CI->load->config('socialhappen');
 		$this->sh_api_url = $this->CI->config->item('api_url');
 		$this->app_id = $this->CI->config->item('app_id');
 		$this->app_secret_key = $this->CI->config->item('app_secret_key');

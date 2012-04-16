@@ -2,7 +2,7 @@
 //SocialHappen
 $config['app_id'] = 4;
 $config['app_secret_key'] = 'cd14463efa98e6ee00fde6ccd51a9f6d';
-$config['api_url'] = 'https://socialhappen.dyndns.org/socialhappen/api/';
+$config['api_url'] = 'https://socialhappen.dyndns.org/socialhappen/apiv2/';
 
 //Mongodb
 $config['mongodb_username'] = 'sohap'; 
@@ -25,4 +25,4 @@ $config['facebook_app_scope'] = 'user_about_me';
 //} else {
 //	do socialhappen api request
 //}
-$config['mockuphappen_enable'] = TRUE;
+$config['mockuphappen_enable'] = FALSE;
