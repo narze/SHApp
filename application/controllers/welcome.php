@@ -43,7 +43,7 @@ class Welcome extends CI_Controller {
 								'app_install_id' => 0,
 								'app_install_secret_key' => 0,
 							);
-			//$this->load->view('welcome_message');
+							
 		}else{
 
 			/*
@@ -65,7 +65,8 @@ class Welcome extends CI_Controller {
 		}
 
 		$sh_user = $this->call_get_user($app_data);
-		
+
+		/*
 		if($sh_user&& $user_facebook_id){
 			//already member
 			//call play app
@@ -83,8 +84,9 @@ class Welcome extends CI_Controller {
 			//call play app in play_app_trigger
 			
 		}
-	
+		*/
 
+		$this->load->view('welcome_message');
 
 	}
 

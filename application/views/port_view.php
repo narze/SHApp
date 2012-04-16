@@ -71,6 +71,15 @@
 	<script src="<?php echo base_url(); ?>assets/js/jquery-1.7.1.min.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
 	<script>
+		var item_url = new Array();
+		item_url[1] = 'https://www.facebook.com/SocialHappen/app_125984734199028';
+		item_url[2] = 'https://www.facebook.com/SocialHappen/app_299915470082039';
+		item_url[3] = 'https://www.facebook.com/SocialHappen/app_299915470082039';
+		
+		/*item_url[1] = 'https://app2.socialhappen.com/ghost';
+		item_url[2] = 'https://apps.socialhappen.com/songkran';
+		item_url[3] = 'https://app2.socialhappen,com/';*/
+
 		jQuery(document).ready(function(){
 			jQuery('.show').click(function(){
 				var direction = jQuery(this).attr('data-direction');
@@ -80,6 +89,8 @@
 			jQuery('.item').click(function(){
 				var number = jQuery(this).attr('data-number');
 				console.log(number);
+
+				window.top.location = item_url[number];
 			});
 
 		});
