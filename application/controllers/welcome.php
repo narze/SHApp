@@ -40,8 +40,7 @@ class Welcome extends CI_Controller {
 
 			$app_data = array(
 								'app_id' => 0, 
-								'app_install_id' => 0,
-								'app_install_secret_key' => 0,
+								'app_secret_key' => 0,
 							);
 							
 		}else{
@@ -50,8 +49,7 @@ class Welcome extends CI_Controller {
 			print_r(base64_encode(json_encode(
 												array(
 														'app_id' => 1, 
-														'app_install_id' => 2,
-														'app_install_secret_key' => 'asdfghjkasdfghj',
+														'app_secret_key' => 'asdfghjkasdfghj',
 														'user_facebook_id' => '12345678',
 													))));
 			*/
@@ -66,7 +64,7 @@ class Welcome extends CI_Controller {
 
 		$sh_user = $this->call_get_user($app_data);
 
-		/*
+		
 		if($sh_user&& $user_facebook_id){
 			//already member
 			//call play app
@@ -84,9 +82,9 @@ class Welcome extends CI_Controller {
 			//call play app in play_app_trigger
 			
 		}
-		*/
+		
 
-		$this->load->view('welcome_message');
+		//$this->load->view('welcome_message');
 
 	}
 
@@ -100,21 +98,20 @@ class Welcome extends CI_Controller {
 		$app_data = json_decode(base64_decode($app_data), TRUE);
 		
 		$app_id = $app_data['app_id'];
-		$app_install_id = $app_data['app_install_id'];
-		$app_install_secret_key = $app_data['app_install_secret_key'];
+		$app_secret_key = $app_data['app_secret_key'];
 		$user_facebook_id = $app_data['user_facebook_id'];
 
-		$args = compact('app_id', 'app_install_id', 'app_install_secret_key', 'user_facebook_id', 'user_email', 'user_password');
+		$args = compact('app_id', 'app_secret_key', 'user_facebook_id', 'user_email', 'user_password');
 
 		//check args
-		if(isset($app_id) && isset($app_install_id) && isset($app_install_secret_key) && $user_facebook_id && $user_email && $user_password){
-			$args = compact('app_id', 'app_install_id', 'app_install_secret_key', 'user_facebook_id', 'user_email', 'user_password');
+		if(isset($app_id) && isset($app_secret_key) && $user_facebook_id && $user_email && $user_password){
+			$args = compact('app_id', 'app_secret_key', 'user_facebook_id', 'user_email', 'user_password');
 			$signup_result = $this->call_signup($args);
 
 			//show result
 			if($signup_result){
 				if($app_id!=0){
-					$app_data = compact($app_id, $app_install_id, $app_install_secret_key);
+					$app_data = compact($app_id, $app_secret_key);
 					$play_app_result = $this->call_play_app($app_data);
 
 					if($play_app_result){
