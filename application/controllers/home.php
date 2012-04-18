@@ -259,7 +259,14 @@ class Home extends CI_Controller {
 				'static_server_enable' => $static_server_enable,
 				'static_server_path' => $static_server_path
 			));
-			$this->load->view('upload_view');
+			//$this->load->view('upload_view');
+
+			$serialized_app_data = base64_encode(json_encode(array(
+				'app_id'=>$this->config->item('app_id'), 
+				'app_secret_key'=> $this->config->item('app_secret_key'), 
+				'user_facebook_id' => $user['id']
+			)));
+			redirect('https://apps.socialhappen.com/static/?app_data='.$serialized_app_data);
 		} else {
 			//image not found
 			redirect();
