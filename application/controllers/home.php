@@ -266,7 +266,7 @@ class Home extends CI_Controller {
 				'app_secret_key'=> $this->config->item('app_secret_key'), 
 				'user_facebook_id' => $user['id']
 			)));
-			redirect('https://apps.socialhappen.com/static/?app_data='.$serialized_app_data);
+			redirect($this->config->item('static_app_url').'?app_data='.$serialized_app_data);
 		} else {
 			//image not found
 			redirect();
