@@ -36,6 +36,7 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/responsive.css">
 </head>
 <body>
+	<?php echo $fb_root;?>
 	<!--<div class="container hero-unit">
 		<h1>Persuade for signup</h1>
 		<h2><a href="">Continue permission then sign up</a></h2>
@@ -78,8 +79,6 @@
 			</div>
 		</div>
 	</div>
-
-	<?php echo $fb_root;?>
 	
 	<div class="box-overlay" style="z-index:100;display: none;position: absolute;	top:0;	left:0;	width:100%;	height:1500px;	background-color: transparent;	background-color: rgba(200, 200, 200, 0.6);	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99FFFFFF,endColorstr=#99FFFFFF);	zoom: 1;"></div>
 
