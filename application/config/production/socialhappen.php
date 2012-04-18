@@ -15,6 +15,9 @@ $config['mongodb_database'] = 'songkran';
 $config['facebook_app_id'] = '299915470082039';
 $config['facebook_app_secret'] = '3c149c76eb9e94759cd65ddcb28fdb70';
 $config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes';
+$config['facebook_force_like'] = TRUE;
+//Set force like app_id if you want to use other app to force page liking
+$config['facebook_force_like_app_id'] = '299915470082039';
 
 //MockupHappen : Use only if you want to use app without socialhappen api calls
 //This will mockup all api request and return values corresponding to api names
