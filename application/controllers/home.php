@@ -225,10 +225,8 @@ class Home extends CI_Controller {
 			$user_message .= "\n\n\n";
 		}
 		$default_message = $randomapp_settings['default_message'];
-		$page_id = $this->config->item('mockuphappen_facebook_page_id');
-		$facebook_app_id = $this->config->item('facebook_app_id');
-		$app_facebook_url = "https://www.facebook.com/profile.php?id={$page_id}&sk=app_{$facebook_app_id}";
-		
+		$app_facebook_url = base_url();
+
 		//upload image
 		$this->facebook->setFileUploadSupport(true);
 
