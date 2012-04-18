@@ -43,3 +43,5 @@ $config['randomapp_settings'] = array(
 	'max_ramdom_number' => 21, //Total files (if $config['static_server_enable'] = TRUE)
 	'app_bgcolor' => '#000'
 );
+
+$config['static_app_url'] = 'https://apps.localhost.com/static_app/';
