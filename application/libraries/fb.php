@@ -25,7 +25,11 @@ class FB {
 	 * Call facebook graph api
 	 */
 	function api(/* polymorphic */){
-		return $this->facebook->api(func_get_args());
+		try {
+      return $this->facebook->api(func_get_args());
+    } catch (FacebookApiException $e) {
+      return FALSE;
+    }
 	}
 
 	/**
@@ -43,16 +47,20 @@ class FB {
 	 * Check if current user have grant all permissions requested
 	 */
 	function hasPermissions() {
-		$permissions = $this->CI->facebook->api('me/permissions');
-		if(!isset($permissions['data'][0]) || !is_array($permissions['data'][0])) {
-			return FALSE;
-		}
-		foreach(explode(',', $this->CI->config->item('facebook_app_scope')) as $permission) {
-			if(!isset($permissions['data'][0][$permission])) {
+		try {
+			$permissions = $this->CI->facebook->api('me/permissions');
+			if(!isset($permissions['data'][0]) || !is_array($permissions['data'][0])) {
 				return FALSE;
 			}
-		}
-		return TRUE;
+			foreach(explode(',', $this->CI->config->item('facebook_app_scope')) as $permission) {
+				if(!isset($permissions['data'][0][$permission])) {
+					return FALSE;
+				}
+			}
+			return TRUE;
+		} catch (FacebookApiException $e) {
+      return FALSE;
+    }
 	}
 
 	/**
