@@ -234,7 +234,7 @@ class Home extends CI_Controller {
 			
 			$page_id = $this->config->item('mockuphappen_facebook_page_id');
 			$facebook_app_id = $this->config->item('facebook_app_id');
-			$app_facebook_url = "https://www.facebook.com/profile.php?id={$page_id}&sk=app_{$facebook_app_id}";
+			$app_facebook_url = base_url();
 			$this->facebook->setFileUploadSupport(true);
 			$args = array(
 				'message' => $user_message.$default_message."\n".$app_facebook_url,
