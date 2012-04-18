@@ -111,7 +111,7 @@ class Welcome extends CI_Controller {
 			//show result
 			if($signup_result){
 				if($app_id!=0){
-					$app_data = compact($app_id, $app_secret_key);
+					$app_data = compact('app_id', 'app_secret_key', 'user_facebook_id');
 					$play_app_result = $this->call_play_app($app_data);
 
 					if($play_app_result){
@@ -168,7 +168,7 @@ class Welcome extends CI_Controller {
 		if($args){
 			$play_app = $this->socialhappen->request('play_app', $args);
 
-			if($play_app['success']){
+			if(isset($play_app['success']) && $play_app['success']){
 				return TRUE;
 			}else{
 				return FALSE;
