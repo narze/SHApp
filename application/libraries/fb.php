@@ -61,6 +61,8 @@ class FB {
 	function isUserLikedPage($facebook_page_id = NULL){
 		if(!$facebook_page_id){
 			return FALSE;
+		} else if ($this->CI->config->item('facebook_force_like') !== TRUE) {
+			return TRUE;
 		}
 		try {
 			$likes = $this->CI->facebook->api('me/likes/'.$facebook_page_id);

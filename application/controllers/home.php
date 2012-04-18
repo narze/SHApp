@@ -26,19 +26,26 @@ class Home extends CI_Controller {
 		} else if ($this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))){			
 			$this->play();
 		} else {
-			$this->like();
+			$this->_force_like();
 		}
 	}
 
-	function like() {
+	function _force_like() {
 		if(!$facebook_uid = $this->facebook->getUser()) {
 			redirect();
-		} else if($this->fb->isUserLikedPage($this->config->item('mockuphappen_facebook_page_id'))) {
-			redirect('home/play');
 		} else {
 			$signedRequest = $this->facebook->getSignedRequest();
+			//if not have signed request or page mismatch
 			if(!isset($signedRequest['page']['id']) 
 				|| ($signedRequest['page']['id'] != $this->config->item('mockuphappen_facebook_page_id'))) {
+				$page_id = $this->config->item('mockuphappen_facebook_page_id');
+				if($facebook_force_like_app_id = $this->config->item('facebook_force_like_app_id')) {
+					$facebook_app_id = $facebook_force_like_app_id;
+				} else {
+					$facebook_app_id = $this->config->item('facebook_app_id');
+				}
+				echo '<script>top.location = "'."https://www.facebook.com/profile.php?id={$page_id}&sk=app_{$facebook_app_id}".'";</script>';
+			} else if($this->config->item('facebook_app_id') != $this->config->item('facebook_force_like_app_id')) {
 				$page_id = $this->config->item('mockuphappen_facebook_page_id');
 				$facebook_app_id = $this->config->item('facebook_app_id');
 				echo '<script>top.location = "'."https://www.facebook.com/profile.php?id={$page_id}&sk=app_{$facebook_app_id}".'";</script>';

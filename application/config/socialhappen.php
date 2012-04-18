@@ -15,6 +15,9 @@ $config['mongodb_database'] = 'shapp';
 $config['facebook_app_id'] = '214547751984695';
 $config['facebook_app_secret'] = 'd3a1fcba7100ef80a42ce754e831cf7a';
 $config['facebook_app_scope'] = 'user_about_me,user_photos,publish_stream,user_likes';
+$config['facebook_force_like'] = TRUE;
+//Set force like app_id if you want to use other app to force page liking
+$config['facebook_force_like_app_id'] = '214547751984695';
 
 //MockupHappen : Use only if you want to use app without socialhappen api calls
 //This will mockup all api request and return values corresponding to api names
