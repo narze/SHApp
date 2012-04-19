@@ -43,7 +43,7 @@ class Welcome extends CI_Controller {
 								'app_secret_key' => 0,
 							);
 							
-		}else{
+		} else {
 
 			/*
 			print_r(base64_encode(json_encode(
@@ -65,14 +65,14 @@ class Welcome extends CI_Controller {
 		$sh_user = $this->call_get_user($app_data);
 
 		
-		if($sh_user&& $user_facebook_id){
+		if($sh_user['success'] && $user_facebook_id){
 			//already member
 			//call play app
 			$play_app_result = $this->call_play_app($app_data);
 
 			$this->load->view('port_view');
 
-		}else{
+		} else {
 			//any other case
 			$data = array('app_data' => base64_encode(json_encode($app_data)));
 
@@ -109,22 +109,22 @@ class Welcome extends CI_Controller {
 			$signup_result = $this->call_signup($args);
 
 			//show result
-			if($signup_result){
+			if($signup_result['success']){
 				if($app_id!=0){
 					$app_data = compact('app_id', 'app_secret_key', 'user_facebook_id');
 					$play_app_result = $this->call_play_app($app_data);
 
-					if($play_app_result){
-						echo json_encode(array('result' => 'ok', 'message' => 'sucessfully log play app'));
-					}else{
-						echo json_encode(array('result' => 'error', 'message' => 'log play app error'));
+					if($play_app_result['success']){
+						echo json_encode(array('result' => 'ok', 'message' => 'sucessfully log play app', 'data' => $play_app_result));
+					} else {
+						echo json_encode(array('result' => 'error', 'message' => 'log play app error', 'data' => $play_app_result));
 					}
-				}else{
-					echo json_encode(array('result' => 'ok', 'message' => 'sucessfully sign-up'));
+				} else {
+					echo json_encode(array('result' => 'ok', 'message' => 'sucessfully sign-up', 'data' => $signup_result));
 				}
 				
-			}else{
-				echo json_encode(array('result' => 'error', 'message' => 'signup error'));
+			} else {
+				echo json_encode(array('result' => 'error', 'message' => 'signup error', 'data' => $signup_result));
 			}
 		}
 		
@@ -152,46 +152,43 @@ class Welcome extends CI_Controller {
 	//private functions
 	private function call_get_user($args = NULL){
 		if($args){
-			$sh_user = $this->socialhappen->request('get_user', $args);
-			if($sh_user['success']){
-				return TRUE;
-			}else{
-				return FALSE;
+			$result = $this->socialhappen->request('get_user', $args);
+			if(isset($result['success'])){
+				return $result;
+			} else {
+				$result['success'] = FALSE;
+				return $result;
 			}
 		}
-
 		return FALSE;
-
 	}
 
 	private function call_play_app($args = NULL){
 		if($args){
-			$play_app = $this->socialhappen->request('play_app', $args);
+			$result = $this->socialhappen->request('play_app', $args);
 
-			if(isset($play_app['success']) && $play_app['success']){
-				return TRUE;
-			}else{
-				return FALSE;
+			if(isset($result['success'])){
+				return $result;
+			} else {
+				$result['success'] = FALSE;
+				return $result;
 			}
 		}
-
 		return FALSE;
-
 	}
 
 	private function call_signup($args = NULL){
 		if($args){
-			$signup = $this->socialhappen->request('signup', $args);
+			$result = $this->socialhappen->request('signup', $args);
 
-			if($signup['success']){
-				return TRUE;
-			}else{
-				return FALSE;
+			if(isset($result['success'])){
+				return $result;
+			} else {
+				$result['success'] = FALSE;
+				return $result;
 			}
 		}
-
 		return FALSE;
-
 	}
 	
 }
