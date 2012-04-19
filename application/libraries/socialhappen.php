@@ -33,7 +33,7 @@ class SocialHappen {
 			}
 			$this->set_api_method($method);
 			$response = $this->sh_curl($args);			
-			return $this->check_response($response);
+			return $this->check_response($response, $method, $args);
 		}
 	}
 	
@@ -68,12 +68,14 @@ class SocialHappen {
 		}
 	}
 	
-	function check_response($response){
+	function check_response($response, $method, $args){
 		if(!$response) {
 			log_message('error','Response error : '.$response);
 			return array(
-						'error'=>'',
-						'message' => 'Connection Error'
+						'error' => '',
+						'message' => 'Connection Error',
+						'method' => $method,
+						'args' => $args
 					);
 		} else if ( $this->bad_response($response) ){
 			return $response;
