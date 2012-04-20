@@ -44,4 +44,5 @@ $config['randomapp_settings'] = array(
 	'app_bgcolor' => '#000'
 );
 
+$config['static_app_enable'] = FALSE;
 $config['static_app_url'] = 'https://apps.socialhappen.com/static/';
