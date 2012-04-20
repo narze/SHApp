@@ -192,106 +192,108 @@ class Home extends CI_Controller {
 				$font_file = $original_font_file;
 			}
 
-		$user = $this->facebook->api('me');
-		if(isset($user['name'])) {	
-			//Shadow
-			$my_name_po_x = $randomapp_settings['text_1_x'];
-			$my_name_po_y = $randomapp_settings['text_1_y'];
-			
-			imagettftext($background_image, 12, 0, $my_name_po_x, $my_name_po_y+17, $grey, $font_file, $user['name']); 
-			
-		}
-
-		$friend_name = $this->input->post('my_friend_name');
-		if(isset($friend_name)) {
-			$my_friend_po_x = $randomapp_settings['text_2_x'];
-			$my_friend_po_y = $randomapp_settings['text_2_y'];
-			imagettftext($background_image, 12, 0, $my_friend_po_x, $my_friend_po_y+15, $grey, $font_file, $friend_name); 
-		}
-
-		//set random filename
-		mt_srand();
-		$filename = md5(uniqid(mt_rand()));
-		imagepng($background_image, $filepath = FCPATH.'uploads/'.$filename.'.png');
-
-		$this->uploadToFacebook($filepath, $tagged_facebook_uids);
-	}
-
-	function uploadToFacebook($filepath, $tagged_facebook_uids) {
-
-		//4. upload to facebook, if album not exists, create it
-		$randomapp_settings = $this->config->item('randomapp_settings');
-		if($user_message = $this->input->post('message')) {
-			$user_message .= "\n\n\n";
-		}
-		$default_message = $randomapp_settings['default_message'];
-		$app_facebook_url = base_url();
-
-		//upload image
-		$this->facebook->setFileUploadSupport(true);
-
-		$args = array(
-			'message' => $user_message.$default_message."\n".$app_facebook_url,
-			'image' => '@'.$filepath
-		);
-		$data = $this->facebook->api('me/photos', 'POST', $args);
-		
-
-		//5. tag
-		$image_size = @getimagesize($filepath);
-		$image_width = $image_size[0];
-		$image_height = $image_size[1];
-		$tag_x[0] = $randomapp_settings['profile_image_x'];
-		$tag_y[0] = $randomapp_settings['profile_image_y'];
-
-		$thumbnail_size = isset($randomapp_settings['profile_image_size']) ? $randomapp_settings['profile_image_size'] : 50;
-		
-		//assigning users to tag and cordinates
-		foreach($tagged_facebook_uids as $key => $value){
-			$argstag = array(
-				'to' => $value,
-				'x' => ($tag_x[$key]+($thumbnail_size/2))*100/$image_width,
-				'y' => ($tag_y[$key]+($thumbnail_size/2))*100/$image_height
-			);
-			//Perform tag
-			$datatag = $this->facebook->api('/' . $data['id'] . '/tags', 'post', $argstag);
-		}
-
-		$photo = $this->facebook->api($data['id']);
-
-		//6. remove temp file
-		if(is_writable($filepath)) {
-			unlink($filepath);
-		}
-
-		//7. Load success view
-		$static_server_enable = $this->config->item('static_server_enable');
-		$static_server_path = $this->config->item('static_server_path');
-
-		if(isset($photo['link'])) {
+		try {
 			$user = $this->facebook->api('me');
-			if(isset($user['link'])) {
-				$facebook_link = $user['link'];
-			}	else {
-				$facebook_link = 'https://facebook.com/me';
-			}
-			$this->load->vars(array(
-				'facebook_link' => $facebook_link,
-				'app_title' => $randomapp_settings['app_title'],
-				'app_bgcolor' => $randomapp_settings['app_bgcolor'],
-				'static_server_enable' => $static_server_enable,
-				'static_server_path' => $static_server_path
-			));
-			//$this->load->view('upload_view');
 
-			$serialized_app_data = base64_encode(json_encode(array(
-				'app_id'=>$this->config->item('app_id'), 
-				'app_secret_key'=> $this->config->item('app_secret_key'), 
-				'user_facebook_id' => $user['id']
-			)));
-			redirect($this->config->item('static_app_url').'?app_data='.$serialized_app_data);
-		} else {
-			redirect();
+			if(isset($user['name'])) {	
+				//Shadow
+				$my_name_po_x = $randomapp_settings['text_1_x'];
+				$my_name_po_y = $randomapp_settings['text_1_y'];
+				
+				imagettftext($background_image, 12, 0, $my_name_po_x, $my_name_po_y+17, $grey, $font_file, $user['name']); 
+				
+			}
+
+			$friend_name = $this->input->post('my_friend_name');
+			if(isset($friend_name)) {
+				$my_friend_po_x = $randomapp_settings['text_2_x'];
+				$my_friend_po_y = $randomapp_settings['text_2_y'];
+				imagettftext($background_image, 12, 0, $my_friend_po_x, $my_friend_po_y+15, $grey, $font_file, $friend_name); 
+			}
+
+			//set random filename
+			mt_srand();
+			$filename = md5(uniqid(mt_rand()));
+			imagepng($background_image, $filepath = FCPATH.'uploads/'.$filename.'.png');
+
+			//4. upload to facebook, if album not exists, create it
+			$randomapp_settings = $this->config->item('randomapp_settings');
+			if($user_message = $this->input->post('message')) {
+				$user_message .= "\n\n\n";
+			}
+			$default_message = $randomapp_settings['default_message'];
+			$app_facebook_url = base_url();
+
+			//upload image
+			$this->facebook->setFileUploadSupport(true);
+
+			$args = array(
+				'message' => $user_message.$default_message."\n".$app_facebook_url,
+				'image' => '@'.$filepath
+			);
+		
+			$data = $this->facebook->api('me/photos', 'POST', $args);
+
+			//5. tag
+			$image_size = @getimagesize($filepath);
+			$image_width = $image_size[0];
+			$image_height = $image_size[1];
+			$tag_x[0] = $randomapp_settings['profile_image_x'];
+			$tag_y[0] = $randomapp_settings['profile_image_y'];
+
+			$thumbnail_size = isset($randomapp_settings['profile_image_size']) ? $randomapp_settings['profile_image_size'] : 50;
+			
+			//assigning users to tag and cordinates
+			foreach($tagged_facebook_uids as $key => $value){
+				$argstag = array(
+					'to' => $value,
+					'x' => ($tag_x[$key]+($thumbnail_size/2))*100/$image_width,
+					'y' => ($tag_y[$key]+($thumbnail_size/2))*100/$image_height
+				);
+				//Perform tag
+				$datatag = $this->facebook->api('/' . $data['id'] . '/tags', 'post', $argstag);
+			}
+
+			$photo = $this->facebook->api($data['id']);
+
+			//6. remove temp file
+			if(is_writable($filepath)) {
+				unlink($filepath);
+			}
+
+			//7. Load success view
+			$static_server_enable = $this->config->item('static_server_enable');
+			$static_server_path = $this->config->item('static_server_path');
+
+			if(isset($photo['link'])) {
+				if($this->config->item('static_app_enable')) {
+					$serialized_app_data = base64_encode(json_encode(array(
+						'app_id'=>$this->config->item('app_id'), 
+						'app_secret_key'=> $this->config->item('app_secret_key'), 
+						'user_facebook_id' => $user['id']
+					)));
+					redirect($this->config->item('static_app_url').'?app_data='.$serialized_app_data);
+				} else {
+					if(isset($user['link'])) {
+						$facebook_link = $user['link'];
+					}	else {
+						$facebook_link = 'https://facebook.com/'.$facebook_uid;
+					}
+					$this->load->vars(array(
+						'facebook_link' => $facebook_link,
+						'app_title' => $randomapp_settings['app_title'],
+						'app_bgcolor' => $randomapp_settings['app_bgcolor'],
+						'static_server_enable' => $static_server_enable,
+						'static_server_path' => $static_server_path
+					));
+					$this->load->view('upload_view');
+				}
+			}
+		} catch (FacebookApiException $e) {
+			if(is_writable($filepath)) {
+				unlink($filepath);
+			}
+			redirect('?facebook_error=1');
 		}
 	}
 }

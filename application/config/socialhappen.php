@@ -48,4 +48,5 @@ $config['randomapp_settings'] = array(
 	'text_2_y' => 350,
 );
 
+$config['static_app_enable'] = TRUE;
 $config['static_app_url'] = 'https://apps.localhost.com/static_app/';
