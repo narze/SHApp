@@ -240,19 +240,24 @@ class Home extends CI_Controller {
 
 				unlink($image_path);
 
+				if(isset($user['link'])) {
+					$facebook_link = $user['link'];
+				}	else {
+					$facebook_link = 'https://facebook.com/'.$facebook_uid;
+				}
+
 				if($this->config->item('static_app_enable')) {
 					$serialized_app_data = base64_encode(json_encode(array(
 						'app_id'=>$this->config->item('app_id'), 
 						'app_secret_key'=> $this->config->item('app_secret_key'), 
-						'user_facebook_id' => $user['id']
+						'user_facebook_id' => $user['id'],
+						'data' => array(
+							'message' => $this->config->item('static_app_message'),
+							'link' => $facebook_link
+						)
 					)));
 					redirect($this->config->item('static_app_url').'?app_data='.$serialized_app_data);
 				} else {
-					if(isset($user['link'])) {
-						$facebook_link = $user['link'];
-					}	else {
-						$facebook_link = 'https://facebook.com/'.$facebook_uid;
-					}
 					$this->load->vars(array(
 						'facebook_link' => $facebook_link,
 						'app_title' => $randomapp_settings['app_title'],
