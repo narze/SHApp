@@ -51,6 +51,7 @@ class Welcome extends CI_Controller {
 														'app_id' => 1, 
 														'app_secret_key' => 'asdfghjkasdfghj',
 														'user_facebook_id' => '12345678',
+														'data' => array('message' => 'message', 'link' => 'link')
 													))));
 			*/
 		
