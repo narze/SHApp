@@ -50,3 +50,4 @@ $config['randomapp_settings'] = array(
 
 $config['static_app_enable'] = TRUE;
 $config['static_app_url'] = 'https://apps.localhost.com/static_app/';
+$config['static_app_message'] = 'ดูภาพของคุณได้ที่';
