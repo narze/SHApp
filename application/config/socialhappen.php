@@ -30,16 +30,16 @@ $config['facebook_force_like_app_id'] = '204755022911798';
 //}
 $config['mockuphappen_enable'] = TRUE;
 $config['static_server_enable'] = TRUE;
-$config['static_server_path'] = 'http://static.localhost.com/apps/ghost/';
+$config['static_server_path'] = 'http://static.localhost.com/apps/posetonight/';
 
 $config['randomapp_settings'] = array(
-	'app_title' => 'ล่า ท้า ผี คุณจะเจอผีแบบไหน?',
+	'app_title' => 'ท่ายากของคุณในคืนนี้',
 	'profile_image_size' => 65,
 	'profile_image_x' => 70,
 	'profile_image_y' => 48,
 	'profile_image_type' => 'square',
 	'profile_image_facebook_size' => 50,
-	'default_message' => "ล่า ท้า ผี คุณจะเจอผีแบบไหน?",
+	'default_message' => "ท่ายากของคุณในคืนนี้",
 	'max_ramdom_number' => 21, //Total files (if $config['static_server_enable'] = TRUE)
 	'app_bgcolor' => '#000'
 );
