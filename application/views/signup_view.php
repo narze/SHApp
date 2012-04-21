@@ -58,26 +58,53 @@
 				<div class="progress-signup" style="position:absolute;cursor:pointer;display:inline-block;margin-left:464px;width:177px;height:47px;"></div>
 			</div>
 		</div>
-		<div class="signup-form" style="z-index:1000;width:100%;
-			display: block;	position:absolute; display:none;">
-			<div class="signup-form-wrapper" style="background:#fff;width:350px;padding:15px;margin:0 auto;">
-				<div style="height:30px;">
-					<span style="width:100px;display: inline-block;">Email : </span>
-					<span style="width:200px;display: inline-block;"><input type="text" name="email" id="input-email" / ></span>
-				</div>
-				<div style="height:30px;">
-					<span style="width:100px;display: inline-block;">Password : </span>
-					<span style="width:200px;display: inline-block;"><input type="password" name="password" id="input-password" / ></span>
-				</div>
-				<div style="height:30px;">
-					<span style="width:100px;display: inline-block;"></span>
-					<span style="width:200px;display: inline-block;"><button id="submit-signup">Sign Up</button></span>
-				</div>
-				<div class ="signup-result" style="display:none;height:30px;">
 
+		<div class="popup-container" style="z-index:1000;width:100%;display:none;position:absolute;">
+
+			<div class="form-horizontal signup-form" style="background:#fff;width:455px;margin:0 auto;padding:0 15px">
+
+				<legend>Sign up</legend>
+
+				<div class="control-group" style="margin-bottom:0;">
+					<label class="control-label"><img src="#" alt="" style="background-color:#ccc;width:50px;height:50px;"></label>
+					<div class="controls">
+						<p style="padding-top:20px;"><b>Name Surname</b></p>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="input01">Email</label>
+					<div class="controls">
+						<input type="text" class="input-xlarge" name="email" id="input-email" / >
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="input01">Password</label>
+					<div class="controls">
+						<input type="password" class="input-xlarge" name="password" id="input-password" / >
+					</div>
+				</div>
+
+				<div class="form-actions">
+					<button class="btn btn-primary" id="submit-signup">Sign Up</button>
+				</div>
+
+				
+
+			</div>
+
+			<div id="progress_bar" style="margin:0 auto;width:400px;display:none;">
+				<p style="text-align:center">Loading...</p>
+				<div class="progress progress-striped progress-info active">
+					<div class="bar" style="width: 100%;"></div>
 				</div>
 			</div>
+
+			<div class="signup-result alert" style="margin:0 auto;width:400px;display:none;"></div>
+
 		</div>
+
 	</div>
 	
 	<div class="box-overlay" style="z-index:100;display: none;position: absolute;	top:0;	left:0;	width:100%;	height:1500px;	background-color: transparent;	background-color: rgba(200, 200, 200, 0.6);	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99FFFFFF,endColorstr=#99FFFFFF);	zoom: 1;"></div>
@@ -115,6 +142,8 @@
 
 				var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
   				if(regex.test(email) && password != ''){
+  					$('.signup-form').hide();
+  					$('#progress_bar').show();
 					jQuery.ajax({
 						url: '<?php echo base_url(); ?>welcome/signup_trigger',
 						type: "POST",
@@ -126,18 +155,19 @@
 						dataType: "json",
 						success:function(data){
 							console.log(data);
+							$('#progress_bar').hide();
 							if(data.result=='ok'){
 								//redirect to play_app_trigger
-								jQuery('.signup-result').html('Sign Up Successful <a href="<?php echo base_url()?>welcome/play_app_trigger?app_data=<?php echo $app_data; ?>">Continue</a>');
+								jQuery('.signup-result').addClass('alert-success').html('Sign Up Successful <a href="<?php echo base_url()?>welcome/play_app_trigger?app_data=<?php echo $app_data; ?>">Continue</a>');
 								jQuery('.signup-result').show('slow');
 							}else{
-								jQuery('.signup-result').html('Sign Up Failed: ' + data.message + ' <a href="<?php echo base_url()?>welcome/play_app_trigger?app_data=<?php echo $app_data; ?>">Continue</a>');
+								jQuery('.signup-result').addClass('alert-error').html('Sign Up Failed: ' + data.message + ' <a href="<?php echo base_url()?>welcome/play_app_trigger?app_data=<?php echo $app_data; ?>">Continue</a>');
 								jQuery('.signup-result').show('slow');
 							}
 						}
 					});
 				}
-				
+				//return false;
 			});
 
 		});
@@ -152,13 +182,13 @@
 			jQuery('.box-overlay').show('fast');
 			var windowY = window.scrollY;
 			var top = 300;
-			jQuery('.signup-form').css('top', windowY+top);
-			jQuery('.signup-form').show('slow');
+			jQuery('.popup-container').css('top', windowY+top);
+			jQuery('.popup-container').show('slow');
 
 		}
 
 		function hide_signup_form(){
-			jQuery('.signup-form').hide('fast');
+			jQuery('.popup-container').hide('fast');
 			jQuery('.box-overlay').hide('slow');
 
 		}
