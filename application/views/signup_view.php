@@ -46,7 +46,9 @@
 		<span class="label label-info">Info</span>
 		Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT == 'development') ?  'CodeIgniter Version <strong>' . CI_VERSION . '</strong>' : '' ?>
 	</div>-->
+
 	<div style="width:100%">
+		<div class="alert alert-success" style="margin-top:15px;">Success</div>
 		<div style="background:url('<?php echo base_url()?>assets/images/header.png');width:810px;height:300px;margin:0 auto">
 			<div class="progress-signup" style="position:absolute;cursor:pointer;display:inline-block;margin-top:210px;margin-left:568px;width:179px;height:64px;"></div>
 		</div>
