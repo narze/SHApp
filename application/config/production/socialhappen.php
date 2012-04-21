@@ -1,7 +1,7 @@
 <?php
 //SocialHappen
-$config['app_id'] = 1;
-$config['app_secret_key'] = '11111111111111111111111111111111';
+$config['app_id'] = 10001;
+$config['app_secret_key'] = '6ec950b9cb9526f204bf14f4c97e4f2a';
 $config['api_url'] = 'https://socialhappen.com/api/';
 
 //Mongodb
