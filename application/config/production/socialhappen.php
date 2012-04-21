@@ -50,3 +50,4 @@ $config['randomapp_settings'] = array(
 
 $config['static_app_enable'] = FALSE;
 $config['static_app_url'] = 'https://apps.socialhappen.com/static/';
+$config['static_app_message'] = 'ดูภาพของคุณได้ที่';
