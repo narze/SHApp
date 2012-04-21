@@ -39,7 +39,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'https://apps.localhost.com/shapp/';
+$config['base_url']	= 'https://apps.localhost.com/static_app/';
 
 /*
 |--------------------------------------------------------------------------
