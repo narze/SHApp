@@ -189,6 +189,7 @@ class Home extends CI_Controller {
 		try {
 			//insert name
 			$user = $this->facebook->api('me');
+			/* Text
 			if(isset($user['name'])) {	
 				//Try caching font (because windows' apache would lock it!)
 				$original_font_file = FCPATH.'assets/fonts/tahoma.ttf';
@@ -210,6 +211,7 @@ class Home extends CI_Controller {
 				//imagettftext($background_image, 15, 0, $profile_image_x, $profile_image_y - 21, $white, $font_file, $user['name']);
 				//imagettftext($background_image, 15, 0, $profile_image_x, $profile_image_y - 23, $grey, $font_file, $user['name']);
 			}
+			*/
 
 			if(is_writable($image_path)) {
 				unlink($image_path);

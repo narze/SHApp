@@ -34,13 +34,13 @@ $config['static_server_path'] = 'http://static.socialhappen.com/apps/posetonight
 
 $config['randomapp_settings'] = array(
 	'app_title' => 'ท่ายากของคุณในคืนนี้',
-	'profile_image_size' => 65,
-	'profile_image_x' => 70,
-	'profile_image_y' => 48,
+	'profile_image_size' => 50,
+	'profile_image_x' => 155,
+	'profile_image_y' => 51,
 	'profile_image_type' => 'square',
 	'profile_image_facebook_size' => 50,
-	'default_message' => "ท่ายากของคุณในคืนนี้",
-	'max_ramdom_number' => 21, //Total files (if $config['static_server_enable'] = TRUE)
+	'default_message' => "ท่ายากของคุณในคืนนี้คือท่าอะไร เข้าไปดูได้ที่",
+	'max_ramdom_number' => 14, //Total files (if $config['static_server_enable'] = TRUE)
 	'app_bgcolor' => '#000'
 );
 
