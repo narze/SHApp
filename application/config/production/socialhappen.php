@@ -44,6 +44,6 @@ $config['randomapp_settings'] = array(
 	'app_bgcolor' => '#000'
 );
 
-$config['static_app_enable'] = FALSE;
+$config['static_app_enable'] = TRUE;
 $config['static_app_url'] = 'https://apps.socialhappen.com/static/';
-$config['static_app_message'] = 'ดูภาพของคุณได้ที่';
+$config['static_app_message'] = 'อัพโหลดเรียบร้อย คลิกเพื่อดูภาพ';
