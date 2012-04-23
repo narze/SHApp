@@ -48,8 +48,8 @@
 	</div>-->
 
 	<div style="width:100%">
-		<?php if(isset($app_data['data']['message']) && isset($app_data['data']['link'])) : ?>
-			<div class="alert alert-success" style="margin-top:15px;"><a target="_blank" href="<?php echo $app_data['data']['link'];?>"><?php echo $app_data['data']['message'];?></a></div>
+		<?php if(isset($app_data_array['data']['message']) && isset($app_data_array['data']['link'])) : ?>
+			<div class="alert alert-success" style="margin-top:15px;"><a target="_blank" href="<?php echo $app_data_array['data']['link'];?>"><?php echo $app_data_array['data']['message'];?></a></div>
 		<?php endif;?>
 		<div style="background:url('<?php echo base_url()?>assets/images/header.png');width:810px;height:300px;margin:0 auto">
 			<div class="progress-signup" style="position:absolute;cursor:pointer;display:inline-block;margin-top:210px;margin-left:568px;width:179px;height:64px;"></div>

@@ -38,7 +38,7 @@ class Welcome extends CI_Controller {
 
 		if(!$app_data){
 
-			$app_data = array(
+			$app_data_array = array(
 								'app_id' => 0, 
 								'app_secret_key' => 0,
 							);
@@ -55,27 +55,27 @@ class Welcome extends CI_Controller {
 													))));
 			*/
 		
-			$app_data = json_decode(base64_decode($app_data), TRUE);
+			$app_data_array = json_decode(base64_decode($app_data), TRUE);
 
 		}
 
 		if($user_facebook_id = $this->facebook->getUser()){
-			$app_data['user_facebook_id'] = $user_facebook_id;
+			$app_data_array['user_facebook_id'] = $user_facebook_id;
 		}
 
-		$sh_user = $this->call_get_user($app_data);
+		$sh_user = $this->call_get_user($app_data_array);
 
 		
 		if($sh_user['success'] && $user_facebook_id){
 			//already member
 			//call play app
-			$play_app_result = $this->call_play_app($app_data);
+			$play_app_result = $this->call_play_app($app_data_array);
 
 			$this->load->view('port_view');
 
 		} else {
 			//any other case
-			$data = compact('app_data');
+			$data = compact('app_data','app_data_array');
 
 			try {
 				$facebook_user = $this->facebook->api('me');
