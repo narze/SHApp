@@ -34,6 +34,7 @@
 	<title>SocialHappen</title>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/responsive.css">
+	<?php $this->load->view('ga'); ?>
 </head>
 <body>
 	<?php echo $fb_root;?>

@@ -26,3 +26,5 @@ $config['facebook_app_scope'] = 'user_about_me';
 //	do socialhappen api request
 //}
 $config['mockuphappen_enable'] = FALSE;
+
+$config['google_analytics_tracking_id'] = 'UA-18943856-6';
