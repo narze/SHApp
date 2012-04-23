@@ -47,3 +47,5 @@ $config['randomapp_settings'] = array(
 $config['static_app_enable'] = TRUE;
 $config['static_app_url'] = 'https://apps.localhost.com/static_app/';
 $config['static_app_message'] = 'อัพโหลดเรียบร้อย คลิกเพื่อดูภาพ';
+
+$config['google_analytics_tracking_id'] = 'UA-18943856-5';

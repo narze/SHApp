@@ -1,7 +1,7 @@
 <script type="text/javascript">
-
+	
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-18943856-2']);
+  _gaq.push(['_setAccount', '<?php echo $this->config->item("google_analytics_tracking_id");?>']);
   _gaq.push(['_trackPageview']);
 
   (function() {
