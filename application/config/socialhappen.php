@@ -40,7 +40,7 @@ $config['randomapp_settings'] = array(
 	'profile_image_type' => 'square',
 	'profile_image_facebook_size' => 50,
 	'default_message' => "ท่ายากของคุณในคืนนี้คือท่าอะไร เข้าไปดูได้ที่",
-	'max_ramdom_number' => 14, //Total files (if $config['static_server_enable'] = TRUE)
+	'max_ramdom_number' => 23, //Total files (if $config['static_server_enable'] = TRUE)
 	'app_bgcolor' => '#000'
 );
 
