@@ -31,7 +31,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Welcome to CodeIgniter</title>
+	<title>SocialHappen</title>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/responsive.css">
 </head>
@@ -48,7 +48,9 @@
 	</div>-->
 
 	<div style="width:100%">
-		<div class="alert alert-success" style="margin-top:15px;">Success</div>
+		<?php if(isset($app_data['data']['message']) && isset($app_data['data']['link'])) : ?>
+			<div class="alert alert-success" style="margin-top:15px;"><a target="_blank" href="<?php echo $app_data['data']['link'];?>"><?php echo $app_data['data']['message'];?></a></div>
+		<?php endif;?>
 		<div style="background:url('<?php echo base_url()?>assets/images/header.png');width:810px;height:300px;margin:0 auto">
 			<div class="progress-signup" style="position:absolute;cursor:pointer;display:inline-block;margin-top:210px;margin-left:568px;width:179px;height:64px;"></div>
 		</div>
@@ -67,12 +69,14 @@
 
 				<legend>Sign up</legend>
 
-				<div class="control-group" style="margin-bottom:0;">
-					<label class="control-label"><img src="#" alt="" style="background-color:#ccc;width:50px;height:50px;"></label>
-					<div class="controls">
-						<p style="padding-top:20px;"><b>Name Surname</b></p>
+				<?php if(isset($facebook_image) && isset($facebook_image)) :?>
+					<div class="control-group" style="margin-bottom:0;">
+						<label class="control-label"><img src="<?php echo $facebook_image;?>" alt="" style="background-color:#ccc;width:50px;height:50px;"></label>
+						<div class="controls">
+							<p style="padding-top:20px;"><b><?php echo $facebook_name;?></b></p>
+						</div>
 					</div>
-				</div>
+				<?php endif; ?>
 
 				<div class="control-group">
 					<label class="control-label" for="input01">Email</label>

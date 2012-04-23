@@ -75,8 +75,15 @@ class Welcome extends CI_Controller {
 
 		} else {
 			//any other case
-			$data = array('app_data' => base64_encode(json_encode($app_data)));
+			$data = compact('app_data');
 
+			try {
+				$facebook_user = $this->facebook->api('me');
+				$data['facebook_name'] = $facebook_user['name'];
+				$data['facebook_image'] = 'http://graph.facebook.com/'.$user_facebook_id.'/picture';
+			} catch (FacebookApiException $e) {
+
+			}
 			//try request for permission and/or signup
 			$this->load->view('signup_view', $data);
 
