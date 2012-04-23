@@ -66,7 +66,7 @@ class Home extends CI_Controller {
 	}
 
 	function play() {
-		$this->_in_page_tab_check();
+//		$this->_in_page_tab_check();
 		if((!$facebook_uid = $this->facebook->getUser()) 
 			|| !$this->fb->isUserLikedPage($this->facebook_page_id)) {
 			redirect();
