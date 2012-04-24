@@ -41,8 +41,10 @@
 			</div>
 		</div>
 
-		<div><a target="_blank" href="<?php echo base_url('privacy_policy');?>">Privacy Policy</a></div>
-		<div><a target="_blank" href="<?php echo base_url('terms_of_service');?>">Terms of Service</a></div>
+		<div>
+			<a target="_blank" href="<?php echo base_url('privacy_policy');?>">Privacy Policy</a> | 
+			<a target="_blank" href="<?php echo base_url('terms_of_service');?>">Terms of Service</a>
+		</div>
 	</center>
 	<script type="text/javascript">
 		document.getElementById("share_button").addEventListener("click", shareToFB);
