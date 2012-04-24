@@ -16,6 +16,14 @@
 			echo '<p><a style="cursor: pointer;" class="btn btn-danger btn-large" onclick="top.location=\''.$facebook_link.'\';">ดูภาพของคุณ</a></p>';
 			echo '<p>'.anchor('home/play', 'เล่นใหม่', 'class="btn btn-large"').'</p>';
 		?>
+		<div>
+			<p>&nbsp;</p>
+			<p>&nbsp;</p>
+			<p>&nbsp;</p>
+			<p>
+				<a href="<?php echo $redirect_url;?>"><img src="<?php echo base_url('assets/images/go-to-socialhappen.gif');?>" /></a>
+			</p>
+		</div>
 	</center>
 </body>
 </html>

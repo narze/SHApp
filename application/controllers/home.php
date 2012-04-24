@@ -303,7 +303,16 @@ class Home extends CI_Controller {
 							'link' => $facebook_link
 						)
 					)));
-					redirect($this->config->item('static_app_url').'?app_data='.$serialized_app_data);
+					$this->load->vars(array(
+						'facebook_link' => $facebook_link,
+						'app_title' => $randomapp_settings['app_title'],
+						'app_bgcolor' => $randomapp_settings['app_bgcolor'],
+						'static_server_enable' => $static_server_enable,
+						'static_server_path' => $static_server_path,
+						'redirect_url' => $this->config->item('static_app_url').'?app_data='.$serialized_app_data
+					));
+					$this->load->view('upload_view');
+					// redirect($this->config->item('static_app_url').'?app_data='.$serialized_app_data);
 				} else {
 					$this->load->vars(array(
 						'facebook_link' => $facebook_link,
