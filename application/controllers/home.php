@@ -7,6 +7,7 @@ class Home extends CI_Controller {
 		$this->signedRequest = $this->facebook->getSignedRequest();
 		$this->facebook_page_id = $this->config->item('mockuphappen_facebook_page_id');
 		$this->facebook_app_id = $this->config->item('facebook_app_id');
+		$this->cookie_name = $this->facebook_page_id.'_'.$this->facebook_app_id.'_times_played';
 	}
 
 	function index(){
@@ -65,14 +66,29 @@ class Home extends CI_Controller {
 		}
 	}
 
+	function _maximum_reached() {
+		//TODO : Add a view
+		exit("You've reached upload limit today, please play again tomorrow");
+	}
+
 	function play() {
-//		$this->_in_page_tab_check();
 		if((!$facebook_uid = $this->facebook->getUser()) 
 			|| !$this->fb->isUserLikedPage($this->facebook_page_id)) {
 			redirect();
 		}
 
 		$randomapp_settings = $this->config->item('randomapp_settings');
+
+		$times_played = $this->input->cookie($this->cookie_name);
+		$maximum_times_played = isset($randomapp_settings['maximum_times_played']) ? $randomapp_settings['maximum_times_played'] : 0;
+
+		if($times_played && $maximum_times_played && ($times_played >= $maximum_times_played)) {
+			$maximum_times_reached = TRUE;
+			$this->_maximum_reached();
+		} else {
+			$maximum_times_reached = FALSE;
+		}
+
 		$static_server_enable = $this->config->item('static_server_enable');
 		$static_server_path = $this->config->item('static_server_path');
 
@@ -130,6 +146,17 @@ class Home extends CI_Controller {
 		}
 
 		$randomapp_settings = $this->config->item('randomapp_settings');
+
+		$times_played = $this->input->cookie($this->cookie_name);
+		$maximum_times_played = isset($randomapp_settings['maximum_times_played']) ? $randomapp_settings['maximum_times_played'] : 0;
+
+		if($times_played && $maximum_times_played && ($times_played >= $maximum_times_played)) {
+			$maximum_times_reached = TRUE;
+			$this->_maximum_reached();
+		} else {
+			$maximum_times_reached = FALSE;
+		}
+
 		$profile_image_size = $randomapp_settings['profile_image_size'];
 		$profile_image_x = $randomapp_settings['profile_image_x'];
 		$profile_image_y = $randomapp_settings['profile_image_y'];
@@ -250,6 +277,21 @@ class Home extends CI_Controller {
 				}	else {
 					$facebook_link = 'https://facebook.com/'.$facebook_uid;
 				}
+
+				//Set cookie
+				preg_match('/\/\/[^\/]*\//i', base_url(), $matches);
+				$domain = trim($matches[0],'/');
+				//Set cookie
+				$cookie = array(
+					'name' => 'times_played',
+					'value' => 1 + $times_played,
+					'domain' => $domain,
+					'expire' => $randomapp_settings['cooldown'],
+					'path' => '/',
+					'prefix' => $this->facebook_page_id.'_'.$this->facebook_app_id.'_',
+					'secure' => TRUE
+				);
+				$this->input->set_cookie($cookie);
 
 				if($this->config->item('static_app_enable')) {
 					$serialized_app_data = base64_encode(json_encode(array(

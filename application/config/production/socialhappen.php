@@ -41,7 +41,9 @@ $config['randomapp_settings'] = array(
 	'profile_image_facebook_size' => 50,
 	'default_message' => "ท่ายากของคุณในคืนนี้คือท่าอะไร เข้าไปดูได้ที่",
 	'max_ramdom_number' => 23, //Total files (if $config['static_server_enable'] = TRUE)
-	'app_bgcolor' => '#000'
+	'app_bgcolor' => '#000',
+	'maximum_times_played' => 0,
+	'cooldown' => 43200
 );
 
 $config['static_app_enable'] = TRUE;
