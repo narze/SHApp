@@ -53,7 +53,7 @@
 			<div class="alert alert-success" style="margin-top:15px;"><a target="_blank" href="<?php echo $app_data_array['data']['link'];?>"><?php echo $app_data_array['data']['message'];?></a></div>
 		<?php endif;?>
 		<div style="background:url('<?php echo base_url()?>assets/images/header.png');width:810px;height:300px;margin:0 auto">
-			<div class="progress-signup" style="position:absolute;cursor:pointer;display:inline-block;margin-top: 205px;margin-left: 537px;width:250px;height: 70px;background:url('<?php echo base_url()?>assets/images/signup-button.png');?>');"></div>
+			<div class="progress-signup" style="position:absolute;cursor:pointer;display:inline-block;margin-top:210px;margin-left:568px;width:179px;height:64px;"></div>
 		</div>
 		<div style="background:url('<?php echo base_url()?>assets/images/content1.png');width:810px;height:687px;margin:0 auto">
 		</div>
