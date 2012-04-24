@@ -9,8 +9,8 @@
 		<?php echo $fb_root;?>
 		<center>
 			<a id="fblogin" onclick="fblogin();" style="cursor:pointer;"><img src="<?php echo base_url('assets/images/start.jpg');?>" /></a>
-			<div><a href="<?php echo base_url('privacy_policy');?>">Privacy Policy</a></div>
-			<div><a href="<?php echo base_url('terms_of_service');?>">Terms of Service</a></div>
+			<div><a target="_blank" href="<?php echo base_url('privacy_policy');?>">Privacy Policy</a></div>
+			<div><a target="_blank" href="<?php echo base_url('terms_of_service');?>">Terms of Service</a></div>
 		</center>
 	</body>
 </html>
