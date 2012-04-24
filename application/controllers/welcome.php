@@ -64,7 +64,6 @@ class Welcome extends CI_Controller {
 		}
 
 		$sh_user = $this->call_get_user($app_data_array);
-
 		
 		if($sh_user['success'] && $user_facebook_id){
 			//already member
@@ -75,10 +74,12 @@ class Welcome extends CI_Controller {
 
 		} else {
 			//any other case
+			$app_data = base64_encode(json_encode($app_data_array));
 			$data = compact('app_data','app_data_array');
 
 			try {
 				$facebook_user = $this->facebook->api('me');
+				$data['user_email'] = $facebook_user['email'];
 				$data['facebook_name'] = $facebook_user['name'];
 				$data['facebook_image'] = 'http://graph.facebook.com/'.$user_facebook_id.'/picture';
 			} catch (FacebookApiException $e) {
@@ -101,7 +102,6 @@ class Welcome extends CI_Controller {
 		//mandatory parameters
 		$app_data = $this->input->post('app_data', TRUE);
 		$user_email = $this->input->post('email', TRUE);
-		$user_password = $this->input->post('password', TRUE);
 
 		$app_data = json_decode(base64_decode($app_data), TRUE);
 		
@@ -109,11 +109,11 @@ class Welcome extends CI_Controller {
 		$app_secret_key = $app_data['app_secret_key'];
 		$user_facebook_id = $app_data['user_facebook_id'];
 
-		$args = compact('app_id', 'app_secret_key', 'user_facebook_id', 'user_email', 'user_password');
+		$args = compact('app_id', 'app_secret_key', 'user_facebook_id', 'user_email');
 
 		//check args
-		if(isset($app_id) && isset($app_secret_key) && $user_facebook_id && $user_email && $user_password){
-			$args = compact('app_id', 'app_secret_key', 'user_facebook_id', 'user_email', 'user_password');
+		if(isset($app_id) && isset($app_secret_key) && $user_facebook_id && $user_email){
+			$args = compact('app_id', 'app_secret_key', 'user_facebook_id', 'user_email');
 			$signup_result = $this->call_signup($args);
 
 			//show result

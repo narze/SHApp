@@ -14,7 +14,7 @@ $config['mongodb_database'] = 'static';
 //Facebook : Fill these if you want to use facebook library
 $config['facebook_app_id'] = '212677235501808';
 $config['facebook_app_secret'] = '79284c8a972b17e25708ea3755425d85';
-$config['facebook_app_scope'] = 'user_about_me';
+$config['facebook_app_scope'] = 'user_about_me,email';
 
 //MockupHappen : Use only if you want to use app without socialhappen api calls
 //This will mockup all api request and return values corresponding to api names

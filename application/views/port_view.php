@@ -46,6 +46,7 @@
 	</div>-->
 
 	<div style="width:100%">
+		<div class="alert alert-success" style="margin-top:15px;">คุณได้รับคะแนนจาก SocialHappen แล้ว 50 แต้ม!</div>
 		<div style="background:url('<?php echo base_url()?>assets/images/header-blank.png');width:810px;height:300px;margin:0 auto">
 		</div>
 		<div style="background:url('<?php echo base_url()?>assets/images/box-header1.png');width:810px;height:55px;margin:0 auto">

@@ -53,7 +53,7 @@
 			<div class="alert alert-success" style="margin-top:15px;"><a target="_blank" href="<?php echo $app_data_array['data']['link'];?>"><?php echo $app_data_array['data']['message'];?></a></div>
 		<?php endif;?>
 		<div style="background:url('<?php echo base_url()?>assets/images/header.png');width:810px;height:300px;margin:0 auto">
-			<div class="progress-signup" style="position:absolute;cursor:pointer;display:inline-block;margin-top:210px;margin-left:568px;width:179px;height:64px;"></div>
+			<div class="progress-signup" style="position:absolute;cursor:pointer;display:inline-block;margin-top: 205px;margin-left: 537px;width:250px;height: 70px;background:url('<?php echo base_url()?>assets/images/signup-button.png');?>');"></div>
 		</div>
 		<div style="background:url('<?php echo base_url()?>assets/images/content1.png');width:810px;height:687px;margin:0 auto">
 		</div>
@@ -66,9 +66,9 @@
 
 		<div class="popup-container" style="z-index:1000;width:100%;display:none;position:absolute;">
 
-			<div class="form-horizontal signup-form" style="background:#fff;width:455px;margin:0 auto;padding:0 15px">
+			<div class="form-horizontal signup-form" style="background:#fff;width:480px;margin:0 auto;padding:0 15px">
 
-				<legend>Sign up</legend>
+				<legend>สมัครสมาชิก SocialHappen ด้วย Facebook Account</legend>
 
 				<?php if(isset($facebook_image) && isset($facebook_image)) :?>
 					<div class="control-group" style="margin-bottom:0;">
@@ -79,22 +79,10 @@
 					</div>
 				<?php endif; ?>
 
-				<div class="control-group">
-					<label class="control-label" for="input01">Email</label>
-					<div class="controls">
-						<input type="text" class="input-xlarge" name="email" id="input-email" / >
-					</div>
-				</div>
-
-				<div class="control-group">
-					<label class="control-label" for="input01">Password</label>
-					<div class="controls">
-						<input type="password" class="input-xlarge" name="password" id="input-password" / >
-					</div>
-				</div>
+				<input type="hidden" class="input-xlarge" name="email" id="input-email" value="<?php echo $user_email;?>" / >
 
 				<div class="form-actions">
-					<button class="btn btn-primary" id="submit-signup">Sign Up</button>
+					<button class="btn btn-primary" id="submit-signup">สมัครสมาชิก (รับ 50 แต้ม)</button>
 				</div>
 
 				
@@ -145,10 +133,9 @@
 
 			jQuery('#submit-signup').click(function(){
 				var email = jQuery('#input-email').val();
-				var password = jQuery('#input-password').val();
 
 				var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-  				if(regex.test(email) && password != ''){
+  				if(regex.test(email)){
   					$('.signup-form').hide();
   					$('#progress_bar').show();
 					jQuery.ajax({
@@ -156,8 +143,7 @@
 						type: "POST",
 						data: {
 							app_data : '<?php echo $app_data; ?>',
-							email: email,
-							password: password
+							email: email
 						},
 						dataType: "json",
 						success:function(data){
@@ -165,7 +151,7 @@
 							$('#progress_bar').hide();
 							if(data.result=='ok'){
 								//redirect to play_app_trigger
-								jQuery('.signup-result').addClass('alert-success').html('Sign Up Successful <a href="<?php echo base_url()?>welcome/play_app_trigger?app_data=<?php echo $app_data; ?>">Continue</a>');
+								jQuery('.signup-result').addClass('alert-success').html('สมัครสมาชิกเรียบร้อยแล้ว <a href="<?php echo base_url()?>welcome/play_app_trigger?app_data=<?php echo $app_data; ?>">Continue</a>');
 								jQuery('.signup-result').show('slow');
 							}else{
 								jQuery('.signup-result').addClass('alert-error').html('Sign Up Failed: ' + data.message + ' <a href="<?php echo base_url()?>welcome/play_app_trigger?app_data=<?php echo $app_data; ?>">Continue</a>');

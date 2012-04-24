@@ -13,12 +13,25 @@
 				fbcallback(response);
 			}
 		  	window.fblogin = function () {
-				FB.login(function(response) {
-					if (response.status === 'connected') {
-						window.location = window.location.href;
-					}
-				}, {scope:'<?php echo $facebook_app_scope;?>'});
-			};
+					FB.login(function(response) {
+						if (response.status === 'connected') {
+							window.location = window.location.href;
+						}
+					}, {scope:'<?php echo $facebook_app_scope;?>'});
+				};
+		  // 	window.fblogin = function () {
+				// 	FB.ui({
+				// 		method: 'oauth',
+				// 		client_id: '<?php echo $facebook_app_id; ?>',
+				// 		redirect_uri: window.location.href, //have problem with X-frame
+				// 		display: 'iframe'
+				// 	},
+				// 	function(response) {
+				// 		if (response.status === 'connected') {
+				// 			window.location = window.location.href;
+				// 		}
+				// 	}, {scope:'<?php echo $facebook_app_scope;?>'});
+				// };
 		});
   	};
 
