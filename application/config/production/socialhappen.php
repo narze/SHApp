@@ -12,12 +12,12 @@ $config['mongodb_port'] = 27017;
 $config['mongodb_database'] = 'posetonight';
 
 //Facebook : Fill these if you want to use facebook library
-$config['facebook_app_id'] = '187336624721105';
-$config['facebook_app_secret'] = 'bf0f49da0887d2dc1e3f0d2f0ec636fd';
+$config['facebook_app_id'] = '237170856390504';
+$config['facebook_app_secret'] = 'e4bf921e344003e0ad54484c21a501a9';
 $config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes';
 $config['facebook_force_like'] = TRUE;
 //Set force like app_id if you want to use other app to force page liking
-$config['facebook_force_like_app_id'] = '187336624721105';
+$config['facebook_force_like_app_id'] = '237170856390504';
 
 //MockupHappen : Use only if you want to use app without socialhappen api calls
 //This will mockup all api request and return values corresponding to api names
