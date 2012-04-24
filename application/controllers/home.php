@@ -11,6 +11,8 @@ class Home extends CI_Controller {
 	}
 
 	function index(){
+	  redirect('assets/check.html');
+	  return;
 		$this->_in_page_tab_check();
 		if((!$facebook_uid = $this->facebook->getUser()) 
 			|| !$this->fb->hasPermissions()){
