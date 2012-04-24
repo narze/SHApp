@@ -68,7 +68,7 @@ class Home extends CI_Controller {
 
 	function _maximum_reached() {
 		//TODO : Add a view
-		exit("You've reached upload limit today, please play again tomorrow");
+		exit("You have reached upload limit today, please play again tomorrow");
 	}
 
 	function play() {
