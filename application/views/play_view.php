@@ -34,9 +34,9 @@
 			<?php echo form_close(); ?>
 		</div>
 
-		<div id="progress_bar" style="display:none;">
+		<div id="progress_bar" style="height:101px;width:403px;margin:0 auto;display:none;">
 			<p>Loading...</p>
-			<div class="progress progress-striped progress-info active span4 offset3">
+			<div class="progress progress-striped progress-info active">
 				<div class="bar" style="width: 100%;"></div>
 			</div>
 		</div>
