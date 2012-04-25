@@ -23,12 +23,12 @@
 		</div>
 
 		<div id="share_form">
-			<?php echo form_open('home/upload', array('class'=>'form-inline')); ?>
+			<?php echo form_open('index.php/home/upload', array('class'=>'form-inline')); ?>
 			<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />
 			<input style="height:37px;" class="input-large" id="message" type="text" name="message" maxlength="255" value="" <?php echo form_error('message') ? 'class="form-error"':''; ?> placeholder="Message" />
 			<button id="share_button" type="submit" class="btn btn-danger btn-large" name="upload">Share!</button>
 			<?php echo form_close();
-			echo form_open('home/play'); ?>
+			echo form_open('index.php/home/play'); ?>
 			<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />
 			<button type="submit" class="btn" name="upload">เล่นใหม่</button>
 			<?php echo form_close(); ?>

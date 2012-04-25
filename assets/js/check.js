@@ -1,48 +1,69 @@
-var showForceLikePage = function(){
+var startFallbackCounter = function(){
+  console.log('start fallback counter');
+  window.fallbackCounter = setTimeout(function(){
+    console.log('fallback time out, go to PHP');
+    window.location = '../index.php/home/check'
+  }, 60000); // one minute
+}
+
+var clearFallbackCounter = function(){
+  console.log('clear fallback counter');
+  clearTimeout(window.fallbackCounter);
+}
+
+var showForceLikePage = function() {
   $('div#content').text('please like us first');
+  clearFallbackCounter();
+  window.location = 'like.html';
 }
-
-var showPlayPage = function(){
+var showPlayPage = function() {
   $('div#content').text('let\'s play');
+  clearFallbackCounter();
+  window.location = '../index.php/home/play';
 }
+var showLoginPage = function() {
+  console.log('showLoginPage');
+  // $('div#content').html('<a href="#" id="auth-loginlink">Login</a>');
+  //
+  // // respond to clicks on the login and logout links
+  // $('#auth-loginlink').on('click', function(e){
+  // e.preventDefault();
+  // FB.login(function(response) {
+  // if (response.status === 'connected') {
+  // window.location = window.location.href;
+  // }
+  // }, {scope:'user_about_me,publish_stream,user_likes'});
+  // });
 
-var showLoginPage = function(){
-  $('div#content').html('<a href="#" id="auth-loginlink">Login</a>');
-  
-  // respond to clicks on the login and logout links
-  $('#auth-loginlink').on('click', function(e){
-    e.preventDefault();
-    FB.login();
-  });
+  window.location = 'login.html';
 }
-
-var checkLike = function(user_id){
+var checkLike = function(user_id) {
   console.log('user logged in, checking like of user_id', user_id);
-  
-  if(user_id != 0 && user_id != '0'){
+
+  if(user_id != 0 && user_id != '0') {
     $('#auth-loginlink').hide();
   }
-  
-  var page_id = "135287989899131"; //
-  var fql_query = "SELECT uid FROM page_fan WHERE page_id = "+page_id+"and uid="+user_id;
+
+  var page_id = "135287989899131";
+  //
+  var fql_query = "SELECT uid FROM page_fan WHERE page_id = " + page_id + "and uid=" + user_id;
   var the_query = FB.Data.query(fql_query);
 
   the_query.wait(function(rows) {
 
-      if (rows.length == 1 && rows[0].uid == user_id) {
-          $("#container_like").show();
+    if(rows.length == 1 && rows[0].uid == user_id) {
+      $("#container_like").show();
 
-          //here you could also do some ajax and get the content for a "liker" instead of simply showing a hidden div in the page.
-          showPlayPage();
-      } else {
-          $("#container_notlike").show();
-          //and here you could get the content for a non liker in ajax...
-          showForceLikePage();
-      }
+      //here you could also do some ajax and get the content for a "liker" instead of simply showing a hidden div in the page.
+      showPlayPage();
+    } else {
+      $("#container_notlike").show();
+      //and here you could get the content for a non liker in ajax...
+      showForceLikePage();
+    }
   });
-  
-}
 
+}
 $(function() {
   window.fbAsyncInit = function() {
     FB.init({
@@ -57,29 +78,31 @@ $(function() {
 
     console.log('facebook is ready');
     
+    startFallbackCounter();
+    
     FB.Canvas.setAutoResize(7);
-    FB.getLoginStatus(function(response){
-      if(response.status != 'connected'){
+    FB.getLoginStatus(function(response) {
+      if(response.status != 'connected') {
         // should redirect to index
         console.log('login status not connect');
         showLoginPage();
         return;
       }
-      
-      window.user = {
-        user_facebook_id : FB.getUserID()
-      }
-      console.log('got loginStatus', response);
-      checkLike(FB.getUserID());
+//       
+      // window.user = {
+        // user_facebook_id : FB.getUserID()
+      // }
+      // console.log('got loginStatus', response);
+      // checkLike(FB.getUserID());
     });
-    FB.Event.subscribe('auth.statusChange', function(response){
+    FB.Event.subscribe('auth.statusChange', function(response) {
       console.log('auth.statusChange', response);
-      if(response.status != 'connected'){
+      if(response.status != 'connected') {
         // should redirect to index
         console.log('auth.statusChange: login status not connect');
         showLoginPage();
         return;
-      }else{
+      } else {
         checkLike(FB.getUserID());
       }
     });
@@ -96,4 +119,4 @@ $(function() {
     js.async = true;
     js.src = "//connect.facebook.net/en_US/all.js";
     ref.parentNode.insertBefore(js, ref);
-  }(document)); 
+  }(document));

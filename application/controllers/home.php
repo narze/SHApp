@@ -9,11 +9,19 @@ class Home extends CI_Controller {
 		$this->facebook_app_id = $this->config->item('facebook_app_id');
 		$this->cookie_name = $this->facebook_page_id.'_'.$this->facebook_app_id.'_times_played';
 	}
-
+  
+  /**
+   * redirect to check in javascript
+   */
 	function index(){
 	  redirect('assets/check.html');
-	  return;
-		$this->_in_page_tab_check();
+	}
+  
+  /**
+   * fallback when javascript error occur
+   */
+  function check(){
+    $this->_in_page_tab_check();
 		if((!$facebook_uid = $this->facebook->getUser()) 
 			|| !$this->fb->hasPermissions()){
 			$randomapp_settings = $this->config->item('randomapp_settings');
@@ -28,7 +36,7 @@ class Home extends CI_Controller {
 		} else {
 			$this->_force_like();
 		}
-	}
+  }
 
 	/**
 	 * If not in page tab, or not liked, redirect to page tab
@@ -72,10 +80,12 @@ class Home extends CI_Controller {
 		//TODO : Add a view
 		exit("You have reached upload limit today, please play again tomorrow");
 	}
-
+  
+  /**
+   * send random photo
+   */
 	function play() {
-		if((!$facebook_uid = $this->facebook->getUser()) 
-			|| !$this->fb->isUserLikedPage($this->facebook_page_id)) {
+		if(!$facebook_uid = $this->facebook->getUser()) { // we dont't check page like here
 			redirect();
 		}
 
@@ -139,8 +149,16 @@ class Home extends CI_Controller {
 		));
 		$this->load->view('play_view');
 	}
-
+  
+  /**
+   * user submitted share button
+   * 
+   * @TODO: render and add photo to upload queue instead of upload via PHP
+   */
 	function upload() {
+	  /**
+     * full check here
+     */
 		if((!$facebook_uid = $this->facebook->getUser()) 
 			|| !$this->fb->isUserLikedPage($this->facebook_page_id)
 			|| (!$random_image_name = $this->input->post('img_name'))) {
