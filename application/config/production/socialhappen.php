@@ -42,8 +42,8 @@ $config['randomapp_settings'] = array(
 	'default_message' => "คุณจะได้แต่งงานที่ไหน เข้าไปดูได้ที่",
 	'max_ramdom_number' => 16, //Total files (if $config['static_server_enable'] = TRUE)
 	'app_bgcolor' => '#FFF',
-	'maximum_times_played' => 1,
-	'cooldown' => 14400
+	'maximum_times_played' => 3,
+	'cooldown' => 21600
 );
 
 $config['static_app_enable'] = TRUE;

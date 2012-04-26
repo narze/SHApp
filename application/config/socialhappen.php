@@ -43,7 +43,7 @@ $config['randomapp_settings'] = array(
 	'max_ramdom_number' => 16, //Total files (if $config['static_server_enable'] = TRUE)
 	'app_bgcolor' => '#FFF',
 	'maximum_times_played' => 1,
-	'cooldown' => 14400
+	'cooldown' => 21600
 );
 
 $config['static_app_enable'] = TRUE;
