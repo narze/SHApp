@@ -34,13 +34,13 @@ $config['static_server_path'] = 'http://static.localhost.com/apps/weddingplace/'
 
 $config['randomapp_settings'] = array(
 	'app_title' => 'คุณจะได้แต่งงานที่ไหน',
-	'profile_image_size' => 50,
-	'profile_image_x' => 155,
-	'profile_image_y' => 51,
+	'profile_image_size' => 70,
+	'profile_image_x' => 42,
+	'profile_image_y' => 22,
 	'profile_image_type' => 'square',
 	'profile_image_facebook_size' => 50,
 	'default_message' => "คุณจะได้แต่งงานที่ไหน เข้าไปดูได้ที่",
-	'max_ramdom_number' => 23, //Total files (if $config['static_server_enable'] = TRUE)
+	'max_ramdom_number' => 16, //Total files (if $config['static_server_enable'] = TRUE)
 	'app_bgcolor' => '#000',
 	'maximum_times_played' => 1,
 	'cooldown' => 14400
