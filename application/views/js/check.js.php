@@ -1,4 +1,7 @@
 <script type="text/javascript">
+<?php if(ENVIRONMENT == 'production') : ?>
+  window['console']['log'] = function() {};
+<?php endif; ?>
 var startFallbackCounter = function(){
   console.log('start fallback counter');
   window.fallbackCounter = setTimeout(function(){
@@ -24,18 +27,6 @@ var showPlayPage = function() {
 }
 var showLoginPage = function() {
   console.log('showLoginPage');
-  // $('div#content').html('<a href="#" id="auth-loginlink">Login</a>');
-  //
-  // // respond to clicks on the login and logout links
-  // $('#auth-loginlink').on('click', function(e){
-  // e.preventDefault();
-  // FB.login(function(response) {
-  // if (response.status === 'connected') {
-  // window.location = window.location.href;
-  // }
-  // }, {scope:'user_about_me,publish_stream,user_likes'});
-  // });
-
   window.location = "<?php echo base_url('home/login');?>";
 }
 var checkLike = function(user_id) {
