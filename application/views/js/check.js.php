@@ -16,12 +16,12 @@ var clearFallbackCounter = function(){
 }
 
 var showForceLikePage = function() {
-  $('div#content').text('please like us first');
+  console.log('please like us first');
   clearFallbackCounter();
-  window.location = "<?php echo base_url('home/like');?>";
+  window.location = "<?php echo base_url('home/like/');?>";
 }
 var showPlayPage = function() {
-  $('div#content').text('let\'s play');
+  console.log('let\'s play');
   clearFallbackCounter();
   window.location = "<?php echo base_url('home/play');?>";
 }

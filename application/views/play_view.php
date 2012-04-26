@@ -16,19 +16,30 @@
 	<?php $this->load->view('ga'); ?>
 </head>
 <body <?php echo $app_bgcolor ? 'style="background-color:'.$app_bgcolor.';"' : ''; ?>>
+
 	<center>
+		<?php if($maximum_times_reached) : ?>
+			<div class="alert alert-error" style="margin-top:5px;margin-left:5px;margin-right:5px;">ทุก <?php echo $cooldown_hours;?> ชั่วโมง สามารถแชร์ภาพได้ <?php echo $maximum_times_played;?> ภาพนะจ๊ะ</div>
+		<?php endif ;?>
 		<div class="img-box">
 			<?php echo img($image_url); ?>
 			<div class="user-profile"><img src="https://graph.facebook.com/<?php echo $facebook_uid;?>/picture?type=<?php echo $profile_image_type ?>" /></div>
 		</div>
-
+		
 		<div id="share_form">
-			<?php echo form_open('index.php/home/upload', array('class'=>'form-inline')); ?>
-			<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />
-			<input style="height:37px;" class="input-large" id="message" type="text" name="message" maxlength="255" value="" <?php echo form_error('message') ? 'class="form-error"':''; ?> placeholder="Message" />
-			<button id="share_button" type="submit" class="btn btn-danger btn-large" name="upload">Share!</button>
-			<?php echo form_close();
-			echo form_open('index.php/home/play'); ?>
+			<?php 
+				echo form_open('home/upload', array('class'=>'form-inline')); ?>
+					<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />
+					<?php if($maximum_times_reached) : ?>
+						<input disabled="true" style="height:37px;" class="input-large" id="message" type="text" name="message" maxlength="255" value="" <?php echo form_error('message') ? 'class="form-error"':''; ?> placeholder="Message" />
+						<button disabled="true" id="share_button" type="submit" class="btn btn-danger btn-large" name="upload">Share!</button>
+					<?php else : ?>
+						<input style="height:37px;" class="input-large" id="message" type="text" name="message" maxlength="255" value="" <?php echo form_error('message') ? 'class="form-error"':''; ?> placeholder="Message" />
+						<button id="share_button" type="submit" class="btn btn-danger btn-large" name="upload">Share!</button>
+					<?php endif;
+				echo form_close();
+			
+			echo form_open('home/play'); ?>
 			<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />
 			<button type="submit" class="btn" name="upload">เล่นใหม่</button>
 			<?php echo form_close(); ?>

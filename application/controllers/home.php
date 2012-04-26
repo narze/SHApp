@@ -14,6 +14,7 @@ class Home extends CI_Controller {
    * Check like in javascript
    */
 	function index(){
+    $this->_in_page_tab_check();
 	  $this->load->view('check_view');
 	}
   
@@ -21,7 +22,6 @@ class Home extends CI_Controller {
    * fallback when javascript error occur
    */
   function check(){
-    $this->_in_page_tab_check();
 		if((!$facebook_uid = $this->facebook->getUser()) 
 			|| !$this->fb->hasPermissions()){
 			$randomapp_settings = $this->config->item('randomapp_settings');
@@ -49,6 +49,9 @@ class Home extends CI_Controller {
 		}
 	}
 
+	/**
+	 * Forces user to like facebook page by redirecting to facebook page tab
+	 */
 	function _force_like() {
 		if(!$facebook_uid = $this->facebook->getUser()) {
 			redirect();
@@ -75,11 +78,6 @@ class Home extends CI_Controller {
 			}
 		}
 	}
-
-	function _maximum_reached() {
-		//TODO : Add a view
-		exit("You have reached upload limit today, please play again tomorrow");
-	}
   
   /**
    * send random photo
@@ -96,7 +94,6 @@ class Home extends CI_Controller {
 
 		if($times_played && $maximum_times_played && ($times_played >= $maximum_times_played)) {
 			$maximum_times_reached = TRUE;
-			$this->_maximum_reached();
 		} else {
 			$maximum_times_reached = FALSE;
 		}
@@ -145,7 +142,10 @@ class Home extends CI_Controller {
 			'profile_image_type' => $randomapp_settings['profile_image_type'],
 			'app_bgcolor' => $randomapp_settings['app_bgcolor'],
 			'static_server_enable' => $static_server_enable,
-			'static_server_path' => $static_server_path
+			'static_server_path' => $static_server_path,
+			'maximum_times_reached' => $maximum_times_reached,
+			'cooldown_hours' => $randomapp_settings['cooldown'] / 60 / 60,
+			'maximum_times_played' => $randomapp_settings['maximum_times_played']
 		));
 		$this->load->view('play_view');
 	}
@@ -171,10 +171,7 @@ class Home extends CI_Controller {
 		$maximum_times_played = isset($randomapp_settings['maximum_times_played']) ? $randomapp_settings['maximum_times_played'] : 0;
 
 		if($times_played && $maximum_times_played && ($times_played >= $maximum_times_played)) {
-			$maximum_times_reached = TRUE;
-			$this->_maximum_reached();
-		} else {
-			$maximum_times_reached = FALSE;
+			redirect('home/play?maximum_times_reached=1');
 		}
 
 		$profile_image_size = $randomapp_settings['profile_image_size'];
@@ -233,8 +230,8 @@ class Home extends CI_Controller {
 
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
 
-		$image_path = FCPATH.'uploads/'.$filename.'.png';
-		$image_url = base_url().'uploads/'.$filename.'.png';
+		$image_path = FCPATH.'uploads/'.$filename.'.jpg';
+		$image_url = base_url().'uploads/'.$filename.'.jpg';
 
 		try {
 			//insert name
@@ -267,7 +264,7 @@ class Home extends CI_Controller {
 				unlink($image_path);
 			}
 			if(is_writable(FCPATH.'uploads')) {
-				imagepng($background_image, $image_path);
+				imagejpeg($background_image, $image_path);
 				imagedestroy($background_image);
 			} else {
 				exit('Image cannot be saved');
@@ -345,7 +342,7 @@ class Home extends CI_Controller {
 				}
 			} else {
 				//image not found
-				redirect('?image_error=1');
+				redirect('home/play?image_error=1');
 			}
 		} catch (FacebookApiException $e) {
 			if(is_writable($image_path)) {
