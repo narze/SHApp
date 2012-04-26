@@ -10,8 +10,9 @@
 	<?php } 
 	$this->load->view('ga'); ?>
 </head>
-<body style="padding-top:50px;<?php echo $app_bgcolor ? 'background-color:'.$app_bgcolor.';' : ''; ?>">
+<body style="<?php echo $app_bgcolor ? 'background-color:'.$app_bgcolor.';' : ''; ?>">
 	<center>
+		<div class="alert alert-success" style="margin-top:5px;margin-left:5px;margin-right:5px;">ทำการแชร์ภาพเรียบร้อยแล้ว</div>
 		<?php
 			echo '<p><a style="cursor: pointer;" class="btn btn-danger btn-large" onclick="top.location=\''.$facebook_link.'\';">ดูภาพของคุณ</a></p>';
 			echo '<p>'.anchor('home/play', 'เล่นใหม่', 'class="btn btn-large"').'</p>';
