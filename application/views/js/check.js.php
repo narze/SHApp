@@ -1,8 +1,9 @@
+<script type="text/javascript">
 var startFallbackCounter = function(){
   console.log('start fallback counter');
   window.fallbackCounter = setTimeout(function(){
     console.log('fallback time out, go to PHP');
-    window.location = '../index.php/home/check'
+    window.location = "<?php echo base_url('home/check');?>";
   }, 60000); // one minute
 }
 
@@ -14,12 +15,12 @@ var clearFallbackCounter = function(){
 var showForceLikePage = function() {
   $('div#content').text('please like us first');
   clearFallbackCounter();
-  window.location = 'like.html';
+  window.location = "<?php echo base_url('home/like');?>";
 }
 var showPlayPage = function() {
   $('div#content').text('let\'s play');
   clearFallbackCounter();
-  window.location = '../index.php/home/play';
+  window.location = "<?php echo base_url('home/play');?>";
 }
 var showLoginPage = function() {
   console.log('showLoginPage');
@@ -35,7 +36,7 @@ var showLoginPage = function() {
   // }, {scope:'user_about_me,publish_stream,user_likes'});
   // });
 
-  window.location = 'login.html';
+  window.location = "<?php echo base_url('home/login');?>";
 }
 var checkLike = function(user_id) {
   console.log('user logged in, checking like of user_id', user_id);
@@ -44,7 +45,7 @@ var checkLike = function(user_id) {
     $('#auth-loginlink').hide();
   }
 
-  var page_id = "135287989899131";
+  var page_id = "<?php echo $this->config->item('mockuphappen_facebook_page_id');?>";
   //
   var fql_query = "SELECT uid FROM page_fan WHERE page_id = " + page_id + "and uid=" + user_id;
   var the_query = FB.Data.query(fql_query);
@@ -67,7 +68,7 @@ var checkLike = function(user_id) {
 $(function() {
   window.fbAsyncInit = function() {
     FB.init({
-      appId : '204755022911798', // App ID
+      appId : "<?php echo $this->config->item('facebook_app_id');?>", // App ID
       channelUrl : 'channel/fb.php', // Channel File
       status : true, // check login status
       cookie : true, // enable cookies to allow the server to access the session
@@ -120,3 +121,4 @@ $(function() {
     js.src = "//connect.facebook.net/en_US/all.js";
     ref.parentNode.insertBefore(js, ref);
   }(document));
+</script>

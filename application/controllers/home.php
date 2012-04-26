@@ -11,10 +11,10 @@ class Home extends CI_Controller {
 	}
   
   /**
-   * redirect to check in javascript
+   * Check like in javascript
    */
 	function index(){
-	  redirect('assets/check.html');
+	  $this->load->view('check_view');
 	}
   
   /**
@@ -355,7 +355,28 @@ class Home extends CI_Controller {
 		}
 	}
 
-	function invite() {
-		echo 'coming soon';
+	/**
+	 * Load force like view without checking
+	 */
+	function like() {
+		$randomapp_settings = $this->config->item('randomapp_settings');
+		$this->load->vars(array(
+			'app_title' => $randomapp_settings['app_title'],
+			'app_bgcolor' => $randomapp_settings['app_bgcolor']
+		));
+		$this->load->view('like_view');
+	}
+
+	/**
+	 * Load login view without checking
+	 */
+	function login() {
+		$randomapp_settings = $this->config->item('randomapp_settings');
+		$this->load->vars(array(
+			'fb_root' => $this->fb->getFbRoot(),
+			'app_title' => $randomapp_settings['app_title'],
+			'app_bgcolor' => $randomapp_settings['app_bgcolor']
+		));
+		$this->load->view('facebook_connect');
 	}
 }
