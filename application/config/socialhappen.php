@@ -1,6 +1,6 @@
 <?php
 //SocialHappen
-$config['app_id'] = 4;
+$config['app_id'] = 5;
 $config['app_secret_key'] = 'cd14463efa98e6ee00fde6ccd51a9f6d';
 $config['api_url'] = 'https://socialhappen.dyndns.org/socialhappen/api/';
 
@@ -30,16 +30,16 @@ $config['facebook_force_like_app_id'] = '204755022911798';
 //}
 $config['mockuphappen_enable'] = TRUE;
 $config['static_server_enable'] = TRUE;
-$config['static_server_path'] = 'http://static.localhost.com/apps/posetonight/';
+$config['static_server_path'] = 'http://static.localhost.com/apps/weddingplace/';
 
 $config['randomapp_settings'] = array(
-	'app_title' => 'ท่ายากของคุณในคืนนี้',
+	'app_title' => 'คุณจะได้แต่งงานที่ไหน',
 	'profile_image_size' => 50,
 	'profile_image_x' => 155,
 	'profile_image_y' => 51,
 	'profile_image_type' => 'square',
 	'profile_image_facebook_size' => 50,
-	'default_message' => "ท่ายากของคุณในคืนนี้คือท่าอะไร เข้าไปดูได้ที่",
+	'default_message' => "คุณจะได้แต่งงานที่ไหน เข้าไปดูได้ที่",
 	'max_ramdom_number' => 23, //Total files (if $config['static_server_enable'] = TRUE)
 	'app_bgcolor' => '#000',
 	'maximum_times_played' => 1,
@@ -50,4 +50,4 @@ $config['static_app_enable'] = TRUE;
 $config['static_app_url'] = 'https://apps.localhost.com/static_app/';
 $config['static_app_message'] = 'อัพโหลดเรียบร้อย คลิกเพื่อดูภาพ';
 
-$config['google_analytics_tracking_id'] = 'UA-18943856-5';
+$config['google_analytics_tracking_id'] = 'UA-18943856-7';

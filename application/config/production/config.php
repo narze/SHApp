@@ -39,7 +39,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'https://app2.socialhappen.com/posetonight/';
+$config['base_url']	= 'https://app2.socialhappen.com/weddingplace/';
 
 /*
 |--------------------------------------------------------------------------
