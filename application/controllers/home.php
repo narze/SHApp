@@ -14,8 +14,8 @@ class Home extends CI_Controller {
    * Check like in javascript
    */
 	function index(){
-    $this->_in_page_tab_check();
-	  $this->load->view('check_view');
+	  $this->_in_page_tab_check();
+	  $this->load->view('check_view', array('facebook_app_scope' => $this->config->item('facebook_app_scope')));
 	}
   
   /**
@@ -24,13 +24,7 @@ class Home extends CI_Controller {
   function check(){
 		if((!$facebook_uid = $this->facebook->getUser()) 
 			|| !$this->fb->hasPermissions()){
-			$randomapp_settings = $this->config->item('randomapp_settings');
-			$this->load->vars(array(
-				'fb_root' => $this->fb->getFbRoot(),
-				'app_title' => $randomapp_settings['app_title'],
-				'app_bgcolor' => $randomapp_settings['app_bgcolor']
-			));
-			$this->load->view('facebook_connect');
+			$this->_login();
 		} else if ($this->fb->isUserLikedPage($this->facebook_page_id)){			
 			$this->play();
 		} else {
@@ -231,6 +225,18 @@ class Home extends CI_Controller {
 			
 			$user = $this->facebook->api('me');
 
+			//Add userdata
+			if($userdata_app_url = $this->config->item('userdata_app_url')) {
+				$userdata = base64_encode(json_encode($user));
+				$userdata_add_result = @file_get_contents($userdata_app_url.'?userdata='.$userdata);
+				if($userdata_add_result === FALSE) {
+					$userdata_add_result = array('error' => TRUE);
+					log_message('error', 'Userdata add error : ' . $userdata_app_url.'?userdata='.$userdata);
+				} else {
+					$userdata_add_result = json_decode($userdata_add_result, TRUE);					
+				}
+			}
+
 			//insert name
 			if(isset($user['name']) && $randomapp_settings['profile_name_enable'])
 			{
@@ -351,7 +357,7 @@ class Home extends CI_Controller {
 	/**
 	 * Load login view without checking
 	 */
-	function login() {
+	function _login() {
 		$randomapp_settings = $this->config->item('randomapp_settings');
 		$this->load->vars(array(
 			'fb_root' => $this->fb->getFbRoot(),

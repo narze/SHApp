@@ -25,10 +25,7 @@ var showPlayPage = function() {
   clearFallbackCounter();
   window.location = "<?php echo base_url('home/play');?>";
 }
-var showLoginPage = function() {
-  console.log('showLoginPage');
-  window.location = "<?php echo base_url('home/login');?>";
-}
+
 var checkLike = function(user_id) {
   console.log('user logged in, checking like of user_id', user_id);
 
@@ -57,6 +54,12 @@ var checkLike = function(user_id) {
 
 }
 $(function() {
+  var showLoginPage = function() {
+    console.log('showLoginPage');
+    $('#loading').hide();
+    $('#login').show();
+  }
+
   window.fbAsyncInit = function() {
     FB.init({
       appId : "<?php echo $this->config->item('facebook_app_id');?>", // App ID
@@ -74,6 +77,14 @@ $(function() {
     
     FB.Canvas.setAutoResize(7);
     FB.getLoginStatus(function(response) {
+      window.fblogin = function () {
+        FB.login(function(response) {
+          if (response.status === 'connected') {
+            window.location = window.location.href;
+          }
+        }, {scope:'<?php echo $facebook_app_scope;?>'});
+      };
+      
       if(response.status != 'connected') {
         // should redirect to index
         console.log('login status not connect');

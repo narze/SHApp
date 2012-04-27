@@ -53,16 +53,11 @@
 
 		<div>
 			<p>
+				<a href="<?php echo $this->config->item('static_app_url');?>"><img src="<?php echo base_url('assets/images/go-to-socialhappen.gif');?>" /></a>
+			</p>
+			<p>
 				<a target="_blank" href="<?php echo base_url('privacy_policy');?>">Privacy Policy</a> | 
 				<a target="_blank" href="<?php echo base_url('terms_of_service');?>">Terms of Service</a>
-			</p>
-		</div>
-		<div>
-			<p>&nbsp;</p>
-			<p>&nbsp;</p>
-			<p>&nbsp;</p>
-			<p>
-				<a href="<?php echo $this->config->item('static_app_url');?>"><img src="<?php echo base_url('assets/images/go-to-socialhappen.gif');?>" /></a>
 			</p>
 		</div>
 	</center>
