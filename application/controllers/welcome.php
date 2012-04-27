@@ -7,20 +7,28 @@ class Welcome extends CI_Controller {
 
 	function index()
 	{
-		if(($userdata = $this->input->get('userdata')) && isset($userdata['id'])) {
+		if(($userdata = $this->input->get('userdata'))) {
 			$userdata = json_decode(base64_decode($userdata), TRUE);
-			$this->load->model('userdata_model');
-			$userdata['facebook_user_id'] = "".$userdata['id'];
-			unset($userdata['id']);
-			if($result = $this->userdata_model->add($userdata)) {
-				echo json_encode(array(
-					'success' => TRUE,
-					'result' => $result
-				));
+			if(isset($userdata['id'])) {
+				$this->load->model('userdata_model');
+				$userdata['facebook_user_id'] = "".$userdata['id'];
+				unset($userdata['id']);
+				if($result = $this->userdata_model->add($userdata)) {
+					echo json_encode(array(
+						'success' => TRUE,
+						'result' => $result
+					));
+				} else {
+					echo json_encode(array(
+						'success' => FALSE,
+						'result' => 'Cannot add userdata, maybe duplicated id'
+					));
+				}
 			} else {
 				echo json_encode(array(
 					'success' => FALSE,
-					'result' => 'Cannot add userdata, maybe duplicated id'
+					'input' => $userdata,
+					'error' => 'Userdata has bad format'
 				));
 			}
 		} else {
