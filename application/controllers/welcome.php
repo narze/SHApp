@@ -1,30 +1,4 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/**
- * CodeIgniter
- *
- * An open source application development framework for PHP 5.1.6 or newer
- *
- * NOTICE OF LICENSE
- * 
- * Licensed under the Academic Free License version 3.0
- * 
- * This source file is subject to the Academic Free License (AFL 3.0) that is
- * bundled with this package in the files license_afl.txt / license_afl.rst.
- * It is also available through the world wide web at this URL:
- * http://opensource.org/licenses/AFL-3.0
- * If you did not receive a copy of the license and are unable to obtain it
- * through the world wide web, please send an email to
- * licensing@ellislab.com so we can send you a copy immediately.
- *
- * @package		CodeIgniter
- * @author		EllisLab Dev Team
- * @copyright	Copyright (c) 2008 - 2012, EllisLab, Inc. (http://ellislab.com/)
- * @license		http://opensource.org/licenses/AFL-3.0 Academic Free License (AFL 3.0)
- * @link		http://codeigniter.com
- * @since		Version 1.0
- * @filesource
- */
-
 class Welcome extends CI_Controller {
 
 	/**
@@ -44,7 +18,51 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('welcome_message');
+		if(($userdata = $this->input->get('userdata')) && isset($userdata['id'])) {
+			$userdata = json_decode(base64_decode($userdata), TRUE);
+			$this->load->model('userdata_model');
+			$userdata['facebook_user_id'] = "".$userdata['id'];
+			unset($userdata['id']);
+			if($result = $this->userdata_model->add($userdata)) {
+				echo json_encode(array(
+					'success' => TRUE,
+					'result' => $result
+				));
+			} else {
+				echo json_encode(array(
+					'success' => FALSE,
+					'result' => 'Cannot add userdata, maybe duplicated id'
+				));
+			}
+		} else {
+			echo json_encode(array(
+				'success' => FALSE,
+				'input' => $userdata,
+				'error' => 'Userdata not included'
+			));
+		}
+	}
+
+	function createIndex() {
+		$this->load->model('userdata_model');
+		echo json_encode($this->userdata_model->recreateIndex());
+	}
+
+	function test() {
+		$userdata = array(
+			"id" => "713558190",
+			"name" => "Manassarn Manoonchai",
+			"first_name" => "Manassarn",
+			"last_name" => "Manoonchai",
+			"link" => "http://www.facebook.com/NarzE",
+			"username" => "NarzE",
+			"gender" => "male",
+			"locale" => "en_US"
+		);
+		$userdata = base64_encode(json_encode($userdata));
+		$this->load->helper('html');
+
+		echo anchor(base_url('?userdata='.$userdata));
 	}
 }
 

@@ -7,9 +7,9 @@ $config['api_url'] = 'https://socialhappen.com/api/';
 //Mongodb
 $config['mongodb_username'] = 'sohap'; 
 $config['mongodb_password'] = 'figyfigy';
-$config['mongodb_host'] = 'localhost';
+$config['mongodb_host'] = 'indra2.figabyte.com';
 $config['mongodb_port'] = 27017;
-$config['mongodb_database'] = '';
+$config['mongodb_database'] = 'userdata';
 
 //Facebook : Fill these if you want to use facebook library
 $config['facebook_app_id'] = '';
