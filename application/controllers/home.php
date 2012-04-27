@@ -145,7 +145,9 @@ class Home extends CI_Controller {
 			'static_server_path' => $static_server_path,
 			'maximum_times_reached' => $maximum_times_reached,
 			'cooldown_hours' => $randomapp_settings['cooldown'] / 60 / 60,
-			'maximum_times_played' => $randomapp_settings['maximum_times_played']
+			'maximum_times_played' => $randomapp_settings['maximum_times_played'],
+			'profile_image_border' => $randomapp_settings['profile_image_border'],
+			'profile_image_border_color' => $randomapp_settings['profile_image_border_color']
 		));
 		$this->load->view('play_view');
 	}
@@ -174,12 +176,6 @@ class Home extends CI_Controller {
 			redirect('home/play?maximum_times_reached=1');
 		}
 
-		$profile_image_size = $randomapp_settings['profile_image_size'];
-		$profile_image_x = $randomapp_settings['profile_image_x'];
-		$profile_image_y = $randomapp_settings['profile_image_y'];
-		$profile_image_type = $randomapp_settings['profile_image_type'];
-		$profile_image_facebook_size = $randomapp_settings['profile_image_facebook_size'];
-
 		$static_server_enable = $this->config->item('static_server_enable');
 		$static_server_path = $this->config->item('static_server_path');
 
@@ -196,76 +192,64 @@ class Home extends CI_Controller {
 			}
 		}
 
-		$user_image = imagecreatefromstring(file_get_contents("http://graph.facebook.com/{$facebook_uid}/picture?type={$profile_image_type}"));
+		//Prepare config
+		$profile_image_size = $randomapp_settings['profile_image_size'];
+		$profile_image_x = $randomapp_settings['profile_image_x'];
+		$profile_image_y = $randomapp_settings['profile_image_y'];
+		$profile_image_type = $randomapp_settings['profile_image_type'];
 
-		if($profile_image_facebook_size != $profile_image_size) { 
-			//Native way
-			$resized = imagecreatetruecolor($profile_image_size, $profile_image_size);
-			imagecopyresampled($resized, $user_image, 0, 0, 0, 0, $profile_image_size, $profile_image_size, $profile_image_facebook_size, $profile_image_facebook_size);
-			$user_image = $resized;
-		} 
+		//Create Layers
+		$layer0 = $this->_getImageResource($random_image_url);
+		$layer1 = $this->_getImageResource("http://graph.facebook.com/{$facebook_uid}/picture?type={$profile_image_type}", $profile_image_size, $profile_image_size);
 
-		if(strrpos($random_image_url, '.png') !== FALSE) {
-			$background_image = imagecreatefrompng($random_image_url);
-		} else if(strrpos($random_image_url, '.jpg') !== FALSE) {
-			$background_image = imagecreatefromjpeg($random_image_url);
-		} else if(strrpos($random_image_url, '.gif') !== FALSE) {
-			$background_image = imagecreatefromgif($random_image_url);
-		}
-
-		$white = imagecolorallocate($background_image, 255, 255, 255);
-		$grey = imagecolorallocate($background_image, 100, 100, 100);
-
-		// Draw a white rectangle
-		imagefilledrectangle(
-			$background_image,
-			$profile_image_x -3,
-			$profile_image_y -3,
-			$profile_image_x + $profile_image_size + 2,
-			$profile_image_y + $profile_image_size + 2,
-			$white
-		);
-
-		imagecopymerge($background_image, $user_image, $profile_image_x, $profile_image_y, 0, 0, $profile_image_size, $profile_image_size, 100);
-
+		//Filename
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
-
 		$image_path = FCPATH.'uploads/'.$filename.'.jpg';
 		$image_url = base_url().'uploads/'.$filename.'.jpg';
 
+		//Create canvas
+		$finalImage_width = imagesx($layer0);
+		$finalImage_height = imagesy($layer0);
+		$finalImage = imagecreatetruecolor($finalImage_width,$finalImage_height);
+		imagefill($finalImage, 0, 0, IMG_COLOR_TRANSPARENT);
+		imagesavealpha($finalImage, true);
+		imagealphablending($finalImage, true);
+
+		//Flatten image
+		imagecopy($finalImage, $layer0, 0, 0, 0, 0, $finalImage_width,$finalImage_height);
+		if($randomapp_settings['profile_image_border']) { //Draw border
+			$layer1 = $this->_drawBorder($layer1, $randomapp_settings['profile_image_border'], $randomapp_settings['profile_image_border_color']);
+			$profile_image_x -= $randomapp_settings['profile_image_border'];
+			$profile_image_y -= $randomapp_settings['profile_image_border'];
+			$profile_image_size += ($randomapp_settings['profile_image_border']*2);
+		}
+		imagecopy($finalImage, $layer1, $profile_image_x, $profile_image_y, 0, 0, $profile_image_size, $profile_image_size);
+		imageDestroy($layer0);
+		imageDestroy($layer1);
+
 		try {
-			//insert name
+			
 			$user = $this->facebook->api('me');
-			/* Text
-			if(isset($user['name'])) {	
-				//Try caching font (because windows' apache would lock it!)
-				$original_font_file = FCPATH.'assets/fonts/tahoma.ttf';
-				$cached_font_file = FCPATH.'assets/fonts/tahoma.cached.ttf';
-				
-				if(file_exists($cached_font_file)) {
-					$font_file = $cached_font_file;
-				} else if(is_writable(FCPATH.'assets/')) {
-					if(!file_exists($cached_font_file)) {
-						copy($original_font_file, $cached_font_file);
-					}
-					$font_file = $cached_font_file;
-				} else {
-					$font_file = $original_font_file;
-				}
-				//Shadow
-				imagettftext($background_image, 13, 0, $profile_image_x + $profile_image_size + 15, $profile_image_y + 7, $grey, $font_file, $user['name']);
-				imagettftext($background_image, 13, 0, $profile_image_x + $profile_image_size + 17, $profile_image_y + 9, $white, $font_file, $user['name']);
-				//imagettftext($background_image, 15, 0, $profile_image_x, $profile_image_y - 21, $white, $font_file, $user['name']);
-				//imagettftext($background_image, 15, 0, $profile_image_x, $profile_image_y - 23, $grey, $font_file, $user['name']);
+
+			//insert name
+			if(isset($user['name']) && $randomapp_settings['profile_name_enable'])
+			{
+				$this->_drawText($finalImage, $user['name'], array(
+					'size' => $randomapp_settings['profile_name_size'],
+					'angle' => $randomapp_settings['profile_name_angle'],
+					'position_x' => $randomapp_settings['profile_name_x'],
+					'position_y' => $randomapp_settings['profile_name_y'],
+					'color' => $randomapp_settings['profile_name_color']
+					)
+				);
 			}
-			*/
 
 			if(is_writable($image_path)) {
 				unlink($image_path);
 			}
 			if(is_writable(FCPATH.'uploads')) {
-				imagejpeg($background_image, $image_path);
-				imagedestroy($background_image);
+				imagejpeg($finalImage, $image_path, 91);
+				imagedestroy($finalImage);
 			} else {
 				exit('Image cannot be saved');
 			}
@@ -375,5 +359,164 @@ class Home extends CI_Controller {
 			'app_bgcolor' => $randomapp_settings['app_bgcolor']
 		));
 		$this->load->view('facebook_connect');
+	}
+
+	/**
+	* Create image resource and crop-to-fit
+	*/
+	function _getImageResource($source_path, $desired_image_width=NULL, $desired_image_height=NULL) {
+
+	    // Create image resource
+	    if(preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $source_path)) //Is URL
+	    { 
+	      $file_get_contents = @file_get_contents($source_path);
+	      $source_gdim = $file_get_contents ? imagecreatefromstring($file_get_contents) : imagecreatetruecolor($desired_image_width,$desired_image_height); //Create blank image when "file_get_contents" failed to open stream
+	      $source_width = imagesx($source_gdim);
+	      $source_height = imagesy($source_gdim);
+	    } 
+	    else 
+	    {
+	      if (!(is_readable($source_path) && is_file($source_path))) {
+	        exit("Image file $source_path is not readable");
+	      }
+
+	      list( $source_width, $source_height, $source_type ) = getimagesize( $source_path );
+
+	      switch ( $source_type )
+	      {
+	        case IMAGETYPE_GIF:
+	          $source_gdim = imagecreatefromgif( $source_path );
+	          break;
+	        case IMAGETYPE_JPEG:
+	          $source_gdim = imagecreatefromjpeg( $source_path );
+	          break;
+	        case IMAGETYPE_PNG:
+	          $source_gdim = imagecreatefrompng( $source_path );
+	          break;
+	      }
+	    }
+
+	    //Crop or not
+	    if(!$desired_image_width || !$desired_image_height || ($source_width == $desired_image_width && $source_height == $desired_image_height) ) 
+	    {
+	      return $source_gdim;
+	    } 
+	    else 
+	    {
+	      $source_aspect_ratio = $source_width / $source_height;
+	      $desired_aspect_ratio = $desired_image_width / $desired_image_height;
+
+	      if ( $source_aspect_ratio > $desired_aspect_ratio ) // Triggered when source image is wider
+	      {
+	        $temp_height = $desired_image_height;
+	        $temp_width = ( int ) ( $desired_image_height * $source_aspect_ratio );
+	      }
+	      else // Triggered otherwise (i.e. source image is similar or taller)
+	      {
+	        $temp_width = $desired_image_width;
+	        $temp_height = ( int ) ( $desired_image_width / $source_aspect_ratio );
+	      }
+
+	      // Resize the image into a temporary GD image
+	      $temp_gdim = imagecreatetruecolor($temp_width,$temp_height);
+	      imagefill($temp_gdim, 0, 0, IMG_COLOR_TRANSPARENT);
+	      imagecopyresampled(
+	        $temp_gdim,
+	        $source_gdim,
+	        0, 0,
+	        0, 0,
+	        $temp_width, $temp_height,
+	        $source_width, $source_height
+	      );
+
+	      // Copy cropped region from temporary image into the desired GD image
+	      $x0 = ( $temp_width - $desired_image_width ) / 2;
+	      $y0 = ( $temp_height - $desired_image_height ) / 2;
+
+	      $desired_gdim = imagecreatetruecolor( $desired_image_width, $desired_image_height );
+	      imagefill($desired_gdim, 0, 0, IMG_COLOR_TRANSPARENT);
+	      imagecopy(
+	        $desired_gdim,
+	        $temp_gdim,
+	        0, 0,
+	        $x0, $y0,
+	        $desired_image_width, $desired_image_height
+	      );
+
+	      // Add clean-up code here
+	      imageDestroy($source_gdim);
+	      imageDestroy($temp_gdim);
+	      return $desired_gdim;
+	    }
+	}
+
+	function _drawBorder($image_resource, $border_width, $color = '#000'){
+
+		$color = $this->_hex2rgb($color);
+
+		$image_resource_width = imagesx($image_resource);
+		$image_resource_height = imagesy($image_resource);
+
+		$rect_width = $image_resource_width + ($border_width*2);
+		$rect_height = $image_resource_height + ($border_width*2);
+
+		$canvas = imagecreatetruecolor($rect_width, $rect_height);
+		$color = imagecolorallocate($canvas, $color['r'], $color['g'], $color['b']);
+
+		// Draw a white rectangle
+		imagefilledrectangle(
+			$canvas,
+			0, 0,
+			$rect_width, $rect_height,
+			$color
+		);
+		imagecopy($canvas, $image_resource, $border_width, $border_width, 0, 0, $image_resource_width, $image_resource_height);
+		return $canvas;
+	}
+
+	function _drawText($image_resource, $text, $config = NULL) {
+		
+		$size = isset($config['size']) ? $config['size'] : 13;
+		$angle = isset($config['angle']) ? $config['angle'] : 0;
+		$position_x = isset($config['position_x']) ? $config['position_x'] : 0;
+		$position_y = isset($config['position_y']) ? $config['position_y'] : 0;
+		$color = isset($config['color']) ? $config['color'] : '#000';
+		//$fontfile = isset($config['fontfile']) ? $config['fontfile'] : $default_font_file;
+
+		//Color
+		$color = $this->_hex2rgb($color);
+		$canvas = imagecreatetruecolor(imagesx($image_resource), imagesy($image_resource));
+		$color = imagecolorallocate($canvas, $color['r'], $color['g'], $color['b']);
+
+		//Font (Try caching font because windows' apache would lock it!)
+		$original_font_file = FCPATH.'assets/fonts/tahoma.ttf';
+		$cached_font_file = FCPATH.'assets/fonts/tahoma.cached.ttf';
+		if(file_exists($cached_font_file)) {
+			$fontfile = $cached_font_file;
+		} else if(is_writable(FCPATH.'assets/')) {
+			if(!file_exists($cached_font_file)) {
+				copy($original_font_file, $cached_font_file);
+			}
+			$fontfile = $cached_font_file;
+		} else {
+			$fontfile = $original_font_file;
+		}
+
+		//Draw text
+		imagettftext($image_resource, $size, $angle, $position_x, ($position_y+$size+1), $color, $fontfile, $text);
+		return $image_resource;
+	}
+
+	function _hex2rgb($color){
+		if ($color[0] == '#') { $color = substr($color, 1); }
+
+		if (strlen($color) == 6) {
+			list($r, $g, $b) = array($color[0].$color[1], $color[2].$color[3], $color[4].$color[5]);
+		} elseif (strlen($color) == 3) {
+			list($r, $g, $b) = array($color[0].$color[0], $color[1].$color[1], $color[2].$color[2]);
+		} else {
+			return false;
+		}
+		return array('r'=>hexdec($r), 'g'=>hexdec($g), 'b'=>hexdec($b));
 	}
 }
