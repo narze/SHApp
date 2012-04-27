@@ -78,7 +78,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('socialhappen', 'fb');
+$autoload['libraries'] = array();
 
 
 /*
@@ -135,7 +135,7 @@ $autoload['language'] = array();
 |
 */
 
-$autoload['model'] = array('setting_model');
+$autoload['model'] = array();
 
 
 /* End of file autoload.php */
