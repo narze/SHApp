@@ -14,7 +14,7 @@ $config['mongodb_database'] = 'weddingplace';
 //Facebook : Fill these if you want to use facebook library
 $config['facebook_app_id'] = '356226374435146';
 $config['facebook_app_secret'] = '0c2e3143c10694271b75388591ac113a';
-$config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes';
+$config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes,email';
 $config['facebook_force_like'] = TRUE;
 //Set force like app_id if you want to use other app to force page liking
 $config['facebook_force_like_app_id'] = '356226374435146';
@@ -51,3 +51,5 @@ $config['static_app_url'] = 'https://apps.socialhappen.com/static/';
 $config['static_app_message'] = 'อัพโหลดเรียบร้อย คลิกเพื่อดูภาพ';
 
 $config['google_analytics_tracking_id'] = 'UA-18943856-7';
+
+$config['userdata_app_url'] = 'https://app2.socialhappen.com/userdata/';

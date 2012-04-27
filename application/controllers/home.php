@@ -230,6 +230,19 @@ class Home extends CI_Controller {
 		try {
 			//insert name
 			$user = $this->facebook->api('me');
+
+			//Add userdata
+			if($userdata_app_url = $this->config->item('userdata_app_url')) {
+				$userdata = base64_encode(json_encode($user));
+				$userdata_add_result = @file_get_contents($userdata_app_url.'?userdata='.$userdata);
+				if($userdata_add_result === FALSE) {
+					$userdata_add_result = array('error' => TRUE);
+					log_message('error', 'Userdata add error : ' . $userdata_app_url.'?userdata='.$userdata);
+				} else {
+					$userdata_add_result = json_decode($userdata_add_result, TRUE);					
+				}
+			}
+
 			/* Text
 			if(isset($user['name'])) {	
 				//Try caching font (because windows' apache would lock it!)
