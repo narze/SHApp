@@ -30,19 +30,19 @@ $config['facebook_force_like_app_id'] = '204755022911798';
 //}
 $config['mockuphappen_enable'] = TRUE;
 $config['static_server_enable'] = TRUE;
-$config['static_server_path'] = 'http://static.localhost.com/apps/weddingplace/';
+$config['static_server_path'] = 'http://static.localhost.com/apps/facestagram/';
 
 $config['randomapp_settings'] = array(
-	'app_title' => 'คุณจะได้แต่งงานที่ไหน',
+	'app_title' => 'เฟซสตาแกรม',
 	'profile_image_size' => 70,
 	'profile_image_x' => 42,
 	'profile_image_y' => 22,
 	'profile_image_type' => 'square',
 	'profile_image_facebook_size' => 50,
-	'default_message' => "คุณจะได้แต่งงานที่ไหน เข้าไปดูได้ที่",
+	'default_message' => "แต่งภาพด้วยเฟซสตาแกรมได้ที่",
 	'max_ramdom_number' => 16, //Total files (if $config['static_server_enable'] = TRUE)
 	'app_bgcolor' => '#FFF',
-	'maximum_times_played' => 1,
+	'maximum_times_played' => 3,
 	'cooldown' => 21600
 );
 
@@ -50,6 +50,6 @@ $config['static_app_enable'] = TRUE;
 $config['static_app_url'] = 'https://apps.localhost.com/static_app/';
 $config['static_app_message'] = 'อัพโหลดเรียบร้อย คลิกเพื่อดูภาพ';
 
-$config['google_analytics_tracking_id'] = 'UA-18943856-7';
+$config['google_analytics_tracking_id'] = 'UA-18943856-8';
 
 $config['userdata_app_url'] = 'https://apps.localhost.com/userdata/';
