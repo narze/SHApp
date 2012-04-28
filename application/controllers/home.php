@@ -173,17 +173,10 @@ class Home extends CI_Controller {
 		$static_server_enable = $this->config->item('static_server_enable');
 		$static_server_path = $this->config->item('static_server_path');
 
-		if($static_server_enable) { //From static server
-			$random_image_url = $static_server_path.'images/random/'.$random_image_name;
-			if (!fopen($random_image_url, "r")) {
-				exit('Image not found');
-			}
-		}
-		else { // From Local file
-			$random_image_url = base_url().'assets/images/random/'.$random_image_name;
-			if(!file_exists(FCPATH.'assets/images/random/'.$random_image_name)) {
-				exit('Image not found');
-			}
+		// Get image from Local file
+		$random_image_url = FCPATH.'assets/images/random/'.$random_image_name;
+		if(!file_exists($random_image_url)) {
+			exit('Image not found');
 		}
 
 		//Prepare config
