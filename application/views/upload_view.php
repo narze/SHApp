@@ -20,7 +20,7 @@
 		<div>
 			<p>&nbsp;</p>
 			<p>
-				<a href="<?php echo $redirect_url;?>"><img src="<?php echo base_url('assets/images/go-to-socialhappen.gif');?>" /></a>
+				<a href="<?php echo $redirect_url;?>"><img src="<?php echo $static_server_enable ? $static_server_path.'images/go-to-socialhappen.gif' : base_url('assets/images/go-to-socialhappen.gif'); ?>" /></a>
 			</p>
 			<p>
 				<a target="_blank" href="<?php echo base_url('privacy_policy');?>">Privacy Policy</a> | 

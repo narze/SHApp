@@ -66,7 +66,9 @@ class Home extends CI_Controller {
 				$randomapp_settings = $this->config->item('randomapp_settings');
 				$this->load->vars(array(
 					'app_title' => $randomapp_settings['app_title'],
-					'app_bgcolor' => $randomapp_settings['app_bgcolor']
+					'app_bgcolor' => $randomapp_settings['app_bgcolor'],
+					'static_server_enable' => $this->config->item('static_server_enable'),
+					'static_server_path' => $this->config->item('static_server_path')
 				));
 				$this->load->view('like_view');
 			}
@@ -342,7 +344,9 @@ class Home extends CI_Controller {
 		$randomapp_settings = $this->config->item('randomapp_settings');
 		$this->load->vars(array(
 			'app_title' => $randomapp_settings['app_title'],
-			'app_bgcolor' => $randomapp_settings['app_bgcolor']
+			'app_bgcolor' => $randomapp_settings['app_bgcolor'],
+			'static_server_enable' => $this->config->item('static_server_enable'),
+			'static_server_path' => $this->config->item('static_server_path')
 		));
 		$this->load->view('like_view');
 	}
@@ -355,7 +359,9 @@ class Home extends CI_Controller {
 		$this->load->vars(array(
 			'fb_root' => $this->fb->getFbRoot(),
 			'app_title' => $randomapp_settings['app_title'],
-			'app_bgcolor' => $randomapp_settings['app_bgcolor']
+			'app_bgcolor' => $randomapp_settings['app_bgcolor'],
+			'static_server_enable' => $this->config->item('static_server_enable'),
+			'static_server_path' => $this->config->item('static_server_path')
 		));
 		$this->load->view('facebook_connect');
 	}

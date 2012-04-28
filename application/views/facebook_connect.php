@@ -8,9 +8,11 @@
 	<body <?php echo $app_bgcolor ? 'style="background-color:'.$app_bgcolor.';"' : ''; ?>>
 		<?php echo $fb_root;?>
 		<center>
-			<a id="fblogin" onclick="fblogin();" style="cursor:pointer;"><img src="<?php echo base_url('assets/images/start.jpg');?>" /></a>
-			<div><a target="_blank" href="<?php echo base_url('privacy_policy');?>">Privacy Policy</a></div>
-			<div><a target="_blank" href="<?php echo base_url('terms_of_service');?>">Terms of Service</a></div>
+			<a id="fblogin" onclick="fblogin();" style="cursor:pointer;"><img src="<?php echo $static_server_enable ? $static_server_path.'images/start.jpg' : base_url('assets/images/start.jpg'); ?>" /></a>
+			<div style="margin-top:50px;">
+				<a style="color:#555;" target="_blank" href="<?php echo base_url('privacy_policy');?>">Privacy Policy</a> | 
+				<a style="color:#555;" target="_blank" href="<?php echo base_url('terms_of_service');?>">Terms of Service</a>
+			</div>
 		</center>
 	</body>
 </html>
