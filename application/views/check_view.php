@@ -10,7 +10,7 @@ xmlns:fb="https://www.facebook.com/2008/fbml">
       <div id="loading">Loading ...</div>
       <div id="login" style="display:none;">
         <center>
-          <a id="fblogin" onclick="fblogin();" style="cursor:pointer;"><img src="<?php echo base_url('assets/images/start.jpg');?>" /></a>
+          <a id="fblogin" onclick="fblogin();" style="cursor:pointer;"><img src="<?php echo $static_server_enable ? $static_server_path.'images/start.jpg' : base_url('assets/images/start.jpg'); ?>" /></a>
           <div><a target="_blank" href="<?php echo base_url('privacy_policy');?>">Privacy Policy</a></div>
           <div><a target="_blank" href="<?php echo base_url('terms_of_service');?>">Terms of Service</a></div>
         </center>
