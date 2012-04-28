@@ -15,7 +15,11 @@ class Home extends CI_Controller {
    */
 	function index(){
 	  $this->_in_page_tab_check();
-	  $this->load->view('check_view', array('facebook_app_scope' => $this->config->item('facebook_app_scope')));
+	  $this->load->view('check_view', array(
+	  	'facebook_app_scope' => $this->config->item('facebook_app_scope'),
+	  	'static_server_enable' => $this->config->item('static_server_enable'),
+		'static_server_path' => $this->config->item('static_server_path')
+	  ));
 	}
   
   /**
