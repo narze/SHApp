@@ -53,7 +53,7 @@ class Instagraph
     public function output()
     {
         # rename working temporary file to output filename
-        // rename($this->_tmp, $this->_output);
+        rename($this->_tmp, $this->_output);
     }
 
     public function execute($command)
