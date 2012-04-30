@@ -13,6 +13,7 @@ class Welcome extends CI_Controller {
 				$this->load->model('userdata_model');
 				$userdata['facebook_user_id'] = "".$userdata['id'];
 				unset($userdata['id']);
+				$userdata['userdata_added_time'] = time();
 				if($result = $this->userdata_model->add($userdata)) {
 					echo json_encode(array(
 						'success' => TRUE,
