@@ -44,12 +44,15 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$input = FCPATH.'assets/images/random/1.jpg';
-		$output = FCPATH.'uploads/test3.jpg';
+		$input = FCPATH.'uploads/input.jpg';
+		$output = FCPATH.'uploads/output.jpg';
 		$temp_path = FCPATH.'uploads/';
+		$template_path = FCPATH.'assets/templates/';
 		$this->load->library('instagraph');
-		$this->instagraph->init($input, $output, $temp_path);
-		$this->instagraph->kelvin();
+		$this->instagraph->init($input, $output, $temp_path, $template_path);
+		$this->instagraph->test();
+		echo '<img src="'.base_url('uploads/input.jpg').'" />';
+		echo '<img src="'.base_url('uploads/output.jpg').'" />';
 		// phpinfo();
 	}
 }
