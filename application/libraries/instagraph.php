@@ -155,7 +155,7 @@ class Instagraph
     {
         $this->tempfile();
         
-        $command = "convert $this->_tmp -channel R -level 33% -channel G -level 33% $this->_tmp";
+        $command = "convert $this->_tmp -channel R -level 30% -channel G -level 15% $this->_tmp";
         
         $this->execute($command);
         $this->vignette($this->_tmp);
@@ -228,15 +228,27 @@ class Instagraph
         $this->output();
     }
 
+    # Lomo 2
+    public function lomo2()
+    {
+        $this->tempfile();
+
+        $this->execute("convert $this->_tmp "."
+        -contrast 120 -modulate 100,200
+        "." $this->_tmp");
+        $this->vignette($this->_tmp, 'none', 'black', 1.3);
+        $this->output();
+    }
+
     # for test
     public function test()
     {
         $this->tempfile();
 
         $this->execute("convert $this->_tmp "."
-        ......
+        ....
         "." $this->_tmp");
-
+        $this->vignette($this->_tmp);
         $this->output();
     }
 
