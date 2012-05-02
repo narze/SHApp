@@ -50,7 +50,12 @@ class Welcome extends CI_Controller {
 		$template_path = FCPATH.'assets/templates/';
 		$this->load->library('instagraph');
 		$this->instagraph->init($input, $output, $temp_path, $template_path);
-		$this->instagraph->test();
+		$filter = $this->input->get('filter');
+		if($filter) {
+			$this->instagraph->{$filter}();
+		} else {
+			$this->instagraph->tilt_shift();
+		}
 		echo '<img src="'.base_url('uploads/input.jpg').'" />';
 		echo '<img src="'.base_url('uploads/output.jpg').'" />';
 		// phpinfo();

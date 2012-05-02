@@ -121,7 +121,7 @@ class Instagraph
     /** FILTER METHODS */
     
     # GOTHAM
-    public function gotham()
+    public function filter_gotham()
     {
         $this->tempfile();
         $this->execute("convert $this->_tmp -modulate 120,10,100 -fill #222b6d -colorize 20 -gamma 0.5 -contrast -contrast $this->_tmp");
@@ -130,7 +130,7 @@ class Instagraph
     }
 
     # TOASTER
-    public function toaster()
+    public function filter_toaster()
     {
         $this->tempfile();
         $this->colortone($this->_tmp, '#330000', 100, 0);
@@ -144,7 +144,7 @@ class Instagraph
     }
     
     # NASHVILLE
-    public function nashville()
+    public function filter_nashville()
     {
         $this->tempfile();
         
@@ -158,7 +158,7 @@ class Instagraph
     }
         
     # LOMO-FI
-    public function lomo()
+    public function filter_lomo()
     {
         $this->tempfile();
         
@@ -171,7 +171,7 @@ class Instagraph
     }
 
     # KELVIN
-    public function kelvin()
+    public function filter_kelvin()
     {
         $this->tempfile();
         
@@ -186,7 +186,7 @@ class Instagraph
     }
 
     # TILT SHIFT
-    public function tilt_shift()
+    public function filter_tilt_shift()
     {
         $this->tempfile();
 
@@ -200,7 +200,7 @@ class Instagraph
     }
 
     # Charcoal
-    public function charcoal()
+    public function filter_charcoal()
     {
         $this->tempfile();
 
@@ -212,7 +212,7 @@ class Instagraph
     }
 
     # Sketch
-    public function sketch()
+    public function filter_sketch()
     {
         $this->tempfile();
 
@@ -224,7 +224,7 @@ class Instagraph
     }
 
     # Whitening 
-    public function whitening()
+    public function filter_whitening()
     {
         $this->tempfile();
 
@@ -236,7 +236,7 @@ class Instagraph
     }
 
     # Lomo 2
-    public function lomo2()
+    public function filter_lomo2()
     {
         $this->tempfile();
 
@@ -248,7 +248,7 @@ class Instagraph
     }
 
     # for test
-    public function test()
+    public function filter_test()
     {
         $this->tempfile();
 
@@ -262,47 +262,14 @@ class Instagraph
     }
 
     public function random() {
-        $this->tempfile();
-
-        //randomcolortone
-        $colortones = array(
-            //toaster
-            '#330000, 100, 0',
-            //nashville1
-            '#222b6d, 100, 0',
-            //nashville2
-            '#f7daae, 100, 1'
-        );
-
-        //randomconvert
-        $converts = array(
-            //gotham
-            "convert $this->_tmp -modulate 120,10,100 -fill '#222b6d' -colorize 20 -gamma 0.5 -contrast -contrast $this->_tmp",
-            //toaster
-            "convert $this->_tmp -modulate 150,80,100 -gamma 1.2 -contrast -contrast $this->_tmp",
-            //nashville
-            "convert $this->_tmp -contrast -modulate 100,150,100 -auto-gamma $this->_tmp",
-            //lomo
-            "convert {$this->_tmp} -channel R -level 33% -channel G -level 33% $this->_tmp",
-            //kelvin
-            "convert
-            $this->_tmp -auto-gamma -modulate 120,50,100
-            -size {$this->_width}x{$this->_height} -fill 'rgba(255,153,0,0.5)' -draw 'rectangle 0,0 {$this->_width},{$this->_height}'
-            -compose multiply
-            $this->_tmp"
-        );
-
-        //randomframe | border | vignette
-        $borders = array(
-            'border, black, 20',
-            'frame, nashville',
-            'vignette, none, LavenderBlush3',
-            'vignette, #ff9966, none',
-            'vignette, nonem black',
-            'frame, kelvin'
-        );
-
-        $this->output();
-
+        $class_methods = get_class_methods($this);
+        $filters = array();
+        foreach ($class_methods as $method) {
+            if(preg_match("/^(filter_)/", $method)){
+                $filters[] = $method;
+            }
+        }
+        $n = array_rand($filters);
+        $this->{$filters[$n]}();
     }
 }
