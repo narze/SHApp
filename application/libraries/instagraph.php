@@ -55,6 +55,7 @@ class Instagraph
     public function output()
     {
         # rename working temporary file to output filename
+        $this->watermark($this->_tmp, $this->_template_path.'watermark.png');
         rename($this->_tmp, $this->_output);
     }
 
@@ -256,8 +257,6 @@ class Instagraph
         "." $this->_tmp");
 
         $this->vignette($this->_tmp);
-
-        $this->watermark($this->_tmp, $this->_template_path.'watermark.png');
 
         $this->output();
     }
