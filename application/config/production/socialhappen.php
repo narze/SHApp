@@ -14,7 +14,7 @@ $config['mongodb_database'] = 'facestagram';
 //Facebook : Fill these if you want to use facebook library
 $config['facebook_app_id'] = '328373487230218';
 $config['facebook_app_secret'] = '8d79281a11e1183f9ecb26da82c034d2';
-$config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes,email';
+$config['facebook_app_scope'] = 'user_about_me,user_photos,publish_stream,user_likes,email';
 $config['facebook_force_like'] = TRUE;
 //Set force like app_id if you want to use other app to force page liking
 $config['facebook_force_like_app_id'] = '328373487230218';
