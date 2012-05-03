@@ -39,7 +39,7 @@ $config['randomapp_settings'] = array(
 	'profile_image_y' => 48,
 	'profile_image_type' => 'square',
 	'profile_image_border' => 3,
-	'profile_image_border_color' => '#fff',
+	'profile_image_border_color' => '#f00',
 	'profile_name_enable' => FALSE,
 	'profile_name_size' => 13,
 	'profile_name_angle' => 0,
@@ -48,7 +48,7 @@ $config['randomapp_settings'] = array(
 	'profile_name_color' => '#000',
 	'default_message' => "ล่า ท้า ผี คุณจะเจอผีแบบไหน? เข้าไปเจอได้ที่นี่",
 	'max_ramdom_number' => 36, //Total files (if $config['static_server_enable'] = TRUE)
-	'app_bgcolor' => '#FFF',
+	'app_bgcolor' => '#000',
 	'maximum_times_played' => 3,
 	'cooldown' => 21600
 );
