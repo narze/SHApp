@@ -34,9 +34,9 @@ $config['static_server_path'] = 'http://static.localhost.com/apps/khmername/';
 
 $config['randomapp_settings'] = array(
 	'app_title' => 'ชื่อเขมรของคุณ',
-	'profile_image_size' => 65,
-	'profile_image_x' => 70,
-	'profile_image_y' => 48,
+	'profile_image_size' => 50,
+	'profile_image_x' => 203,
+	'profile_image_y' => 42,
 	'profile_image_type' => 'square',
 	'profile_image_border' => 3,
 	'profile_image_border_color' => '#fff',
