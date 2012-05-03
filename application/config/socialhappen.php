@@ -30,18 +30,18 @@ $config['facebook_force_like_app_id'] = '204755022911798';
 //}
 $config['mockuphappen_enable'] = TRUE;
 $config['static_server_enable'] = TRUE;
-$config['static_server_path'] = 'http://static.localhost.com/apps/khmername/';
+$config['static_server_path'] = 'http://static.localhost.com/apps/lovestatus/';
 
 $config['randomapp_settings'] = array(
-	'app_title' => 'ชื่อเขมรของคุณ',
+	'app_title' => 'สถานะโดนใจ มือกด Like ใจกด Love',
 	'profile_image_size' => 65,
 	'profile_image_x' => 70,
 	'profile_image_y' => 48,
 	'profile_image_type' => 'square',
 	'profile_image_facebook_size' => 50,
-	'default_message' => "ดูชื่อเขมรของคุณได้ที่นี่",
-	'max_ramdom_number' => 27, //Total files (if $config['static_server_enable'] = TRUE)
-	'app_bgcolor' => '#000',
+	'default_message' => "เลือกสถานะโดนใจของคุณได้ที่นี่",
+	'max_ramdom_number' => 36, //Total files (if $config['static_server_enable'] = TRUE)
+	'app_bgcolor' => '#FFF',
 	'maximum_times_played' => 3,
 	'cooldown' => 21600
 );
@@ -50,6 +50,6 @@ $config['static_app_enable'] = TRUE;
 $config['static_app_url'] = 'https://apps.localhost.com/static_app/';
 $config['static_app_message'] = 'อัพโหลดเรียบร้อย คลิกเพื่อดูภาพ';
 
-$config['google_analytics_tracking_id'] = 'UA-18943856-8';
+$config['google_analytics_tracking_id'] = 'UA-18943856-9';
 
 $config['userdata_app_url'] = 'https://apps.localhost.com/userdata/';
