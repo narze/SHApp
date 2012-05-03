@@ -10,8 +10,6 @@
 	<?php } ?>
 	<style type="text/css">
 	.img-box { width:403px;height:403px;margin-bottom:20px;position:relative; }
-	.user-profile { position: absolute; overflow: hidden; border:3px solid #fff; width:<?php echo $img_size;?>px; height:<?php echo $img_size;?>px; left:<?php echo $img_x;?>px; top:<?php echo $img_y;?>px; }
-	.user-profile img { width:<?php echo $img_size;?>px; height:<?php echo $img_size;?>px; }
 	</style>
 	<?php $this->load->view('ga'); ?>
 </head>
@@ -23,13 +21,12 @@
 		<?php endif ;?>
 		<div class="img-box">
 			<?php echo img($image_url); ?>
-			<div class="user-profile"><img src="https://graph.facebook.com/<?php echo $facebook_uid;?>/picture?type=<?php echo $profile_image_type ?>" /></div>
 		</div>
 		
 		<div id="share_form">
 			<?php 
 				echo form_open('home/upload', array('class'=>'form-inline')); ?>
-					<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />
+				<input type="hidden" name="filter_name" value="<?php echo $filter_name;?>" />
 					<?php if($maximum_times_reached) : ?>
 						<input disabled="true" style="height:37px;" class="input-large" id="message" type="text" name="message" maxlength="255" value="" <?php echo form_error('message') ? 'class="form-error"':''; ?> placeholder="Message" />
 						<button disabled="true" id="share_button" type="submit" class="btn btn-danger btn-large" name="upload">Share!</button>
@@ -40,7 +37,7 @@
 				echo form_close();
 			
 			echo form_open('home/play'); ?>
-			<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />
+			<input type="hidden" name="filter_name" value="<?php echo $filter_name;?>" />
 			<button type="submit" class="btn" name="upload">เล่นใหม่</button>
 			<?php echo form_close(); ?>
 		</div>
