@@ -10,8 +10,7 @@
 	<?php } ?>
 	<style type="text/css">
 	.img-box { width:403px;height:403px;margin-bottom:20px;position:relative; }
-	.user-profile { position: absolute; overflow: hidden; border:3px solid #fff; width:<?php echo $img_size;?>px; height:<?php echo $img_size;?>px; left:<?php echo $img_x;?>px; top:<?php echo $img_y;?>px; }
-	.user-profile img { width:<?php echo $img_size;?>px; height:<?php echo $img_size;?>px; }
+	.user-profile { position: absolute; overflow: hidden; border:<?php echo $profile_image_border; ?>px solid <?php echo $profile_image_border_color; ?>; width:<?php echo $img_size;?>px; height:<?php echo $img_size;?>px; left:<?php echo $img_x;?>px; top:<?php echo $img_y;?>px; background-size:cover;}
 	</style>
 	<?php $this->load->view('ga'); ?>
 </head>
@@ -23,7 +22,7 @@
 		<?php endif ;?>
 		<div class="img-box">
 			<?php echo img($image_url); ?>
-			<div class="user-profile"><img src="https://graph.facebook.com/<?php echo $facebook_uid;?>/picture?type=<?php echo $profile_image_type ?>" /></div>
+			<div class="user-profile" style="background-image:url(https://graph.facebook.com/<?php echo $facebook_uid;?>/picture?type=<?php echo $profile_image_type ?>);"></div>
 		</div>
 		
 		<div id="share_form">
@@ -54,7 +53,7 @@
 
 		<div>
 			<p>
-				<a href="<?php echo $this->config->item('static_app_url');?>"><img src="<?php echo base_url('assets/images/go-to-socialhappen.gif');?>" /></a>
+				<a href="<?php echo $this->config->item('static_app_url');?>"><img src="<?php echo $static_server_enable ? $static_server_path.'images/go-to-socialhappen.gif' : base_url('assets/images/go-to-socialhappen.gif'); ?>" /></a>
 			</p>
 			<p>
 				<a target="_blank" href="<?php echo base_url('privacy_policy');?>">Privacy Policy</a> | 
