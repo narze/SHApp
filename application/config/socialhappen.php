@@ -47,7 +47,7 @@ $config['randomapp_settings'] = array(
 	'profile_name_y' => 0,
 	'profile_name_color' => '#000',
 	'default_message' => "ล่า ท้า ผี คุณจะเจอผีแบบไหน? เข้าไปเจอได้ที่นี่",
-	'max_ramdom_number' => 36, //Total files (if $config['static_server_enable'] = TRUE)
+	'max_ramdom_number' => 21, //Total files (if $config['static_server_enable'] = TRUE)
 	'app_bgcolor' => '#000',
 	'maximum_times_played' => 3,
 	'cooldown' => 21600
