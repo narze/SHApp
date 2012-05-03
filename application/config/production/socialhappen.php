@@ -17,7 +17,7 @@ $config['facebook_app_secret'] = 'e928bcab0da1ca966564302306b5ce77';
 $config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes,email';
 $config['facebook_force_like'] = TRUE;
 //Set force like app_id if you want to use other app to force page liking
-$config['facebook_force_like_app_id'] = '125984734199028';
+$config['facebook_force_like_app_id'] = '257877660977476';
 
 //MockupHappen : Use only if you want to use app without socialhappen api calls
 //This will mockup all api request and return values corresponding to api names
@@ -38,10 +38,17 @@ $config['randomapp_settings'] = array(
 	'profile_image_x' => 70,
 	'profile_image_y' => 48,
 	'profile_image_type' => 'square',
-	'profile_image_facebook_size' => 50,
+	'profile_image_border' => 3,
+	'profile_image_border_color' => '#fff',
+	'profile_name_enable' => FALSE,
+	'profile_name_size' => 13,
+	'profile_name_angle' => 0,
+	'profile_name_x' => 0,
+	'profile_name_y' => 0,
+	'profile_name_color' => '#FFF',
 	'default_message' => "ดูชื่อเขมรของคุณได้ที่นี่",
 	'max_ramdom_number' => 27, //Total files (if $config['static_server_enable'] = TRUE)
-	'app_bgcolor' => '#000',
+	'app_bgcolor' => '#FFF',
 	'maximum_times_played' => 3,
 	'cooldown' => 21600
 );

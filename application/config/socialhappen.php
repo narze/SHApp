@@ -38,10 +38,17 @@ $config['randomapp_settings'] = array(
 	'profile_image_x' => 70,
 	'profile_image_y' => 48,
 	'profile_image_type' => 'square',
-	'profile_image_facebook_size' => 50,
+	'profile_image_border' => 3,
+	'profile_image_border_color' => '#fff',
+	'profile_name_enable' => FALSE,
+	'profile_name_size' => 13,
+	'profile_name_angle' => 0,
+	'profile_name_x' => 0,
+	'profile_name_y' => 0,
+	'profile_name_color' => '#FFF',
 	'default_message' => "ดูชื่อเขมรของคุณได้ที่นี่",
 	'max_ramdom_number' => 27, //Total files (if $config['static_server_enable'] = TRUE)
-	'app_bgcolor' => '#000',
+	'app_bgcolor' => '#FFF',
 	'maximum_times_played' => 3,
 	'cooldown' => 21600
 );
