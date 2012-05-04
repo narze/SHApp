@@ -14,7 +14,7 @@ $config['mongodb_database'] = 'lovestatus';
 //Facebook : Fill these if you want to use facebook library
 $config['facebook_app_id'] = '343670095688118';
 $config['facebook_app_secret'] = '3f355200b7579121c8780fe4f93e9d71';
-$config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes,email';
+$config['facebook_app_scope'] = 'publish_stream,user_likes,email';
 $config['facebook_force_like'] = TRUE;
 //Set force like app_id if you want to use other app to force page liking
 $config['facebook_force_like_app_id'] = '343670095688118';
