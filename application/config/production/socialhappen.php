@@ -14,7 +14,7 @@ $config['mongodb_database'] = 'ghost';
 //Facebook : Fill these if you want to use facebook library
 $config['facebook_app_id'] = '125984734199028';
 $config['facebook_app_secret'] = '0a7b12697d16233101b6c455960207f5';
-$config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes,email';
+$config['facebook_app_scope'] = 'publish_stream,user_likes,email';
 $config['facebook_force_like'] = TRUE;
 //Set force like app_id if you want to use other app to force page liking
 $config['facebook_force_like_app_id'] = '125984734199028';
