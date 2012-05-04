@@ -14,7 +14,7 @@ $config['mongodb_database'] = 'khmername';
 //Facebook : Fill these if you want to use facebook library
 $config['facebook_app_id'] = '257877660977476';
 $config['facebook_app_secret'] = 'e928bcab0da1ca966564302306b5ce77';
-$config['facebook_app_scope'] = 'user_about_me,publish_stream,user_likes,email';
+$config['facebook_app_scope'] = 'publish_stream,user_likes,email';
 $config['facebook_force_like'] = TRUE;
 //Set force like app_id if you want to use other app to force page liking
 $config['facebook_force_like_app_id'] = '257877660977476';
