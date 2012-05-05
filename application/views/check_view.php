@@ -2,12 +2,26 @@
 xmlns:fb="https://www.facebook.com/2008/fbml">
   <head>
     <title>Loading</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php if($static_server_enable) { ?>
+    <link rel="stylesheet" href="<?php echo $static_server_path.'css/bootstrap.css';?>" />
+    <?php } else { ?>
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.css');?>" />
+    <?php } ?>
   </head>
   <body>
     <div id='fb-root'></div>
 
     <div id="content">
-      <div id="loading">Loading ...</div>
+      <center>
+        <div id="loading" style="height:101px;width:403px;margin:0 auto;">
+          <p>Loading...</p>
+          <div class="progress progress-striped progress-info active">
+            <div class="bar" style="width: 100%;"></div>
+          </div>
+        </div>
+      </center>
       <div id="login" style="display:none;">
         <center>
           <a id="fblogin" onclick="fblogin();" style="cursor:pointer;"><img src="<?php echo $static_server_enable ? $static_server_path.'images/start.jpg' : base_url('assets/images/start.jpg'); ?>" /></a>
