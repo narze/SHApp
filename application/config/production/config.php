@@ -39,7 +39,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'https://app2.socialhappen.com/hiddenstatus/';
+$config['base_url']	= 'https://app2.socialhappen.com/hiddenprofile/';
 
 /*
 |--------------------------------------------------------------------------

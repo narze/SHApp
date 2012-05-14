@@ -8,6 +8,7 @@ class Home extends CI_Controller {
 		$this->facebook_page_id = $this->config->item('mockuphappen_facebook_page_id');
 		$this->facebook_app_id = $this->config->item('facebook_app_id');
 		$this->cookie_name = $this->facebook_page_id.'_'.$this->facebook_app_id.'_times_played';
+		$this->cookie_profile_picture = $this->facebook_page_id.'_'.$this->facebook_app_id.'_profile_picture_url';
 	}
   
   /**
@@ -98,6 +99,41 @@ class Home extends CI_Controller {
 			$maximum_times_reached = FALSE;
 		}
 
+		//Get big profile picture url from cookie, if cannot, get it from facebook
+		if(!$profile_pic = $this->input->cookie($this->cookie_profile_picture)) {
+			try {
+				$fql = "SELECT src_big FROM photo WHERE pid IN (SELECT cover_pid FROM album WHERE owner = $facebook_uid AND type = 'profile')";
+	      $response = $this->facebook->api(array(
+					'method' => 'fql.query',
+					'query' =>$fql,
+				));
+				if(isset($response[0]['src_big'])) {
+		      $profile_pic = $response[0]['src_big'];
+		    } else {
+		    	exit('Facebook Error');
+		    }
+
+	      //Set cookie
+				preg_match('/\/\/[^\/]*\//i', base_url(), $matches);
+				$domain = trim($matches[0],'/');
+				//Set cookie
+				$cookie = array(
+					'name' => 'profile_picture_url',
+					'value' => $profile_pic,
+					'domain' => $domain,
+					'expire' => $randomapp_settings['cooldown'],
+					'path' => '/',
+					'prefix' => $this->facebook_page_id.'_'.$this->facebook_app_id.'_',
+					'secure' => TRUE
+				);
+				$this->input->set_cookie($cookie);
+
+	    } catch (FacebookApiException $e) {
+	      exit('Facebook Error');
+	    }
+	  }
+
+
 		$static_server_enable = $this->config->item('static_server_enable');
 		$static_server_path = $this->config->item('static_server_path');
 
@@ -135,9 +171,13 @@ class Home extends CI_Controller {
 			'image_url' => $random_image_url,
 			'img_name' => $random_image_name,
 			'facebook_uid' => $facebook_uid,
-			'img_x'=> $randomapp_settings['profile_image_x']-3,
-			'img_y'=> $randomapp_settings['profile_image_y']-3,
-			'img_size' => $randomapp_settings['profile_image_size'],
+			'img_x'=> $randomapp_settings['profile_image_x']-$randomapp_settings['profile_image_border'],
+			'img_y'=> $randomapp_settings['profile_image_y']-$randomapp_settings['profile_image_border'],
+			// 'img_size' => $randomapp_settings['profile_image_size'],
+			'img_width' => $randomapp_settings['profile_image_width'],
+			'img_height' => $randomapp_settings['profile_image_height'],
+			'profile_name_x' => $randomapp_settings['profile_name_x'],
+			'profile_name_y' => $randomapp_settings['profile_name_y'],
 			'app_title' => $randomapp_settings['app_title'],
 			'profile_image_type' => $randomapp_settings['profile_image_type'],
 			'app_bgcolor' => $randomapp_settings['app_bgcolor'],
@@ -147,7 +187,8 @@ class Home extends CI_Controller {
 			'cooldown_hours' => $randomapp_settings['cooldown'] / 60 / 60,
 			'maximum_times_played' => $randomapp_settings['maximum_times_played'],
 			'profile_image_border' => $randomapp_settings['profile_image_border'],
-			'profile_image_border_color' => $randomapp_settings['profile_image_border_color']
+			'profile_image_border_color' => $randomapp_settings['profile_image_border_color'],
+			'profile_picture_url' => $profile_pic
 		));
 		$this->load->view('play_view');
 	}
@@ -185,15 +226,50 @@ class Home extends CI_Controller {
 			exit('Image not found');
 		}
 
+		//Get big profile picture url from cookie, if cannot, get it from facebook
+		if(!$profile_pic = $this->input->cookie($this->cookie_profile_picture)) {
+			try {
+				$fql = "SELECT src_big FROM photo WHERE pid IN (SELECT cover_pid FROM album WHERE owner = $facebook_uid AND type = 'profile')";
+	      $response = $this->facebook->api(array(
+					'method' => 'fql.query',
+					'query' =>$fql,
+				));
+				if(isset($response[0]['src_big'])) {
+		      $profile_pic = $response[0]['src_big'];
+		    } else {
+		    	exit('Facebook Error');
+		    }
+
+	      //Set cookie
+				preg_match('/\/\/[^\/]*\//i', base_url(), $matches);
+				$domain = trim($matches[0],'/');
+				//Set cookie
+				$cookie = array(
+					'name' => 'profile_picture_url',
+					'value' => $profile_pic,
+					'domain' => $domain,
+					'expire' => $randomapp_settings['cooldown'],
+					'path' => '/',
+					'prefix' => $this->facebook_page_id.'_'.$this->facebook_app_id.'_',
+					'secure' => TRUE
+				);
+				$this->input->set_cookie($cookie);
+
+	    } catch (FacebookApiException $e) {
+	      exit('Facebook Error');
+	    }
+	  }
+
 		//Prepare config
-		$profile_image_size = $randomapp_settings['profile_image_size'];
+		$profile_image_width = $randomapp_settings['profile_image_width'];
+		$profile_image_height = $randomapp_settings['profile_image_height'];
 		$profile_image_x = $randomapp_settings['profile_image_x'];
 		$profile_image_y = $randomapp_settings['profile_image_y'];
 		$profile_image_type = $randomapp_settings['profile_image_type'];
 
 		//Create Layers
 		$layer0 = $this->_getImageResource($random_image_url);
-		$layer1 = $this->_getImageResource("http://graph.facebook.com/{$facebook_uid}/picture?type={$profile_image_type}", $profile_image_size, $profile_image_size);
+		$layer1 = $this->_getImageResource($profile_pic, $profile_image_width, $profile_image_height);
 
 		//Filename
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
@@ -208,15 +284,20 @@ class Home extends CI_Controller {
 		imagesavealpha($finalImage, true);
 		imagealphablending($finalImage, true);
 
-		//Flatten image
-		imagecopy($finalImage, $layer0, 0, 0, 0, 0, $finalImage_width,$finalImage_height);
+		
+		//Merge profile picture
 		if($randomapp_settings['profile_image_border']) { //Draw border
 			$layer1 = $this->_drawBorder($layer1, $randomapp_settings['profile_image_border'], $randomapp_settings['profile_image_border_color']);
 			$profile_image_x -= $randomapp_settings['profile_image_border'];
 			$profile_image_y -= $randomapp_settings['profile_image_border'];
-			$profile_image_size += ($randomapp_settings['profile_image_border']*2);
+			$profile_image_width += ($randomapp_settings['profile_image_border']*2);
+			$profile_image_height += ($randomapp_settings['profile_image_border']*2);
 		}
-		imagecopy($finalImage, $layer1, $profile_image_x, $profile_image_y, 0, 0, $profile_image_size, $profile_image_size);
+		imagecopy($finalImage, $layer1, $profile_image_x, $profile_image_y, 0, 0, $profile_image_width, $profile_image_height);
+
+		//Merge random image
+		imagecopy($finalImage, $layer0, 0, 0, 0, 0, $finalImage_width,$finalImage_height);
+		
 		imageDestroy($layer0);
 		imageDestroy($layer1);
 

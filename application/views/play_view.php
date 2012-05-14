@@ -10,7 +10,8 @@
 	<?php } ?>
 	<style type="text/css">
 	.img-box { width:403px;height:403px;margin-bottom:20px;position:relative; }
-	.user-profile { position: absolute; overflow: hidden; border:<?php echo $profile_image_border; ?>px solid <?php echo $profile_image_border_color; ?>; width:<?php echo $img_size;?>px; height:<?php echo $img_size;?>px; left:<?php echo $img_x;?>px; top:<?php echo $img_y;?>px; background-size:cover;}
+	.user-profile { position: absolute; overflow: hidden; border:<?php echo $profile_image_border; ?>px solid <?php echo $profile_image_border_color; ?>; width:<?php echo $img_width;?>px; height:<?php echo $img_height;?>px; left:<?php echo $img_x;?>px; top:<?php echo $img_y;?>px; background-size:cover;}
+	.user-name { position: absolute; overflow: hidden; width: 200px; left:<?php echo $profile_name_x;?>px; top:<?php echo $profile_name_y;?>px; }
 	</style>
 	<?php $this->load->view('ga'); ?>
 </head>
@@ -21,8 +22,14 @@
 			<div class="alert alert-error" style="margin-top:5px;margin-left:5px;margin-right:5px;">ทุก <?php echo $cooldown_hours;?> ชั่วโมง สามารถแชร์ภาพได้ <?php echo $maximum_times_played;?> ภาพนะจ๊ะ</div>
 		<?php endif ;?>
 		<div class="img-box">
-			<?php echo img($image_url); ?>
-			<div class="user-profile" style="background-image:url(https://graph.facebook.com/<?php echo $facebook_uid;?>/picture?type=<?php echo $profile_image_type ?>);"></div>
+			
+			<?php if(isset($profile_picture_url)) :?>
+				<div class="user-profile" style="background-image:url(<?php echo $profile_picture_url;?>)"></div>
+			<?php else : ?>
+				<div class="user-profile" style="background-image:url(https://graph.facebook.com/<?php echo $facebook_uid;?>/picture?type=<?php echo $profile_image_type ?>);"></div>
+			<?php endif; ?>
+			<?php echo "<img src=\"$image_url\" style=\"position: absolute; top:0; left:0\" />\n"; ?>
+			<div class="user-name">&nbsp;</div>
 		</div>
 		
 		<div id="share_form">
