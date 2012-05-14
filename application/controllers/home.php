@@ -103,11 +103,11 @@ class Home extends CI_Controller {
 
 		if($static_server_enable) { //From static server
 			$exclude_this_image = $this->input->post('img_name');
-			$random_image_name = rand(1, $randomapp_settings['max_ramdom_number']).'.jpg';
+			$random_image_name = rand(1, $randomapp_settings['max_ramdom_number']).'.png';
 			//Exclude recent image if clicked form in play_view
 			if($random_image_name == $exclude_this_image) {
 				while($random_image_name == $exclude_this_image) {
-					$random_image_name = rand(1, $randomapp_settings['max_ramdom_number']).'.jpg';
+					$random_image_name = rand(1, $randomapp_settings['max_ramdom_number']).'.png';
 				}
 			}
 			$random_image_url = $static_server_path.'images/random/'.$random_image_name;
