@@ -12,6 +12,8 @@
 	.img-box { width:403px;height:403px;margin-bottom:20px;position:relative; }
 	.user-profile { position: absolute; overflow: hidden; border:<?php echo $profile_image_border; ?>px solid <?php echo $profile_image_border_color; ?>; width:<?php echo $img_width;?>px; height:<?php echo $img_height;?>px; left:<?php echo $img_x;?>px; top:<?php echo $img_y;?>px; background-size:cover;}
 	.user-name { position: absolute; overflow: hidden; width: 200px; left:<?php echo $profile_name_x;?>px; top:<?php echo $profile_name_y;?>px; }
+	.score { position: absolute; overflow: hidden; font-size:20px ; left:<?php echo $score_x;?>px; top:<?php echo $score_y+7;?>px; }
+	.star { position: absolute; overflow: hidden; left:<?php echo $score_x - 15;?>px; top:<?php echo $score_y - 30;?>px; }
 	</style>
 	<?php $this->load->view('ga'); ?>
 </head>
@@ -23,19 +25,27 @@
 		<?php endif ;?>
 		<div class="img-box">
 			
+			<?php if($random_image_as_background) { echo "<img src=\"$image_url\" style=\"position: absolute; top:0; left:0\" />\n"; } ?>
+			
 			<?php if(isset($profile_picture_url)) :?>
 				<div class="user-profile" style="background-image:url(<?php echo $profile_picture_url;?>)"></div>
 			<?php else : ?>
 				<div class="user-profile" style="background-image:url(https://graph.facebook.com/<?php echo $facebook_uid;?>/picture?type=<?php echo $profile_image_type ?>);"></div>
 			<?php endif; ?>
-			<?php echo "<img src=\"$image_url\" style=\"position: absolute; top:0; left:0\" />\n"; ?>
+			
+			<?php if(!$random_image_as_background) { echo "<img src=\"$image_url\" style=\"position: absolute; top:0; left:0\" />\n"; } ?>
+
 			<div class="user-name">&nbsp;</div>
+
+			<img class="star" src="<?php echo base_url('assets/images/star.png');?>"></img>
+			<div class="score"><?php echo $score;?></div>
 		</div>
 		
 		<div id="share_form">
 			<?php 
 				echo form_open('home/upload', array('class'=>'form-inline')); ?>
 					<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />
+					<input type="hidden" name="img_score" value="<?php echo $score;?>" />
 					<?php if($maximum_times_reached) : ?>
 						<input disabled="true" style="height:37px;" class="input-large" id="message" type="text" name="message" maxlength="255" value="" <?php echo form_error('message') ? 'class="form-error"':''; ?> placeholder="Message" />
 						<button disabled="true" id="share_button" type="submit" class="btn btn-danger btn-large" name="upload">Share!</button>

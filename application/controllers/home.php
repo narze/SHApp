@@ -9,6 +9,7 @@ class Home extends CI_Controller {
 		$this->facebook_app_id = $this->config->item('facebook_app_id');
 		$this->cookie_name = $this->facebook_page_id.'_'.$this->facebook_app_id.'_times_played';
 		$this->cookie_profile_picture = $this->facebook_page_id.'_'.$this->facebook_app_id.'_profile_picture_url';
+		$this->cookie_gender = $this->facebook_page_id.'_'.$this->facebook_app_id.'_gender';
 	}
   
   /**
@@ -118,12 +119,11 @@ class Home extends CI_Controller {
 				$domain = trim($matches[0],'/');
 				//Set cookie
 				$cookie = array(
-					'name' => 'profile_picture_url',
+					'name' => $this->cookie_profile_picture,
 					'value' => $profile_pic,
 					'domain' => $domain,
 					'expire' => $randomapp_settings['cooldown'],
 					'path' => '/',
-					'prefix' => $this->facebook_page_id.'_'.$this->facebook_app_id.'_',
 					'secure' => TRUE
 				);
 				$this->input->set_cookie($cookie);
@@ -133,24 +133,52 @@ class Home extends CI_Controller {
 	    }
 	  }
 
+	  //Get gender from cookie | facebook
+	  if(!$gender = $this->input->cookie($this->cookie_gender)) {
+	  	try {
+	  		$user = $this->facebook->api('me?fields=gender');
+	  		if(isset($user['gender'])) {
+	  			$gender = $user['gender'];
+	  		} else {
+	  			exit('Facebook Error');
+	  		}
+
+	  		//Set cookie
+				preg_match('/\/\/[^\/]*\//i', base_url(), $matches);
+				$domain = trim($matches[0],'/');
+				//Set cookie
+				$cookie = array(
+					'name' => $this->cookie_gender,
+					'value' => $gender,
+					'domain' => $domain,
+					'expire' => $randomapp_settings['cooldown'],
+					'path' => '/',
+					'secure' => TRUE
+				);
+				$this->input->set_cookie($cookie);
+
+	  	} catch (FacebookApiException $e) {
+	      exit('Facebook Error');
+	    }
+	  }
 
 		$static_server_enable = $this->config->item('static_server_enable');
 		$static_server_path = $this->config->item('static_server_path');
 
 		if($static_server_enable) { //From static server
 			$exclude_this_image = $this->input->post('img_name');
-			$random_image_name = rand(1, $randomapp_settings['max_ramdom_number']).'.png';
-			//Exclude recent image if clicked form in play_view
-			if($random_image_name == $exclude_this_image) {
-				while($random_image_name == $exclude_this_image) {
-					$random_image_name = rand(1, $randomapp_settings['max_ramdom_number']).'.png';
-				}
-			}
+
+			//Exclude recent image
+			do {
+				$random_number = mt_rand(1, $randomapp_settings['max_ramdom_number']);
+				$random_image_name = $gender.'_'.$random_number.'.'.$randomapp_settings['random_image_extension'];
+			} while($random_image_name == $exclude_this_image);
+
 			$random_image_url = $static_server_path.'images/random/'.$random_image_name;
 		} else { //From local file
-			$jpgs = glob(FCPATH.'assets/images/random/*.jpg');
-			$pngs = glob(FCPATH.'assets/images/random/*.png');
-			$gifs = glob(FCPATH.'assets/images/random/*.gif');
+			$jpgs = glob(FCPATH.'assets/images/random/'.$gender.'*.jpg');
+			$pngs = glob(FCPATH.'assets/images/random/'.$gender.'*.png');
+			$gifs = glob(FCPATH.'assets/images/random/'.$gender.'*.gif');
 			$images = array_merge($jpgs, $pngs, $gifs);
 
 			//Exclude recent image if clicked form in play_view
@@ -163,7 +191,16 @@ class Home extends CI_Controller {
 			$random_image_path = $images[mt_rand(0, count($images)-1)];
 			$random_image_name = pathinfo($random_image_path, PATHINFO_BASENAME);
 			$random_image_url = base_url().'assets/images/random/'.$random_image_name;
+
+			//Get random number to calculate score
+			preg_match('/(\d+)\.(jpg|png|gif)/', $random_image_name, $matches);
+			$random_number = $matches[1];
 		}
+
+		//Calculate score
+		$image_scores = $this->config->item('image_scores');
+		list ($score_low, $score_high) = $image_scores[$gender.'_'.$random_number];
+		$score = mt_rand($score_low, $score_high) . '%';
 
 		$this->load->helper('html');
 		$this->load->helper('form');
@@ -188,7 +225,11 @@ class Home extends CI_Controller {
 			'maximum_times_played' => $randomapp_settings['maximum_times_played'],
 			'profile_image_border' => $randomapp_settings['profile_image_border'],
 			'profile_image_border_color' => $randomapp_settings['profile_image_border_color'],
-			'profile_picture_url' => $profile_pic
+			'profile_picture_url' => $profile_pic,
+			'random_image_as_background' => $randomapp_settings['random_image_as_background'],
+			'score' => $score,
+			'score_x' => $image_scores['position_x'],
+			'score_y' => $image_scores['position_y'],
 		));
 		$this->load->view('play_view');
 	}
@@ -204,11 +245,14 @@ class Home extends CI_Controller {
      */
 		if((!$facebook_uid = $this->facebook->getUser()) 
 			|| !$this->fb->isUserLikedPage($this->facebook_page_id)
-			|| (!$random_image_name = $this->input->post('img_name'))) {
+			|| (!$random_image_name = $this->input->post('img_name')) 
+			|| (!$random_image_score = $this->input->post('img_score'))) {
 			redirect();
 		}
 
 		$randomapp_settings = $this->config->item('randomapp_settings');
+
+		$image_scores = $this->config->item('image_scores');
 
 		$times_played = $this->input->cookie($this->cookie_name);
 		$maximum_times_played = isset($randomapp_settings['maximum_times_played']) ? $randomapp_settings['maximum_times_played'] : 0;
@@ -271,6 +315,10 @@ class Home extends CI_Controller {
 		$layer0 = $this->_getImageResource($random_image_url);
 		$layer1 = $this->_getImageResource($profile_pic, $profile_image_width, $profile_image_height);
 
+		//Star image layer
+		$layer2 = $this->_getImageResource(FCPATH . 'assets/images/star.png', 82, 85);
+
+
 		//Filename
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
 		$image_path = FCPATH.'uploads/'.$filename.'.jpg';
@@ -293,13 +341,23 @@ class Home extends CI_Controller {
 			$profile_image_width += ($randomapp_settings['profile_image_border']*2);
 			$profile_image_height += ($randomapp_settings['profile_image_border']*2);
 		}
+		
+		if($randomapp_settings['random_image_as_background']) { //BG = Random image
+			imagecopy($finalImage, $layer0, 0, 0, 0, 0, $finalImage_width,$finalImage_height);
+		}
+
 		imagecopy($finalImage, $layer1, $profile_image_x, $profile_image_y, 0, 0, $profile_image_width, $profile_image_height);
 
-		//Merge random image
-		imagecopy($finalImage, $layer0, 0, 0, 0, 0, $finalImage_width,$finalImage_height);
-		
+		if(!$randomapp_settings['random_image_as_background']) { //BG = Random image
+			imagecopy($finalImage, $layer0, 0, 0, 0, 0, $finalImage_width,$finalImage_height);
+		}
+
+		imagecopy($finalImage, $layer2, $image_scores['position_x'] - 15, $image_scores['position_y'] - 35, 0, 0, 82, 85);
+
+
 		imageDestroy($layer0);
 		imageDestroy($layer1);
+		imageDestroy($layer2);
 
 		try {
 			
@@ -329,6 +387,16 @@ class Home extends CI_Controller {
 					)
 				);
 			}
+
+			//insert score
+			$this->_drawText($finalImage, $random_image_score, array(
+				'size' => 18,
+				'angle' => 0,
+				'position_x' => $image_scores['position_x'],
+				'position_y' => $image_scores['position_y'],
+				'color' => '#000'
+				)
+			);
 
 			if(is_writable($image_path)) {
 				unlink($image_path);
