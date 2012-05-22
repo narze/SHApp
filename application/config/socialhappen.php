@@ -46,7 +46,7 @@ $config['randomapp_settings'] = array(
 	'profile_name_angle' => 0,
 	'profile_name_x' => 42,
 	'profile_name_y' => 75,
-	'profile_name_color' => '#000',
+	'profile_name_color' => '#FFFF00',
 	'default_message' => "วัดระดับความ HOT ของคุณได้ที่นี่",
 	'max_ramdom_number' => 12, //Total files (if $config['static_server_enable'] = TRUE)
 	'random_image_extension' => 'jpg',
