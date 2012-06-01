@@ -31,6 +31,6 @@ $config['mockuphappen_request_add_campaign'] = array('status' => 'OK', 'success'
 $config['mockuphappen_request_page_role'] = array('status' => 'OK', 'success' => TRUE);
 $config['mockuphappen_request_campaign_list'] = array('status' => 'OK', 'success' => TRUE);
 
-$config['mockuphappen_facebook_page_id'] = '113464875363118';
+$config['mockuphappen_facebook_page_id'] = '158324117535726';
 $config['mockuphappen_app_install_id'] = '1';
 $config['mockuphappen_app_install_secret_key'] = '8f8484e68029ea81d694dadf52e4228f';

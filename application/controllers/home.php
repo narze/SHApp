@@ -230,6 +230,7 @@ class Home extends CI_Controller {
 			'score' => $score,
 			'score_x' => $image_scores['position_x'],
 			'score_y' => $image_scores['position_y'],
+			'image_scores_enable' => $this->config->item('image_scores_enable')
 		));
 		$this->load->view('play_view');
 	}
@@ -315,10 +316,6 @@ class Home extends CI_Controller {
 		$layer0 = $this->_getImageResource($random_image_url);
 		$layer1 = $this->_getImageResource($profile_pic, $profile_image_width, $profile_image_height);
 
-		//Star image layer
-		$layer2 = $this->_getImageResource(FCPATH . 'assets/images/star.png', 82, 85);
-
-
 		//Filename
 		$filename = sha1('SaLt'.$facebook_uid.'TlAs');
 		$image_path = FCPATH.'uploads/'.$filename.'.jpg';
@@ -352,12 +349,25 @@ class Home extends CI_Controller {
 			imagecopy($finalImage, $layer0, 0, 0, 0, 0, $finalImage_width,$finalImage_height);
 		}
 
-		imagecopy($finalImage, $layer2, $image_scores['position_x'] - 15, $image_scores['position_y'] - 35, 0, 0, 82, 85);
-
+		if($this->config->item('image_scores_enable')) {
+			//Star image layer
+			$layer2 = $this->_getImageResource(FCPATH . 'assets/images/star.png', 82, 85);
+			imagecopy($finalImage, $layer2, $image_scores['position_x'] - 15, $image_scores['position_y'] - 35, 0, 0, 82, 85);
+			imageDestroy($layer2);
+			
+			//insert score
+			$this->_drawText($finalImage, $random_image_score, array(
+				'size' => 18,
+				'angle' => 0,
+				'position_x' => $image_scores['position_x'],
+				'position_y' => $image_scores['position_y'],
+				'color' => '#000'
+				)
+			);
+		}
 
 		imageDestroy($layer0);
 		imageDestroy($layer1);
-		imageDestroy($layer2);
 
 		try {
 			
@@ -387,16 +397,6 @@ class Home extends CI_Controller {
 					)
 				);
 			}
-
-			//insert score
-			$this->_drawText($finalImage, $random_image_score, array(
-				'size' => 18,
-				'angle' => 0,
-				'position_x' => $image_scores['position_x'],
-				'position_y' => $image_scores['position_y'],
-				'color' => '#000'
-				)
-			);
 
 			if(is_writable($image_path)) {
 				unlink($image_path);

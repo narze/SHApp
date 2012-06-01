@@ -37,8 +37,10 @@
 
 			<div class="user-name">&nbsp;</div>
 
-			<img class="star" src="<?php echo base_url('assets/images/star.png');?>"></img>
-			<div class="score"><?php echo $score;?></div>
+			<?php if($image_scores_enable) : ?>
+				<img class="star" src="<?php echo base_url('assets/images/star.png');?>"></img>
+				<div class="score"><?php echo $score;?></div>
+			<?php endif; ?>
 		</div>
 		
 		<div id="share_form">
