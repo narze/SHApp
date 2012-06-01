@@ -4,7 +4,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.css');?>" />
-	$this->load->view('ga'); ?>
+	<?php $this->load->view('ga'); ?>
 </head>
 <body style="<?php echo $app_bgcolor ? 'background-color:'.$app_bgcolor.';' : ''; ?>">
 	<center>
