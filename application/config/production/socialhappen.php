@@ -12,12 +12,12 @@ $config['mongodb_port'] = 27017;
 $config['mongodb_database'] = 'profilejob';
 
 //Facebook : Fill these if you want to use facebook library
-$config['facebook_app_id'] = 'UA-18943856-12';
+$config['facebook_app_id'] = '472741906086237';
 $config['facebook_app_secret'] = '9780a70579fefa3ab0858ed26bd3400c';
 $config['facebook_app_scope'] = 'publish_stream,user_likes,email,user_photos';
 $config['facebook_force_like'] = TRUE;
 //Set force like app_id if you want to use other app to force page liking
-$config['facebook_force_like_app_id'] = '438626169483132';
+$config['facebook_force_like_app_id'] = '472741906086237';
 
 //MockupHappen : Use only if you want to use app without socialhappen api calls
 //This will mockup all api request and return values corresponding to api names
