@@ -30,10 +30,10 @@ $config['facebook_force_like_app_id'] = '204755022911798';
 //}
 $config['mockuphappen_enable'] = TRUE;
 $config['static_server_enable'] = TRUE;
-$config['static_server_path'] = 'http://static.localhost.com/apps/profilejob/';
+$config['static_server_path'] = 'http://static.localhost.com/apps/statuspoem/';
 
 $config['randomapp_settings'] = array(
-	'app_title' => 'อาชีพที่เหมาะกับรูปโปรไฟล์ของคุณ',
+	'app_title' => 'สุนทรผึ้ง',
 	'profile_image_width' => 150,
 	'profile_image_height' => 150,
 	'profile_image_x' => 38,
@@ -47,7 +47,7 @@ $config['randomapp_settings'] = array(
 	'profile_name_x' => 61,
 	'profile_name_y' => 60,
 	'profile_name_color' => '#AD0000',
-	'default_message' => "ค้นหาอาชีพที่เหมาะกับรูปโปรไฟล์ของคุณได้ที่นี่",
+	'default_message' => "สุนทรผึ้ง",
 	'max_ramdom_number' => 13, //Total files (if $config['static_server_enable'] = TRUE)
 	'random_image_extension' => 'jpg',
 	'random_image_as_background' => TRUE,
@@ -90,6 +90,6 @@ $config['static_app_enable'] = TRUE;
 $config['static_app_url'] = 'https://apps.localhost.com/static_app/';
 $config['static_app_message'] = 'อัพโหลดเรียบร้อย คลิกเพื่อดูภาพ';
 
-$config['google_analytics_tracking_id'] = 'UA-18943856-11';
+$config['google_analytics_tracking_id'] = 'UA-18943856-13';
 
 $config['userdata_app_url'] = 'https://apps.localhost.com/userdata/';

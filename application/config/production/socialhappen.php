@@ -1,6 +1,6 @@
 <?php
 //SocialHappen
-$config['app_id'] = 10010;
+$config['app_id'] = 10011;
 $config['app_secret_key'] = '41ee728424904e654348ea66949db013';
 $config['api_url'] = 'https://socialhappen.com/api/';
 
@@ -9,15 +9,15 @@ $config['mongodb_username'] = 'sohap';
 $config['mongodb_password'] = 'figyfigy';
 $config['mongodb_host'] = 'localhost';
 $config['mongodb_port'] = 27017;
-$config['mongodb_database'] = 'profilejob';
+$config['mongodb_database'] = 'statuspoem';
 
 //Facebook : Fill these if you want to use facebook library
-$config['facebook_app_id'] = '472741906086237';
-$config['facebook_app_secret'] = '9780a70579fefa3ab0858ed26bd3400c';
+$config['facebook_app_id'] = '127151967423570';
+$config['facebook_app_secret'] = 'a47615b24801d7dfcd22bec0916b5153';
 $config['facebook_app_scope'] = 'publish_stream,user_likes,email,user_photos';
 $config['facebook_force_like'] = TRUE;
 //Set force like app_id if you want to use other app to force page liking
-$config['facebook_force_like_app_id'] = '472741906086237';
+$config['facebook_force_like_app_id'] = '127151967423570';
 
 //MockupHappen : Use only if you want to use app without socialhappen api calls
 //This will mockup all api request and return values corresponding to api names
@@ -30,10 +30,10 @@ $config['facebook_force_like_app_id'] = '472741906086237';
 //}
 $config['mockuphappen_enable'] = TRUE;
 $config['static_server_enable'] = TRUE;
-$config['static_server_path'] = 'http://static.socialhappen.com/apps/profilejob/';
+$config['static_server_path'] = 'http://static.socialhappen.com/apps/statuspoem/';
 
 $config['randomapp_settings'] = array(
-	'app_title' => 'อาชีพที่เหมาะกับรูปโปรไฟล์ของคุณ',
+	'app_title' => 'สุนทรผึ้ง',
 	'profile_image_width' => 150,
 	'profile_image_height' => 150,
 	'profile_image_x' => 38,
@@ -47,7 +47,7 @@ $config['randomapp_settings'] = array(
 	'profile_name_x' => 61,
 	'profile_name_y' => 60,
 	'profile_name_color' => '#AD0000',
-	'default_message' => "ค้นหาอาชีพที่เหมาะกับรูปโปรไฟล์ของคุณได้ที่นี่",
+	'default_message' => "สุนทรผึ้ง",
 	'max_ramdom_number' => 13, //Total files (if $config['static_server_enable'] = TRUE)
 	'random_image_extension' => 'jpg',
 	'random_image_as_background' => TRUE,
@@ -90,6 +90,6 @@ $config['static_app_enable'] = TRUE;
 $config['static_app_url'] = 'https://apps.socialhappen.com/static/';
 $config['static_app_message'] = 'อัพโหลดเรียบร้อย คลิกเพื่อดูภาพ';
 
-$config['google_analytics_tracking_id'] = 'UA-18943856-12';
+$config['google_analytics_tracking_id'] = 'UA-18943856-13';
 
 $config['userdata_app_url'] = 'https://app2.socialhappen.com/userdata/';
