@@ -53,7 +53,8 @@ $config['randomapp_settings'] = array(
 	'random_image_as_background' => TRUE,
 	'app_bgcolor' => '#FFF',
 	'maximum_times_played' => 5,
-	'cooldown' => 21600
+	'cooldown' => 21600,
+	'gender_separate' => FALSE
 );
 
 $config['image_scores_enable'] = FALSE;

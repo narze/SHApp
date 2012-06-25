@@ -133,33 +133,37 @@ class Home extends CI_Controller {
 	    }
 	  }
 
+	  $gender = '';
 	  //Get gender from cookie | facebook
-	  if(!$gender = $this->input->cookie($this->cookie_gender)) {
-	  	try {
-	  		$user = $this->facebook->api('me?fields=gender');
-	  		if(isset($user['gender'])) {
-	  			$gender = $user['gender'];
-	  		} else {
-	  			exit('Facebook Error');
-	  		}
+	  if($randomapp_settings['gender_separate']) {
+		  if(!$gender = $this->input->cookie($this->cookie_gender)) {
+		  	try {
+		  		$user = $this->facebook->api('me?fields=gender');
+		  		if(isset($user['gender'])) {
+		  			$gender = $user['gender'];
+		  		} else {
+		  			exit('Facebook Error');
+		  		}
 
-	  		//Set cookie
-				preg_match('/\/\/[^\/]*\//i', base_url(), $matches);
-				$domain = trim($matches[0],'/');
-				//Set cookie
-				$cookie = array(
-					'name' => $this->cookie_gender,
-					'value' => $gender,
-					'domain' => $domain,
-					'expire' => $randomapp_settings['cooldown'],
-					'path' => '/',
-					'secure' => TRUE
-				);
-				$this->input->set_cookie($cookie);
+		  		//Set cookie
+					preg_match('/\/\/[^\/]*\//i', base_url(), $matches);
+					$domain = trim($matches[0],'/');
+					//Set cookie
+					$cookie = array(
+						'name' => $this->cookie_gender,
+						'value' => $gender,
+						'domain' => $domain,
+						'expire' => $randomapp_settings['cooldown'],
+						'path' => '/',
+						'secure' => TRUE
+					);
+					$this->input->set_cookie($cookie);
 
-	  	} catch (FacebookApiException $e) {
-	      exit('Facebook Error');
-	    }
+		  	} catch (FacebookApiException $e) {
+		      exit('Facebook Error');
+		    }
+		  }
+		  $gender = $gender . '_';
 	  }
 
 		$static_server_enable = $this->config->item('static_server_enable');
@@ -171,7 +175,7 @@ class Home extends CI_Controller {
 			//Exclude recent image
 			do {
 				$random_number = mt_rand(1, $randomapp_settings['max_ramdom_number']);
-				$random_image_name = $gender.'_'.$random_number.'.'.$randomapp_settings['random_image_extension'];
+				$random_image_name = $gender.$random_number.'.'.$randomapp_settings['random_image_extension'];
 			} while($random_image_name == $exclude_this_image);
 
 			$random_image_url = $static_server_path.'images/random/'.$random_image_name;
@@ -199,7 +203,7 @@ class Home extends CI_Controller {
 
 		//Calculate score
 		$image_scores = $this->config->item('image_scores');
-		list ($score_low, $score_high) = $image_scores[$gender.'_'.$random_number];
+		list ($score_low, $score_high) = $image_scores[$gender.$random_number];
 		$score = mt_rand($score_low, $score_high) . '%';
 
 		$this->load->helper('html');
