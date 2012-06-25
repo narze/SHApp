@@ -7,7 +7,8 @@ class Home extends CI_Controller {
 		$this->signedRequest = $this->facebook->getSignedRequest();
 		$this->facebook_page_id = $this->config->item('mockuphappen_facebook_page_id');
 		$this->facebook_app_id = $this->config->item('facebook_app_id');
-		$this->cookie_name = $this->facebook_page_id.'_'.$this->facebook_app_id.'_times_played';
+		$this->cookie_times_played = $this->facebook_page_id.'_'.$this->facebook_app_id.'_times_played';
+		$this->cookie_full_name = $this->facebook_page_id.'_'.$this->facebook_app_id.'_full_name';
 		$this->cookie_profile_picture = $this->facebook_page_id.'_'.$this->facebook_app_id.'_profile_picture_url';
 		$this->cookie_gender = $this->facebook_page_id.'_'.$this->facebook_app_id.'_gender';
 	}
@@ -91,7 +92,7 @@ class Home extends CI_Controller {
 
 		$randomapp_settings = $this->config->item('randomapp_settings');
 
-		$times_played = $this->input->cookie($this->cookie_name);
+		$times_played = $this->input->cookie($this->cookie_times_played);
 		$maximum_times_played = isset($randomapp_settings['maximum_times_played']) ? $randomapp_settings['maximum_times_played'] : 0;
 
 		if($times_played && $maximum_times_played && ($times_played >= $maximum_times_played)) {
@@ -166,6 +167,47 @@ class Home extends CI_Controller {
 		  $gender = $gender . '_';
 	  }
 
+	  //Get name from cookie | facebook
+	  $name = '';
+
+	  //Add userdata
+	  if($randomapp_settings['profile_name_enable']) {
+  	  if(!$name = $this->input->cookie($this->cookie_full_name)) {
+  	  	try {
+  	  		$user = $this->facebook->api('me?fields=name');
+  	  		if(isset($user['name'])) {
+  	  			$name = $user['name'];
+  	  		} else {
+  	  			exit('Facebook Error');
+  	  		}
+
+  	  		//Set cookie
+  				preg_match('/\/\/[^\/]*\//i', base_url(), $matches);
+  				$domain = trim($matches[0],'/');
+  				//Set cookie
+  				$cookie = array(
+  					'name' => $this->cookie_full_name,
+  					'value' => $name,
+  					'domain' => $domain,
+  					'expire' => $randomapp_settings['cooldown'],
+  					'path' => '/',
+  					'secure' => TRUE
+  				);
+  				$this->input->set_cookie($cookie);
+
+  	  	} catch (FacebookApiException $e) {
+  	      exit('Facebook Error');
+  	    }
+  	  }
+  	  $this->load->vars(array(
+  	  	'profile_name_color' => $randomapp_settings['profile_name_color'],
+  	  	'profile_name_size' => $randomapp_settings['profile_name_size']
+  	  ));
+	  }
+
+	  //insert name
+	  
+
 		$static_server_enable = $this->config->item('static_server_enable');
 		$static_server_path = $this->config->item('static_server_path');
 
@@ -202,9 +244,16 @@ class Home extends CI_Controller {
 		}
 
 		//Calculate score
-		$image_scores = $this->config->item('image_scores');
-		list ($score_low, $score_high) = $image_scores[$gender.$random_number];
-		$score = mt_rand($score_low, $score_high) . '%';
+		if($this->config->item('image_scores_enable')) {
+			$image_scores = $this->config->item('image_scores');
+			list ($score_low, $score_high) = $image_scores[$gender.$random_number];
+			$score = mt_rand($score_low, $score_high) . '%';
+			$this->load->vars(array(
+				'score' => $score,
+				'score_x' => $image_scores['position_x'],
+				'score_y' => $image_scores['position_y']
+			));
+		}
 
 		$this->load->helper('html');
 		$this->load->helper('form');
@@ -231,10 +280,8 @@ class Home extends CI_Controller {
 			'profile_image_border_color' => $randomapp_settings['profile_image_border_color'],
 			'profile_picture_url' => $profile_pic,
 			'random_image_as_background' => $randomapp_settings['random_image_as_background'],
-			'score' => $score,
-			'score_x' => $image_scores['position_x'],
-			'score_y' => $image_scores['position_y'],
-			'image_scores_enable' => $this->config->item('image_scores_enable')
+			'image_scores_enable' => $this->config->item('image_scores_enable'),
+			'name' => $name
 		));
 		$this->load->view('play_view');
 	}
@@ -251,7 +298,7 @@ class Home extends CI_Controller {
 		if((!$facebook_uid = $this->facebook->getUser()) 
 			|| !$this->fb->isUserLikedPage($this->facebook_page_id)
 			|| (!$random_image_name = $this->input->post('img_name')) 
-			|| (!$random_image_score = $this->input->post('img_score'))) {
+			|| ($this->config->item('image_scores_enable') && (!$random_image_score = $this->input->post('img_score')))) {
 			redirect();
 		}
 
@@ -259,7 +306,7 @@ class Home extends CI_Controller {
 
 		$image_scores = $this->config->item('image_scores');
 
-		$times_played = $this->input->cookie($this->cookie_name);
+		$times_played = $this->input->cookie($this->cookie_times_played);
 		$maximum_times_played = isset($randomapp_settings['maximum_times_played']) ? $randomapp_settings['maximum_times_played'] : 0;
 
 		if($times_played && $maximum_times_played && ($times_played >= $maximum_times_played)) {
@@ -442,12 +489,11 @@ class Home extends CI_Controller {
 				$domain = trim($matches[0],'/');
 				//Set cookie
 				$cookie = array(
-					'name' => 'times_played',
+					'name' => $this->cookie_times_played,
 					'value' => 1 + $times_played,
 					'domain' => $domain,
 					'expire' => $randomapp_settings['cooldown'],
 					'path' => '/',
-					'prefix' => $this->facebook_page_id.'_'.$this->facebook_app_id.'_',
 					'secure' => TRUE
 				);
 				$this->input->set_cookie($cookie);
