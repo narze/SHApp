@@ -7,7 +7,7 @@
 	<style type="text/css">
 	.img-box { width:403px;height:403px;margin-bottom:20px;position:relative; }
 	.user-profile { position: absolute; overflow: hidden; border:<?php echo $profile_image_border; ?>px solid <?php echo $profile_image_border_color; ?>; width:<?php echo $img_width;?>px; height:<?php echo $img_height;?>px; left:<?php echo $img_x;?>px; top:<?php echo $img_y;?>px; background-size:cover;}
-	.user-name { font-size: <?php echo $profile_name_size;?>px; text-align: left; position: absolute; overflow: hidden; width: 200px; left:<?php echo $profile_name_x;?>px; top:<?php echo $profile_name_y;?>px; color: <?php echo $profile_name_color; ?>}
+	.user-name { font-size: <?php echo $profile_name_size;?>px; text-align: left; position: absolute; width: 200px; left:<?php echo $profile_name_x;?>px; top:<?php echo $profile_name_y;?>px; color: <?php echo $profile_name_color; ?>}
 	<?php if($image_scores_enable) : ?>
 		.score { position: absolute; overflow: hidden; font-size:20px ; left:<?php echo $score_x;?>px; top:<?php echo $score_y+7;?>px; }
 		.star { position: absolute; overflow: hidden; left:<?php echo $score_x - 15;?>px; top:<?php echo $score_y - 30;?>px; }
