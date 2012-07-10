@@ -33,7 +33,7 @@ $config['static_server_enable'] = TRUE;
 $config['static_server_path'] = 'http://static.socialhappen.com/apps/cutegirl/';
 
 $config['randomapp_settings'] = array(
-	'app_title' => 'ดวงของคุณสมพงษ์กับดาวสถาบันใต',
+	'app_title' => 'ดวงของคุณสมพงษ์กับดาวสถาบันใด',
 	'profile_image_width' => 70,
 	'profile_image_height' => 70,
 	'profile_image_x' => 311,
@@ -47,7 +47,7 @@ $config['randomapp_settings'] = array(
 	'profile_name_x' => 11,
 	'profile_name_y' => 63,
 	'profile_name_color' => '#FFFFFF',
-	'default_message' => "มาดูกันว่า ดวงของคุณสมพงษ์กับดาวสถาบันใต? (แอพนี้ปลอดภัย 100%)",
+	'default_message' => "มาดูกันว่า ดวงของคุณสมพงษ์กับดาวสถาบันใด? (แอพนี้ปลอดภัย 100%)",
 	'max_ramdom_number' => 20, //Total files (if $config['static_server_enable'] = TRUE)
 	'random_image_extension' => 'jpg',
 	'random_image_as_background' => TRUE,
