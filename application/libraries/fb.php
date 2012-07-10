@@ -79,4 +79,33 @@ class FB {
     	return FALSE;
     }
 	}
+
+	function getExtendedToken($access_token = NULL) {
+		if(!$access_token && (!$access_token = $this->CI->facebook->getAccessToken())) {
+				return FALSE;
+		}
+
+		//Setup url for extended token
+		$app_id = $this->CI->config->item('facebook_app_id');
+		$app_secret = $this->CI->config->item('facebook_app_secret');
+
+		$token_url = "https://graph.facebook.com/oauth/access_token?client_id=".$app_id."&client_secret=".$app_secret."&grant_type=fb_exchange_token&fb_exchange_token=".$access_token;
+
+		//Request
+		$c = curl_init();
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($c, CURLOPT_URL, $token_url);
+		$contents = curl_exec($c);
+		$err  = curl_getinfo($c,CURLINFO_HTTP_CODE);
+		curl_close($c);
+
+		//Parse
+		$response_params = null;
+		parse_str($contents, $response_params);
+		if(!isset($response_params['access_token'])) { return FALSE; }
+
+		$this->CI->facebook->setAccessToken($response_params['access_token']);
+		return $response_params['access_token'];
+	}
 }
