@@ -64,7 +64,7 @@
 					<?php endif;
 				echo form_close();
 
-			echo form_open('home/play'); ?>
+			echo form_open('home'); ?>
 			<input type="hidden" name="img_name" value="<?php echo $img_name;?>" />
 			<button type="submit" class="btn btn-info" name="upload">เล่นใหม่</button>
 			<?php echo form_close(); ?>
