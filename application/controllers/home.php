@@ -87,8 +87,7 @@ class Home extends CI_Controller {
    */
 	function play() {
 		if(!$facebook_uid = $this->facebook->getUser()) { // we dont't check page like here
-			// return $this->_login();
-			redirect();
+			return $this->_login();
 		}
 
 		$randomapp_settings = $this->config->item('randomapp_settings');
