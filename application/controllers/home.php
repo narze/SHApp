@@ -544,6 +544,12 @@ class Home extends CI_Controller {
 	 * Load force like view without checking
 	 */
 	function like() {
+		if(isset($this->signedRequest['page']['id'])
+			&& $this->signedRequest['page']['id'] == $this->facebook_page_id) {
+			echo '<script>top.location = "'."https://www.facebook.com/profile.php?id={$this->facebook_page_id}&sk=app_{$this->facebook_app_id}".'";</script>';
+			exit();
+		}
+
 		$randomapp_settings = $this->config->item('randomapp_settings');
 		$this->load->vars(array(
 			'app_title' => $randomapp_settings['app_title'],
