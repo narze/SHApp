@@ -23,7 +23,7 @@ var showForceLikePage = function() {
 var showPlayPage = function() {
   console.log('let\'s play');
   clearFallbackCounter();
-  window.location = "<?php echo base_url('home/play');?>";
+  top.location = "<?php echo base_url('home/play');?>";
 }
 
 
@@ -61,9 +61,9 @@ $(function(){
     });
 
     console.log('facebook is ready');
-    
+
     startFallbackCounter();
-    
+
     FB.Canvas.setAutoResize(7);
 
     FB.Event.subscribe('auth.statusChange', function(response) {

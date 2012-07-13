@@ -17,6 +17,7 @@ class Home extends CI_Controller {
    * Check like in javascript
    */
 	function index(){
+		$this->_in_page_tab_check();
 	  $this->load->view('check_view', array(
 	  	'facebook_app_scope' => $this->config->item('facebook_app_scope'),
 	  	'static_server_enable' => $this->config->item('static_server_enable'),
@@ -42,9 +43,9 @@ class Home extends CI_Controller {
 	 * If not in page tab, or not liked, redirect to page tab
 	 */
 	function _in_page_tab_check() {
-		if(isset($this->signedRequest['page']['id'])
-			&& $this->signedRequest['page']['id'] == $this->facebook_page_id) {
-			echo '<script>top.location = "'.base_url().'";</script>';
+		if(!isset($this->signedRequest['page']['id'])
+			|| $this->signedRequest['page']['id'] != $this->facebook_page_id) {
+			echo '<script>top.location = "'."https://www.facebook.com/profile.php?id={$this->facebook_page_id}&sk=app_{$this->facebook_app_id}".'";</script>';
 			exit();
 		}
 	}
@@ -86,9 +87,9 @@ class Home extends CI_Controller {
    */
 	function play() {
 		if(!$facebook_uid = $this->facebook->getUser()) { // we dont't check page like here
-			return $this->_login();
+			// return $this->_login();
+			redirect();
 		}
-		$this->_in_page_tab_check();
 
 		$randomapp_settings = $this->config->item('randomapp_settings');
 
@@ -544,12 +545,6 @@ class Home extends CI_Controller {
 	 * Load force like view without checking
 	 */
 	function like() {
-		if(isset($this->signedRequest['page']['id'])
-			&& $this->signedRequest['page']['id'] == $this->facebook_page_id) {
-			echo '<script>top.location = "'."https://www.facebook.com/profile.php?id={$this->facebook_page_id}&sk=app_{$this->facebook_app_id}".'";</script>';
-			exit();
-		}
-
 		$randomapp_settings = $this->config->item('randomapp_settings');
 		$this->load->vars(array(
 			'app_title' => $randomapp_settings['app_title'],
