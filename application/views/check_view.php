@@ -11,10 +11,12 @@ xmlns:fb="https://www.facebook.com/2008/fbml">
 
     <div id="content">
       <center>
-        <div id="loading" style="height:101px;width:403px;margin:0 auto;">
-          <p>Loading...</p>
-          <div class="progress progress-striped progress-info active">
-            <div class="bar" style="width: 100%;"></div>
+        <div class="well">
+          <div id="loading" style="height:101px;width:403px;margin:0 auto;">
+            <p>Loading...</p>
+            <div class="progress progress-striped progress-info active">
+              <div class="bar" style="width: 100%;"></div>
+            </div>
           </div>
         </div>
       </center>
