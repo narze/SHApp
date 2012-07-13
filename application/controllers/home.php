@@ -12,7 +12,7 @@ class Home extends CI_Controller {
 		$this->cookie_profile_picture = $this->facebook_page_id.'_'.$this->facebook_app_id.'_profile_picture_url';
 		$this->cookie_gender = $this->facebook_page_id.'_'.$this->facebook_app_id.'_gender';
 	}
-  
+
   /**
    * Check like in javascript
    */
@@ -24,15 +24,15 @@ class Home extends CI_Controller {
 			'static_server_path' => $this->config->item('static_server_path')
 	  ));
 	}
-  
+
   /**
    * fallback when javascript error occur
    */
   function check(){
-		if((!$facebook_uid = $this->facebook->getUser()) 
+		if((!$facebook_uid = $this->facebook->getUser())
 			|| !$this->fb->hasPermissions()){
 			$this->_login();
-		} else if ($this->fb->isUserLikedPage($this->facebook_page_id)){			
+		} else if ($this->fb->isUserLikedPage($this->facebook_page_id)){
 			$this->play();
 		} else {
 			$this->_force_like();
@@ -43,9 +43,9 @@ class Home extends CI_Controller {
 	 * If not in page tab, or not liked, redirect to page tab
 	 */
 	function _in_page_tab_check() {
-		if(!isset($this->signedRequest['page']['id'])
-			|| $this->signedRequest['page']['id'] != $this->facebook_page_id) {
-			echo '<script>top.location = "'."https://www.facebook.com/profile.php?id={$this->facebook_page_id}&sk=app_{$this->facebook_app_id}".'";</script>';
+		if(isset($this->signedRequest['page']['id'])
+			&& $this->signedRequest['page']['id'] == $this->facebook_page_id) {
+			echo '<script>top.location = "'.base_url().'";</script>';
 			exit();
 		}
 	}
@@ -59,7 +59,7 @@ class Home extends CI_Controller {
 		} else {
 			$this->signedRequest = $this->facebook->getSignedRequest();
 			//if not have signed request or page mismatch
-			if(!isset($this->signedRequest['page']['id']) 
+			if(!isset($this->signedRequest['page']['id'])
 				|| ($this->signedRequest['page']['id'] != $this->facebook_page_id)) {
 				if($facebook_force_like_app_id = $this->config->item('facebook_force_like_app_id')) {
 					$this->facebook_app_id = $facebook_force_like_app_id;
@@ -81,13 +81,13 @@ class Home extends CI_Controller {
 			}
 		}
 	}
-  
+
   /**
    * send random photo
    */
 	function play() {
 		if(!$facebook_uid = $this->facebook->getUser()) { // we dont't check page like here
-			redirect();
+			return $this->_login();
 		}
 
 		$randomapp_settings = $this->config->item('randomapp_settings');
@@ -206,7 +206,7 @@ class Home extends CI_Controller {
 	  }
 
 	  //insert name
-	  
+
 
 		$static_server_enable = $this->config->item('static_server_enable');
 		$static_server_path = $this->config->item('static_server_path');
@@ -285,19 +285,19 @@ class Home extends CI_Controller {
 		));
 		$this->load->view('play_view');
 	}
-  
+
   /**
    * user submitted share button
-   * 
+   *
    * @TODO: render and add photo to upload queue instead of upload via PHP
    */
 	function upload() {
 	  /**
      * full check here
      */
-		if((!$facebook_uid = $this->facebook->getUser()) 
+		if((!$facebook_uid = $this->facebook->getUser())
 			|| !$this->fb->isUserLikedPage($this->facebook_page_id)
-			|| (!$random_image_name = $this->input->post('img_name')) 
+			|| (!$random_image_name = $this->input->post('img_name'))
 			|| ($this->config->item('image_scores_enable') && (!$random_image_score = $this->input->post('img_score')))) {
 			redirect();
 		}
@@ -380,7 +380,7 @@ class Home extends CI_Controller {
 		imagesavealpha($finalImage, true);
 		imagealphablending($finalImage, true);
 
-		
+
 		//Merge profile picture
 		if($randomapp_settings['profile_image_border']) { //Draw border
 			$layer1 = $this->_drawBorder($layer1, $randomapp_settings['profile_image_border'], $randomapp_settings['profile_image_border_color']);
@@ -389,7 +389,7 @@ class Home extends CI_Controller {
 			$profile_image_width += ($randomapp_settings['profile_image_border']*2);
 			$profile_image_height += ($randomapp_settings['profile_image_border']*2);
 		}
-		
+
 		if($randomapp_settings['random_image_as_background']) { //BG = Random image
 			imagecopy($finalImage, $layer0, 0, 0, 0, 0, $finalImage_width,$finalImage_height);
 		}
@@ -405,7 +405,7 @@ class Home extends CI_Controller {
 			$layer2 = $this->_getImageResource(FCPATH . 'assets/images/star.png', 82, 85);
 			imagecopy($finalImage, $layer2, $image_scores['position_x'] - 15, $image_scores['position_y'] - 35, 0, 0, 82, 85);
 			imageDestroy($layer2);
-			
+
 			//insert score
 			$this->_drawText($finalImage, $random_image_score, array(
 				'size' => 18,
@@ -421,7 +421,7 @@ class Home extends CI_Controller {
 		imageDestroy($layer1);
 
 		try {
-			
+
 			$user = $this->facebook->api('me');
 
 			//Add userdata
@@ -432,7 +432,7 @@ class Home extends CI_Controller {
 					$userdata_add_result = array('error' => TRUE);
 					log_message('error', 'Userdata add error : ' . $userdata_app_url.'?userdata='.$userdata);
 				} else {
-					$userdata_add_result = json_decode($userdata_add_result, TRUE);					
+					$userdata_add_result = json_decode($userdata_add_result, TRUE);
 				}
 			}
 
@@ -500,8 +500,8 @@ class Home extends CI_Controller {
 
 				if($this->config->item('static_app_enable')) {
 					$serialized_app_data = base64_encode(json_encode(array(
-						'app_id'=>$this->config->item('app_id'), 
-						'app_secret_key'=> $this->config->item('app_secret_key'), 
+						'app_id'=>$this->config->item('app_id'),
+						'app_secret_key'=> $this->config->item('app_secret_key'),
 						'user_facebook_id' => $user['id'],
 						'data' => array(
 							'message' => $this->config->item('static_app_message'),
@@ -576,13 +576,13 @@ class Home extends CI_Controller {
 
 	    // Create image resource
 	    if(preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $source_path)) //Is URL
-	    { 
+	    {
 	      $file_get_contents = @file_get_contents($source_path);
 	      $source_gdim = $file_get_contents ? imagecreatefromstring($file_get_contents) : imagecreatetruecolor($desired_image_width,$desired_image_height); //Create blank image when "file_get_contents" failed to open stream
 	      $source_width = imagesx($source_gdim);
 	      $source_height = imagesy($source_gdim);
-	    } 
-	    else 
+	    }
+	    else
 	    {
 	      if (!(is_readable($source_path) && is_file($source_path))) {
 	        exit("Image file $source_path is not readable");
@@ -605,11 +605,11 @@ class Home extends CI_Controller {
 	    }
 
 	    //Crop or not
-	    if(!$desired_image_width || !$desired_image_height || ($source_width == $desired_image_width && $source_height == $desired_image_height) ) 
+	    if(!$desired_image_width || !$desired_image_height || ($source_width == $desired_image_width && $source_height == $desired_image_height) )
 	    {
 	      return $source_gdim;
-	    } 
-	    else 
+	    }
+	    else
 	    {
 	      $source_aspect_ratio = $source_width / $source_height;
 	      $desired_aspect_ratio = $desired_image_width / $desired_image_height;
@@ -683,7 +683,7 @@ class Home extends CI_Controller {
 	}
 
 	function _drawText($image_resource, $text, $config = NULL) {
-		
+
 		$size = isset($config['size']) ? $config['size'] : 13;
 		$angle = isset($config['angle']) ? $config['angle'] : 0;
 		$position_x = isset($config['position_x']) ? $config['position_x'] : 0;
