@@ -302,6 +302,11 @@ class Home extends CI_Controller {
 			redirect();
 		}
 
+		$custom_message = $this->input->post('message');
+		if(is_array($custom_message)) {
+			$custom_message = implode(" ", $custom_message);
+		}
+
 		$randomapp_settings = $this->config->item('randomapp_settings');
 
 		$image_scores = $this->config->item('image_scores');
@@ -449,6 +454,16 @@ class Home extends CI_Controller {
 				);
 			}
 
+			//insert custom message
+			$custom_message = '" '.$custom_message.' "';
+			$this->_drawText($finalImage, $custom_message, array(
+				'size' => 20,
+				'position_x' => 160,
+				'position_y' => 70,
+				'color' => '#FFFFFF'
+				)
+			);
+
 			if(is_writable($image_path)) {
 				unlink($image_path);
 			}
@@ -463,7 +478,7 @@ class Home extends CI_Controller {
 
 			if(is_writable($image_path)) {
 				$randomapp_settings = $this->config->item('randomapp_settings');
-				if($user_message = $this->input->post('message')) {
+				if($user_message = $custom_message) {
 					$user_message .= "\n\n\n";
 				}
 				$default_message = $randomapp_settings['default_message'];

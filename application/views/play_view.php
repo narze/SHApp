@@ -5,15 +5,31 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.css');?>" />
 	<style type="text/css">
-	#img-box { width:403px;height:403px;margin-bottom:20px;position:relative; }
-	.user-profile { position: absolute; overflow: hidden; border:<?php echo $profile_image_border; ?>px solid <?php echo $profile_image_border_color; ?>; width:<?php echo $img_width;?>px; height:<?php echo $img_height;?>px; left:<?php echo $img_x;?>px; top:<?php echo $img_y;?>px; background-size:cover;}
-	.user-name { font-size: <?php echo $profile_name_size;?>px; text-align: left; position: absolute; min-width: 200px; left:<?php echo $profile_name_x;?>px; top:<?php echo $profile_name_y;?>px; color: <?php echo $profile_name_color; ?>}
+		#img-box { width:403px;height:403px;margin-bottom:20px;position:relative; }
+		.user-profile { position: absolute; overflow: hidden; border:<?php echo $profile_image_border; ?>px solid <?php echo $profile_image_border_color; ?>; width:<?php echo $img_width;?>px; height:<?php echo $img_height;?>px; left:<?php echo $img_x;?>px; top:<?php echo $img_y;?>px; background-size:cover;}
+		.user-name { font-size: <?php echo $profile_name_size;?>px; text-align: left; position: absolute; min-width: 200px; left:<?php echo $profile_name_x;?>px; top:<?php echo $profile_name_y;?>px; color: <?php echo $profile_name_color; ?>}
 	<?php if($image_scores_enable) : ?>
-		.score { position: absolute; overflow: hidden; font-size:20px ; left:<?php echo $score_x;?>px; top:<?php echo $score_y+7;?>px; }
-		.star { position: absolute; overflow: hidden; left:<?php echo $score_x - 15;?>px; top:<?php echo $score_y - 30;?>px; }
+		.score {
+			font-size: <?php echo $profile_name_size;?>px;
+			text-align: left;
+			position: absolute;
+			min-width: 200px;
+			left:<?php echo $profile_name_x;?>px;
+			top:<?php echo $profile_name_y;?>px;
+			color: <?php echo $profile_name_color;
+		?>}
 	<?php endif; ?>
+		#messageText {
+			font-size: <?php echo $profile_name_size;?>px;
+			text-align: left;
+			position: absolute;
+			min-width: 200px;
+			left: 160px;
+			top: 74px;
+			color: <?php echo $profile_name_color; ?>
+		}
 	</style>
-	<?php $this->load->view('ga'); ?>
+	 <?php $this->load->view('ga'); ?>
 </head>
 <body style="<?php echo $app_bgcolor ? 'background-color:'.$app_bgcolor.';' : ''; ?>">
 	<div class="container">
@@ -42,9 +58,11 @@
 						<div class="user-name"><?php echo $name; ?></div>
 
 						<?php if($image_scores_enable) : ?>
-							<img class="star" src="<?php echo base_url('assets/images/star.png');?>"></img>
+							<img class="star" src="<?php echo base_url('assets/images/star.png');?>" />
 							<div class="score"><?php echo $score;?></div>
 						<?php endif; ?>
+
+						<div id="messageText"></div>
 					</div>
 
 					<div id="progress_bar" style="height:101px;width:403px;margin:0 auto;display:none">
@@ -65,7 +83,10 @@
 									<input disabled="true" style="height:37px;" class="input-large" id="message" type="text" name="message" maxlength="255" value="" <?php echo form_error('message') ? 'class="form-error"':''; ?> placeholder="Message" />
 									<button disabled="true" id="share_button" type="submit" class="btn btn-danger btn-large" name="upload">Share!</button>
 								<?php else : ?>
-									<input style="height:37px;" class="input-large" id="message" type="text" name="message" maxlength="255" value="" <?php echo form_error('message') ? 'class="form-error"':''; ?> placeholder="Message" />
+										<input style="height:37px; width:60px;" class="input-large" id="message1" type="text" name="message[0]" maxlength="7" value="" <?php echo form_error('message[0]') ? 'class="form-error"':''; ?> placeholder="คำที่ 1" />
+										<input style="height:37px; width:60px;" class="input-large" id="message2" type="text" name="message[1]" maxlength="7" value="" <?php echo form_error('message[1]') ? 'class="form-error"':''; ?> placeholder="คำที่ 2" />
+										<input style="height:37px; width:60px;" class="input-large" id="message3" type="text" name="message[2]" maxlength="7" value="" <?php echo form_error('message[2]') ? 'class="form-error"':''; ?> placeholder="คำที่ 3" />
+
 									<button id="share_button" type="submit" class="btn btn-success btn-large" name="upload">Share!</button>
 								<?php endif;
 							echo form_close();
@@ -100,6 +121,28 @@
 			document.getElementById('share_form').style.display = 'none';
 			document.getElementById('progress_bar').style.display = 'block';
 		}
+	</script>
+	<script type="text/javascript" src="<?php echo base_url('assets/js/jquery-1.7.1.min.js');?>"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('#share_button').attr('disabled', 'disabled')
+			$('input#message1').keyup(updateMessage)
+			$('input#message2').keyup(updateMessage)
+			$('input#message3').keyup(updateMessage)
+
+			function updateMessage() {
+				var message1 = $('input#message1').val()
+					, message2 = $('input#message2').val()
+					, message3 = $('input#message3').val()
+				var messageAll = '" ' + message1 + ' ' + message2 + ' ' + message3 + ' "'
+				$('#messageText').html(messageAll)
+				if(!!message1 && !!message2 && !!message3) {
+					$('#share_button').removeAttr('disabled')
+				} else {
+					$('#share_button').attr('disabled', 'disabled')
+				}
+			}
+		})
 	</script>
 </body>
 </html>
